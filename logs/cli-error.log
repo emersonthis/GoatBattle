@@ -1,0 +1,240 @@
+2016-09-24 04:00:54 Warning: Warning (2): include(..\GoatBattle\Battle.php): failed to open stream: No such file or directory in [/Users/ESL/Sites/goats/src/Shell/GoatBattleShell.php, line 10]
+Trace:
+Cake\Error\BaseErrorHandler::handleError() - CORE/src/Error/BaseErrorHandler.php, line 146
+include - APP/Shell/GoatBattleShell.php, line 10
+include - APP/Shell/GoatBattleShell.php, line 10
+Composer\Autoload\includeFile - ROOT/vendor/composer/ClassLoader.php, line 414
+Composer\Autoload\ClassLoader::loadClass() - ROOT/vendor/composer/ClassLoader.php, line 301
+spl_autoload_call - [internal], line ??
+class_exists - [internal], line ??
+Cake\Core\App::_classExistsInBase() - CORE/src/Core/App.php, line 152
+Cake\Core\App::className() - CORE/src/Core/App.php, line 64
+Cake\Console\ShellDispatcher::_shellExists() - CORE/src/Console/ShellDispatcher.php, line 339
+Cake\Console\ShellDispatcher::findShell() - CORE/src/Console/ShellDispatcher.php, line 298
+Cake\Console\ShellDispatcher::_dispatch() - CORE/src/Console/ShellDispatcher.php, line 223
+Cake\Console\ShellDispatcher::dispatch() - CORE/src/Console/ShellDispatcher.php, line 182
+Cake\Console\ShellDispatcher::run() - CORE/src/Console/ShellDispatcher.php, line 128
+[main] - ROOT/bin/cake.php, line 34
+
+
+
+2016-09-24 04:00:54 Warning: Warning (2): include(): Failed opening '..\GoatBattle\Battle.php' for inclusion (include_path='.:/Applications/MAMP/bin/php/php5.6.10/lib/php') in [/Users/ESL/Sites/goats/src/Shell/GoatBattleShell.php, line 10]
+Trace:
+Cake\Error\BaseErrorHandler::handleError() - CORE/src/Error/BaseErrorHandler.php, line 146
+include - APP/Shell/GoatBattleShell.php, line 10
+include - APP/Shell/GoatBattleShell.php, line 10
+Composer\Autoload\includeFile - ROOT/vendor/composer/ClassLoader.php, line 414
+Composer\Autoload\ClassLoader::loadClass() - ROOT/vendor/composer/ClassLoader.php, line 301
+spl_autoload_call - [internal], line ??
+class_exists - [internal], line ??
+Cake\Core\App::_classExistsInBase() - CORE/src/Core/App.php, line 152
+Cake\Core\App::className() - CORE/src/Core/App.php, line 64
+Cake\Console\ShellDispatcher::_shellExists() - CORE/src/Console/ShellDispatcher.php, line 339
+Cake\Console\ShellDispatcher::findShell() - CORE/src/Console/ShellDispatcher.php, line 298
+Cake\Console\ShellDispatcher::_dispatch() - CORE/src/Console/ShellDispatcher.php, line 223
+Cake\Console\ShellDispatcher::dispatch() - CORE/src/Console/ShellDispatcher.php, line 182
+Cake\Console\ShellDispatcher::run() - CORE/src/Console/ShellDispatcher.php, line 128
+[main] - ROOT/bin/cake.php, line 34
+
+
+
+2016-09-24 04:00:54 Warning: Warning (2): include(..\GoatBattle\Goat.php): failed to open stream: No such file or directory in [/Users/ESL/Sites/goats/src/Shell/GoatBattleShell.php, line 11]
+Trace:
+Cake\Error\BaseErrorHandler::handleError() - CORE/src/Error/BaseErrorHandler.php, line 146
+include - APP/Shell/GoatBattleShell.php, line 11
+include - APP/Shell/GoatBattleShell.php, line 11
+Composer\Autoload\includeFile - ROOT/vendor/composer/ClassLoader.php, line 414
+Composer\Autoload\ClassLoader::loadClass() - ROOT/vendor/composer/ClassLoader.php, line 301
+spl_autoload_call - [internal], line ??
+class_exists - [internal], line ??
+Cake\Core\App::_classExistsInBase() - CORE/src/Core/App.php, line 152
+Cake\Core\App::className() - CORE/src/Core/App.php, line 64
+Cake\Console\ShellDispatcher::_shellExists() - CORE/src/Console/ShellDispatcher.php, line 339
+Cake\Console\ShellDispatcher::findShell() - CORE/src/Console/ShellDispatcher.php, line 298
+Cake\Console\ShellDispatcher::_dispatch() - CORE/src/Console/ShellDispatcher.php, line 223
+Cake\Console\ShellDispatcher::dispatch() - CORE/src/Console/ShellDispatcher.php, line 182
+Cake\Console\ShellDispatcher::run() - CORE/src/Console/ShellDispatcher.php, line 128
+[main] - ROOT/bin/cake.php, line 34
+
+
+
+2016-09-24 04:00:54 Warning: Warning (2): include(): Failed opening '..\GoatBattle\Goat.php' for inclusion (include_path='.:/Applications/MAMP/bin/php/php5.6.10/lib/php') in [/Users/ESL/Sites/goats/src/Shell/GoatBattleShell.php, line 11]
+Trace:
+Cake\Error\BaseErrorHandler::handleError() - CORE/src/Error/BaseErrorHandler.php, line 146
+include - APP/Shell/GoatBattleShell.php, line 11
+include - APP/Shell/GoatBattleShell.php, line 11
+Composer\Autoload\includeFile - ROOT/vendor/composer/ClassLoader.php, line 414
+Composer\Autoload\ClassLoader::loadClass() - ROOT/vendor/composer/ClassLoader.php, line 301
+spl_autoload_call - [internal], line ??
+class_exists - [internal], line ??
+Cake\Core\App::_classExistsInBase() - CORE/src/Core/App.php, line 152
+Cake\Core\App::className() - CORE/src/Core/App.php, line 64
+Cake\Console\ShellDispatcher::_shellExists() - CORE/src/Console/ShellDispatcher.php, line 339
+Cake\Console\ShellDispatcher::findShell() - CORE/src/Console/ShellDispatcher.php, line 298
+Cake\Console\ShellDispatcher::_dispatch() - CORE/src/Console/ShellDispatcher.php, line 223
+Cake\Console\ShellDispatcher::dispatch() - CORE/src/Console/ShellDispatcher.php, line 182
+Cake\Console\ShellDispatcher::run() - CORE/src/Console/ShellDispatcher.php, line 128
+[main] - ROOT/bin/cake.php, line 34
+
+
+
+2016-09-24 04:00:54 Warning: Warning (2): include(..\GoatBattle\Fatty.php): failed to open stream: No such file or directory in [/Users/ESL/Sites/goats/src/Shell/GoatBattleShell.php, line 12]
+Trace:
+Cake\Error\BaseErrorHandler::handleError() - CORE/src/Error/BaseErrorHandler.php, line 146
+include - APP/Shell/GoatBattleShell.php, line 12
+include - APP/Shell/GoatBattleShell.php, line 12
+Composer\Autoload\includeFile - ROOT/vendor/composer/ClassLoader.php, line 414
+Composer\Autoload\ClassLoader::loadClass() - ROOT/vendor/composer/ClassLoader.php, line 301
+spl_autoload_call - [internal], line ??
+class_exists - [internal], line ??
+Cake\Core\App::_classExistsInBase() - CORE/src/Core/App.php, line 152
+Cake\Core\App::className() - CORE/src/Core/App.php, line 64
+Cake\Console\ShellDispatcher::_shellExists() - CORE/src/Console/ShellDispatcher.php, line 339
+Cake\Console\ShellDispatcher::findShell() - CORE/src/Console/ShellDispatcher.php, line 298
+Cake\Console\ShellDispatcher::_dispatch() - CORE/src/Console/ShellDispatcher.php, line 223
+Cake\Console\ShellDispatcher::dispatch() - CORE/src/Console/ShellDispatcher.php, line 182
+Cake\Console\ShellDispatcher::run() - CORE/src/Console/ShellDispatcher.php, line 128
+[main] - ROOT/bin/cake.php, line 34
+
+
+
+2016-09-24 04:00:54 Warning: Warning (2): include(): Failed opening '..\GoatBattle\Fatty.php' for inclusion (include_path='.:/Applications/MAMP/bin/php/php5.6.10/lib/php') in [/Users/ESL/Sites/goats/src/Shell/GoatBattleShell.php, line 12]
+Trace:
+Cake\Error\BaseErrorHandler::handleError() - CORE/src/Error/BaseErrorHandler.php, line 146
+include - APP/Shell/GoatBattleShell.php, line 12
+include - APP/Shell/GoatBattleShell.php, line 12
+Composer\Autoload\includeFile - ROOT/vendor/composer/ClassLoader.php, line 414
+Composer\Autoload\ClassLoader::loadClass() - ROOT/vendor/composer/ClassLoader.php, line 301
+spl_autoload_call - [internal], line ??
+class_exists - [internal], line ??
+Cake\Core\App::_classExistsInBase() - CORE/src/Core/App.php, line 152
+Cake\Core\App::className() - CORE/src/Core/App.php, line 64
+Cake\Console\ShellDispatcher::_shellExists() - CORE/src/Console/ShellDispatcher.php, line 339
+Cake\Console\ShellDispatcher::findShell() - CORE/src/Console/ShellDispatcher.php, line 298
+Cake\Console\ShellDispatcher::_dispatch() - CORE/src/Console/ShellDispatcher.php, line 223
+Cake\Console\ShellDispatcher::dispatch() - CORE/src/Console/ShellDispatcher.php, line 182
+Cake\Console\ShellDispatcher::run() - CORE/src/Console/ShellDispatcher.php, line 128
+[main] - ROOT/bin/cake.php, line 34
+
+
+
+2016-09-24 04:01:54 Warning: Warning (2): include(..\GoatBattle\Battle.php): failed to open stream: No such file or directory in [/Users/ESL/Sites/goats/src/Shell/GoatBattleShell.php, line 10]
+Trace:
+Cake\Error\BaseErrorHandler::handleError() - CORE/src/Error/BaseErrorHandler.php, line 146
+include - APP/Shell/GoatBattleShell.php, line 10
+include - APP/Shell/GoatBattleShell.php, line 10
+Composer\Autoload\includeFile - ROOT/vendor/composer/ClassLoader.php, line 414
+Composer\Autoload\ClassLoader::loadClass() - ROOT/vendor/composer/ClassLoader.php, line 301
+spl_autoload_call - [internal], line ??
+class_exists - [internal], line ??
+Cake\Core\App::_classExistsInBase() - CORE/src/Core/App.php, line 152
+Cake\Core\App::className() - CORE/src/Core/App.php, line 64
+Cake\Console\ShellDispatcher::_shellExists() - CORE/src/Console/ShellDispatcher.php, line 339
+Cake\Console\ShellDispatcher::findShell() - CORE/src/Console/ShellDispatcher.php, line 298
+Cake\Console\ShellDispatcher::_dispatch() - CORE/src/Console/ShellDispatcher.php, line 223
+Cake\Console\ShellDispatcher::dispatch() - CORE/src/Console/ShellDispatcher.php, line 182
+Cake\Console\ShellDispatcher::run() - CORE/src/Console/ShellDispatcher.php, line 128
+[main] - ROOT/bin/cake.php, line 34
+
+
+
+2016-09-24 04:01:54 Warning: Warning (2): include(): Failed opening '..\GoatBattle\Battle.php' for inclusion (include_path='.:/Applications/MAMP/bin/php/php5.6.10/lib/php') in [/Users/ESL/Sites/goats/src/Shell/GoatBattleShell.php, line 10]
+Trace:
+Cake\Error\BaseErrorHandler::handleError() - CORE/src/Error/BaseErrorHandler.php, line 146
+include - APP/Shell/GoatBattleShell.php, line 10
+include - APP/Shell/GoatBattleShell.php, line 10
+Composer\Autoload\includeFile - ROOT/vendor/composer/ClassLoader.php, line 414
+Composer\Autoload\ClassLoader::loadClass() - ROOT/vendor/composer/ClassLoader.php, line 301
+spl_autoload_call - [internal], line ??
+class_exists - [internal], line ??
+Cake\Core\App::_classExistsInBase() - CORE/src/Core/App.php, line 152
+Cake\Core\App::className() - CORE/src/Core/App.php, line 64
+Cake\Console\ShellDispatcher::_shellExists() - CORE/src/Console/ShellDispatcher.php, line 339
+Cake\Console\ShellDispatcher::findShell() - CORE/src/Console/ShellDispatcher.php, line 298
+Cake\Console\ShellDispatcher::_dispatch() - CORE/src/Console/ShellDispatcher.php, line 223
+Cake\Console\ShellDispatcher::dispatch() - CORE/src/Console/ShellDispatcher.php, line 182
+Cake\Console\ShellDispatcher::run() - CORE/src/Console/ShellDispatcher.php, line 128
+[main] - ROOT/bin/cake.php, line 34
+
+
+
+2016-09-24 04:01:54 Warning: Warning (2): include(..\GoatBattle\Goat.php): failed to open stream: No such file or directory in [/Users/ESL/Sites/goats/src/Shell/GoatBattleShell.php, line 11]
+Trace:
+Cake\Error\BaseErrorHandler::handleError() - CORE/src/Error/BaseErrorHandler.php, line 146
+include - APP/Shell/GoatBattleShell.php, line 11
+include - APP/Shell/GoatBattleShell.php, line 11
+Composer\Autoload\includeFile - ROOT/vendor/composer/ClassLoader.php, line 414
+Composer\Autoload\ClassLoader::loadClass() - ROOT/vendor/composer/ClassLoader.php, line 301
+spl_autoload_call - [internal], line ??
+class_exists - [internal], line ??
+Cake\Core\App::_classExistsInBase() - CORE/src/Core/App.php, line 152
+Cake\Core\App::className() - CORE/src/Core/App.php, line 64
+Cake\Console\ShellDispatcher::_shellExists() - CORE/src/Console/ShellDispatcher.php, line 339
+Cake\Console\ShellDispatcher::findShell() - CORE/src/Console/ShellDispatcher.php, line 298
+Cake\Console\ShellDispatcher::_dispatch() - CORE/src/Console/ShellDispatcher.php, line 223
+Cake\Console\ShellDispatcher::dispatch() - CORE/src/Console/ShellDispatcher.php, line 182
+Cake\Console\ShellDispatcher::run() - CORE/src/Console/ShellDispatcher.php, line 128
+[main] - ROOT/bin/cake.php, line 34
+
+
+
+2016-09-24 04:01:54 Warning: Warning (2): include(): Failed opening '..\GoatBattle\Goat.php' for inclusion (include_path='.:/Applications/MAMP/bin/php/php5.6.10/lib/php') in [/Users/ESL/Sites/goats/src/Shell/GoatBattleShell.php, line 11]
+Trace:
+Cake\Error\BaseErrorHandler::handleError() - CORE/src/Error/BaseErrorHandler.php, line 146
+include - APP/Shell/GoatBattleShell.php, line 11
+include - APP/Shell/GoatBattleShell.php, line 11
+Composer\Autoload\includeFile - ROOT/vendor/composer/ClassLoader.php, line 414
+Composer\Autoload\ClassLoader::loadClass() - ROOT/vendor/composer/ClassLoader.php, line 301
+spl_autoload_call - [internal], line ??
+class_exists - [internal], line ??
+Cake\Core\App::_classExistsInBase() - CORE/src/Core/App.php, line 152
+Cake\Core\App::className() - CORE/src/Core/App.php, line 64
+Cake\Console\ShellDispatcher::_shellExists() - CORE/src/Console/ShellDispatcher.php, line 339
+Cake\Console\ShellDispatcher::findShell() - CORE/src/Console/ShellDispatcher.php, line 298
+Cake\Console\ShellDispatcher::_dispatch() - CORE/src/Console/ShellDispatcher.php, line 223
+Cake\Console\ShellDispatcher::dispatch() - CORE/src/Console/ShellDispatcher.php, line 182
+Cake\Console\ShellDispatcher::run() - CORE/src/Console/ShellDispatcher.php, line 128
+[main] - ROOT/bin/cake.php, line 34
+
+
+
+2016-09-24 04:01:54 Warning: Warning (2): include(..\GoatBattle\Fatty.php): failed to open stream: No such file or directory in [/Users/ESL/Sites/goats/src/Shell/GoatBattleShell.php, line 12]
+Trace:
+Cake\Error\BaseErrorHandler::handleError() - CORE/src/Error/BaseErrorHandler.php, line 146
+include - APP/Shell/GoatBattleShell.php, line 12
+include - APP/Shell/GoatBattleShell.php, line 12
+Composer\Autoload\includeFile - ROOT/vendor/composer/ClassLoader.php, line 414
+Composer\Autoload\ClassLoader::loadClass() - ROOT/vendor/composer/ClassLoader.php, line 301
+spl_autoload_call - [internal], line ??
+class_exists - [internal], line ??
+Cake\Core\App::_classExistsInBase() - CORE/src/Core/App.php, line 152
+Cake\Core\App::className() - CORE/src/Core/App.php, line 64
+Cake\Console\ShellDispatcher::_shellExists() - CORE/src/Console/ShellDispatcher.php, line 339
+Cake\Console\ShellDispatcher::findShell() - CORE/src/Console/ShellDispatcher.php, line 298
+Cake\Console\ShellDispatcher::_dispatch() - CORE/src/Console/ShellDispatcher.php, line 223
+Cake\Console\ShellDispatcher::dispatch() - CORE/src/Console/ShellDispatcher.php, line 182
+Cake\Console\ShellDispatcher::run() - CORE/src/Console/ShellDispatcher.php, line 128
+[main] - ROOT/bin/cake.php, line 34
+
+
+
+2016-09-24 04:01:54 Warning: Warning (2): include(): Failed opening '..\GoatBattle\Fatty.php' for inclusion (include_path='.:/Applications/MAMP/bin/php/php5.6.10/lib/php') in [/Users/ESL/Sites/goats/src/Shell/GoatBattleShell.php, line 12]
+Trace:
+Cake\Error\BaseErrorHandler::handleError() - CORE/src/Error/BaseErrorHandler.php, line 146
+include - APP/Shell/GoatBattleShell.php, line 12
+include - APP/Shell/GoatBattleShell.php, line 12
+Composer\Autoload\includeFile - ROOT/vendor/composer/ClassLoader.php, line 414
+Composer\Autoload\ClassLoader::loadClass() - ROOT/vendor/composer/ClassLoader.php, line 301
+spl_autoload_call - [internal], line ??
+class_exists - [internal], line ??
+Cake\Core\App::_classExistsInBase() - CORE/src/Core/App.php, line 152
+Cake\Core\App::className() - CORE/src/Core/App.php, line 64
+Cake\Console\ShellDispatcher::_shellExists() - CORE/src/Console/ShellDispatcher.php, line 339
+Cake\Console\ShellDispatcher::findShell() - CORE/src/Console/ShellDispatcher.php, line 298
+Cake\Console\ShellDispatcher::_dispatch() - CORE/src/Console/ShellDispatcher.php, line 223
+Cake\Console\ShellDispatcher::dispatch() - CORE/src/Console/ShellDispatcher.php, line 182
+Cake\Console\ShellDispatcher::run() - CORE/src/Console/ShellDispatcher.php, line 128
+[main] - ROOT/bin/cake.php, line 34
+
+
+
