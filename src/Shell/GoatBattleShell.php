@@ -4,6 +4,7 @@ namespace App\Shell;
 use App\GoatBattle\Battle;
 use App\GoatBattle\Fatty;
 use App\GoatBattle\Goat;
+use App\GoatBattle\GoatLocation;
 use App\GoatBattle\Quicky;
 use Cake\Console\Shell;
 
@@ -36,13 +37,18 @@ class GoatBattleShell extends Shell
      */
     public function main()
     {
-        $this->out($this->OptionParser->help());
+        // $this->out($this->OptionParser->help());
 
-        $quicky = new Quicky();
-        $fatty = new Fatty();
+        $goat1Location = new GoatLocation('RED');
+        $goat2Location = new GoatLocation('BLUE');
 
+        $quicky = new Quicky($goat1Location);
+        $fatty = new Fatty($goat2Location);
+        
         $battle = new Battle($quicky, $fatty);
 
+        echo "\n";
+        $battle->printTranscript();
         echo "The End.\n\n";
     }
 }
