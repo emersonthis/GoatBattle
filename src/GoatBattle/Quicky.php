@@ -22,7 +22,9 @@ class Quicky extends Goat
         $actions1 = $this->turnToFaceAndAdvance($opponentLocation);
         $actions2 = $this->turnToFaceAndAdvance($opponentLocation);
         //...
+        $action3 = $this->ram();
 
+        return $actions1 + $actions2 + [$action3];
     }
 
     /**
@@ -32,10 +34,12 @@ class Quicky extends Goat
     {
         if ($this->location->direction() - $direction > 4) {
             $a = new Action($this);
-            return $a->turn(-1 * ($direction - $this->direction));
+            $a->turn(-1 * ($direction - $a->measure));
+            return $a;
         }
         $a = new Action($this);
-        return $a->turn($this->location->direction() - $direction);
+        $a->turn($this->location->direction() - $direction);
+        return $a;
     }
 
     /**

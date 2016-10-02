@@ -41,6 +41,10 @@ abstract class Goat
         return $this->horns;
     }
 
+    final public function setLocation(GoatLocation $location)
+    {
+        $this->location = $location;
+    }
     /**
      *
      */
@@ -71,13 +75,20 @@ abstract class Goat
     /**
      *
      */
-    final public function turn(int $n)
+    final public function turn($n)
     {
-        if ($n > 6 || $n < 6) {
-            throw new Exception('Invalid turn parameter');
-        }
-
-        $this->location->direction += 45 * $n;
+        // if ($n > 6 || $n < -6) {
+        //     throw new Exception('Invalid turn parameter');
+        // }
+        $oldDirection = $this->location->direction;
+        $newDirection = 45 * $n;
+        $newDirection = ($oldDirection + $newDirection) % 360;
+        // debug($n);
+        // debug($oldDirection);
+        // debug($newDirection);
+        // debug(($oldDirection + $newDirection) % 360);
+        $newDirection = ($newDirection > 0) ? $newDirection : (360 + $newDirection);
+        $this->location->direction = ($oldDirection + $newDirection) % 360;
     }
 
     /**

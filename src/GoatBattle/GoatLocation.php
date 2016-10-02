@@ -4,7 +4,7 @@ namespace App\GoatBattle;
 
 class GoatLocation
 {
-    private $direction;
+    public $direction;
     public $x;
     public $y;
 
@@ -17,13 +17,13 @@ class GoatLocation
     {
         switch ($pos) {
             case 'RED':
-                $this->direction = 3; //135
+                $this->direction = 3 * 45; //135
                 $this->x = -50;
                 $this->y = 50;
                 break;
 
             case 'BLUE':
-                $this->direction = 7; //315
+                $this->direction = 7 * 45; //315
                 $this->x = 50;
                 $this->y = -50;
                 break;
@@ -49,5 +49,45 @@ class GoatLocation
     public function faceingMe()
     {
 
+    }
+
+    public function facing()
+    {
+        $string;
+        switch ($this->direction) {
+            case 0:
+                $string = 'North';
+                break;
+            case 45:
+                $string = 'Northeast';
+                break;
+            case 90:
+                $string = 'East';
+                break;
+            case 135:
+                $string = 'Southeast';
+                break;
+            case 180:
+                $string = 'South';
+                break;
+            case 225:
+                $string = 'Southwest';
+                break;
+            case 270:
+                $string = 'West';
+                break;
+            case 315:
+                $string = 'Northwest';
+                break;
+            default:
+                debug($this->direction);
+                throw new \Exception('Unrecognized direction');
+        }
+        return $string;
+    }
+
+    public function describe()
+    {
+        return "@ {$this->x},{$this->y}" . " " . "facing {$this->facing()}";
     }
 }

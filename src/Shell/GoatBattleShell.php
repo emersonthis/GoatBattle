@@ -39,16 +39,12 @@ class GoatBattleShell extends Shell
     {
         // $this->out($this->OptionParser->help());
 
-        $goat1Location = new GoatLocation('RED');
-        $goat2Location = new GoatLocation('BLUE');
-
-        $quicky = new Quicky($goat1Location);
-        $fatty = new Fatty($goat2Location);
+        $quicky = new Quicky();
+        $fatty = new Fatty();
         
         $battle = new Battle($quicky, $fatty);
 
         echo "\n";
         $battle->printTranscript();
-        echo "The End.\n\n";
     }
 }

@@ -15,10 +15,12 @@ class Action
     const TURN = 2;
     const RAM = 3;
 
-    public $action = false;
-    public $distance = false;
-    public $direction = false;
+    // public $action = false;
+    // public $distance = false;
+    // public $direction = false;
+    public $measure = 0;
     private $goat;
+    public $endLocation;
 
     /**
      *
@@ -33,23 +35,27 @@ class Action
      */
     public function cost()
     {
-        if (!$this->action) {
+        if (!$this->number) {
             return false;
         }
 
-        if ($this->action === RAM) {
+        if ($this->number === self::RAM) {
             return 5;
         }
 
-        if ($this->action === ADVANCE) {
-            return $this->distance;
+        if ($this->number === self::ADVANCE) {
+            return $this->measure;
         }
 
-        if ($this->action === TURN) {
-            return abs($this->direction); //remove negative values
+        if ($this->number === self::TURN) {
+            return abs($this->measure); //remove negative values
         }
     }
 
+    // public function setEndLocation(GoatLocation $location)
+    // {
+    //     $this->endLocation = $location;
+    // }
 
     /**
      *
@@ -72,8 +78,8 @@ class Action
      */
     public function advance($distance)
     {
-        $this->action = 1;
-        $this->distance = $distance;
+        $this->number = 1;
+        $this->measure = $distance;
     }
 
     /**
@@ -94,8 +100,8 @@ class Action
      */
     public function turn($direction)
     {
-        $this->action = 2;
-        $this->direction = $direction;
+        $this->number = 2;
+        $this->measure = $direction;
     }
 
     /**
@@ -104,5 +110,38 @@ class Action
     public function ram()
     {
         $this->action = 3;
+    }
+
+    public function isRam()
+    {
+        return ($this->number == self::RAM);
+    }
+
+    public function isTurn()
+    {
+        return ($this->number == self::TURN);
+    }
+
+    public function isAdvance()
+    {
+        return ($this->number == self::ADVANCE);
+    }
+
+    public function describe()
+    {
+        $string;
+        switch ($this->number) {
+            case self::RAM:
+                $string = "Rams!";
+                break;
+            case self::TURN:
+                $string = "Turns " . $this->measure;
+                break;
+            case self::ADVANCE:
+                $string = "Advances " . $this->measure;
+                break;
+        }
+        // debug($string);
+        return $string;
     }
 }
