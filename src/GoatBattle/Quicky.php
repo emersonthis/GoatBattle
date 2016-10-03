@@ -18,13 +18,12 @@ class Quicky extends Goat
     protected function setToughness() { return 5; }
 
     public function action(GoatLocation $opponentLocation)
-    {
+    {        
         $actions1 = $this->turnToFaceAndAdvance($opponentLocation);
-        $actions2 = $this->turnToFaceAndAdvance($opponentLocation);
-        //...
-        $action3 = $this->ram();
+        // $actions2 = $this->turnToFaceAndAdvance($opponentLocation);
+        // $action3 = (new Action($this))->ram();
 
-        return $actions1 + $actions2 + [$action3];
+        return $actions1; // + $actions2 + [$action3];
     }
 
     /**

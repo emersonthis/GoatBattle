@@ -56,6 +56,7 @@ class GoatLocation
         $string;
         switch ($this->direction) {
             case 0:
+            case 360:
                 $string = 'North';
                 break;
             case 45:
@@ -88,6 +89,6 @@ class GoatLocation
 
     public function describe()
     {
-        return "@ {$this->x},{$this->y}" . " " . "facing {$this->facing()}";
+        return "@ {$this->x},{$this->y} facing {$this->facing()}";
     }
 }

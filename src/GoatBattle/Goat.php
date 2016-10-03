@@ -10,6 +10,7 @@ abstract class Goat
     private $horns;
     private $toughness;
     public $location;
+    public $color;
 
     /**
      *
@@ -83,10 +84,6 @@ abstract class Goat
         $oldDirection = $this->location->direction;
         $newDirection = 45 * $n;
         $newDirection = ($oldDirection + $newDirection) % 360;
-        // debug($n);
-        // debug($oldDirection);
-        // debug($newDirection);
-        // debug(($oldDirection + $newDirection) % 360);
         $newDirection = ($newDirection > 0) ? $newDirection : (360 + $newDirection);
         $this->location->direction = ($oldDirection + $newDirection) % 360;
     }
@@ -96,6 +93,7 @@ abstract class Goat
      */
     final public function advance($n)
     {
+        // debug($this->location);
         switch ($this->location->direction()) {
             case 0:
             case 'N':
@@ -140,6 +138,7 @@ abstract class Goat
                 $this->location->x -= $n;
                 break;
         }
+        // debug($this->location);
     }
 
     final protected function ram()

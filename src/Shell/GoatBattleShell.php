@@ -6,6 +6,7 @@ use App\GoatBattle\Fatty;
 use App\GoatBattle\Goat;
 use App\GoatBattle\GoatLocation;
 use App\GoatBattle\Quicky;
+use App\GoatBattle\Stilly;
 use Cake\Console\Shell;
 
 /**
@@ -40,9 +41,10 @@ class GoatBattleShell extends Shell
         // $this->out($this->OptionParser->help());
 
         $quicky = new Quicky();
-        $fatty = new Fatty();
+        // $fatty = new Fatty();
+        $stilly = new Stilly();
         
-        $battle = new Battle($quicky, $fatty);
+        $battle = new Battle($quicky, $stilly);
 
         echo "\n";
         $battle->printTranscript();

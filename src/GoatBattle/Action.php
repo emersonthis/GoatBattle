@@ -141,7 +141,6 @@ class Action
                 $string = "Advances " . $this->measure;
                 break;
         }
-        // debug($string);
         return $string;
     }
 }

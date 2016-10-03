@@ -1,6 +1,8 @@
 <?php
 namespace App\GoatBattle;
 
+use ReflectionClass;
+
 class Battle
 {
     public $goat1;
@@ -19,16 +21,27 @@ class Battle
     private $goat1Location;
     private $goat2Location;
 
+    public $goat1StartLocation;
+    public $goat2StartLocation;
+
     /**
      *
      */
     public function __construct(Goat $goat1, Goat $goat2)
     {
-        $this->goat1Location = new GoatLocation('RED');
-        $this->goat2Location = new GoatLocation('BLUE');
+        // ini_set('memory_limit', '500M');
 
         $this->goat1 = $goat1;
         $this->goat2 = $goat2;
+
+        $this->goat1Location = new GoatLocation('RED');
+        $this->goat2Location = new GoatLocation('BLUE');
+
+        $this->goat1StartLocation = clone $this->goat1Location;
+        $this->goat1->color = 'RED';
+        
+        $this->goat2StartLocation = clone $this->goat2Location;
+        $this->goat2->color = 'BLUE';
 
         $this->goat1->setLocation($this->goat1Location);
         $this->goat2->setLocation($this->goat2Location);
@@ -81,9 +94,9 @@ class Battle
     private function getActions()
     {
         $roundActionsFromGoat1 = $this->goat1->action(clone $this->goat2->location);
+        debug($roundActionsFromGoat1);
         $roundActionsFromGoat2 = $this->goat2->action(clone $this->goat1->location);
 
-        // debug($roundActionsFromGoat1);exit;
         $realRoundActionsGoat1 = $this->updateGoat($this->goat1, $roundActionsFromGoat1);
         $realRoundActionsGoat2 = $this->updateGoat($this->goat2, $roundActionsFromGoat2);
 
@@ -103,8 +116,16 @@ class Battle
         while ($availableAction > 0 && $i < $c) {
             $action = $roundActions[$i];
             $i++;
-            // debug($roundActions);
-            // debug($action);
+
+            // $reflect = new ReflectionClass($action);
+            if (!$action instanceof Action) {
+                debug('INVALID ACTION. See below:');
+                debug($action);
+                debug('ROUND ACTIONS:');
+                debug($roundActions);
+                break;
+            }
+
             if ($action->cost() <= $availableAction) {
                 $action->endLocation = $this->applyAction($goat, $action);
                 $availableAction -= $action->cost();
@@ -131,7 +152,7 @@ class Battle
     {
         $measure = ($actionMeasureOverride) ? $actionMeasureOverride : $action->measure;
         if ($action->isRam()) {
-            //@TODO
+            $actionGoat->ram();
         }
 
         if ($action->isTurn()) {
@@ -139,9 +160,9 @@ class Battle
         }
 
         if ($action->isAdvance()) {
-            $actionGoat->turn($measure);
+            $actionGoat->advance($measure);
         }
-
+        // debug($actionGoat->location);
         return $actionGoat->location;
     }
 
@@ -163,13 +184,15 @@ class Battle
     {
         echo "The battle begins!\n\n";
 
+        echo '=Round: 0=' . "\n";
+        echo 'GOAT1: Starts ' . $this->goat1StartLocation->describe() . "\n";
+        echo 'GOAT2: Starts ' . $this->goat2StartLocation->describe() . "\n";
+        echo "\n";
+
         foreach ($this->battleTranscript as $line) {
-            // debug($line);exit;
             echo '=Round: ' . $line['round'] . "=\n";
-            // echo "===========\n";
             echo 'GOAT1: ' . $this->describeActionRound($line['actions']['goat1']) . "\n";
-            // echo 'GOAT2: ' . $this->describeActionRound($line['actions']['goat2']) . "\n";
-            echo 'GOAT2: coming soon';
+            echo 'GOAT2: ' . $this->describeActionRound($line['actions']['goat2']) . "\n";
             echo "\n\n";
         }
 
@@ -184,12 +207,9 @@ class Battle
         foreach ($actions as $action) {
             $statement .= $action->describe() . ' ';
         }
-        // debug( $actions );
-        // debug( $actions[count($actions) - 1] );
-        // debug( $actions[count($actions) - 1]->endLocation );
+
         $statement .= $actions[count($actions) - 1]->endLocation->describe();
-        // debug( $statement );
-        // exit;
+
         return $statement;
     }
 }
