@@ -16,6 +16,9 @@
         <testsuite name="App Test Suite">
             <directory>./tests/TestCase</directory>
         </testsuite>
+        <testsuite name="GoatBattle">
+            <directory>./tests/TestCase/GoatBattle</directory>
+        </testsuite>
         <!-- Add plugin test suites here. -->
     </testsuites>
 

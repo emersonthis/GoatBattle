@@ -4,30 +4,37 @@ namespace App\GoatBattle;
 
 class Action
 {
-
-    public $actionsMap = [
-        1 => 'advance', // takes a distance value
-        2 => 'turn', // takes a + or - roation
-        3 => 'ram'
-    ];
-
-    const ADVANCE = 1;
+    const MOVE = 1;
     const TURN = 2;
     const RAM = 3;
 
-    // public $action = false;
-    // public $distance = false;
-    // public $direction = false;
+    public $actionsMap = [
+        1 => 'MOVE', // takes a distance value
+        2 => 'TURN', // takes a + or - roation
+        3 => 'RAM'
+    ];
+
+
     public $measure = 0;
-    private $goat;
-    public $endLocation;
+    public $type;
 
     /**
      *
      */
-    public function __construct(Goat $goat)
+    public function __construct($actionName, $measure = null)
     {
-        $this->goat = $goat;
+        $actionName = strtoupper($actionName);
+
+        switch ($actionName) {
+            case "MOVE":
+                $this->type = 1;
+                $this->measure = $measure;
+                break;
+            case "TURN":
+                $this->type = 2;
+                $this->measure = $measure;
+                break;
+        }
     }
 
     /**
@@ -35,19 +42,19 @@ class Action
      */
     public function cost()
     {
-        if (!$this->number) {
+        if (!$this->type) {
             return false;
         }
 
-        if ($this->number === self::RAM) {
+        if ($this->type === self::RAM) {
             return 5;
         }
 
-        if ($this->number === self::ADVANCE) {
+        if ($this->type === self::MOVE) {
             return $this->measure;
         }
 
-        if ($this->number === self::TURN) {
+        if ($this->type === self::TURN) {
             return abs($this->measure); //remove negative values
         }
     }
@@ -78,7 +85,7 @@ class Action
      */
     public function advance($distance)
     {
-        $this->number = 1;
+        $this->type = 1;
         $this->measure = $distance;
     }
 
@@ -100,7 +107,7 @@ class Action
      */
     public function turn($direction)
     {
-        $this->number = 2;
+        $this->type = 2;
         $this->measure = $direction;
     }
 
@@ -109,22 +116,22 @@ class Action
      */
     public function ram()
     {
-        $this->action = 3;
+        $this->type = 3;
     }
 
     public function isRam()
     {
-        return ($this->number == self::RAM);
+        return ($this->type == self::RAM);
     }
 
     public function isTurn()
     {
-        return ($this->number == self::TURN);
+        return ($this->type == self::TURN);
     }
 
     public function isAdvance()
     {
-        return ($this->number == self::ADVANCE);
+        return ($this->type == self::ADVANCE);
     }
 
     public function describe()

@@ -2,6 +2,8 @@
 
 namespace App\Test\TestCase\GoatBattle;
 
+use App\GoatBattle\Action;
+use App\GoatBattle\Battle;
 use App\GoatBattle\Goat;
 use App\GoatBattle\GoatLocation;
 use App\GoatBattle\Stilly;
@@ -9,7 +11,7 @@ use App\Test\TestCase\GoatBattle\Faily;
 use Cake\TestSuite\Fixture\PhpFixture;
 use Cake\TestSuite\TestCase;
 
-class GoatTest extends TestCase
+class BattleTest extends TestCase
 {
 
     /**
@@ -36,15 +38,17 @@ class GoatTest extends TestCase
      * @test
      * @return void
      */
-    public function validateAttributesTest()
+    public function constructTest()
     {
-        $goatLocation = new GoatLocation();
-        $goat = new Stilly($goatLocation);
-        $result = $goat->validateAttributes();
-        $this->assertTrue($result);
+        $goatLocation1 = new GoatLocation();
+        $goat1 = new Stilly($goatLocation1);
 
-        $goat2 = new Faily1($goatLocation); # sum of attributes too high
-        $result = $goat2->validateAttributes();
-        $this->assertFalse($result);
+        $goatLocation2 = new GoatLocation();
+        $goat2 = new Stilly($goatLocation2);
+
+        $battle = new Battle($goat1, $goat2);
+
+        $this->assertTrue($battle->goat1 instanceof Goat);
+        $this->assertTrue($battle->goat2 instanceof Goat);
     }
 }

@@ -78,14 +78,13 @@ abstract class Goat
      */
     final public function turn($n)
     {
-        // if ($n > 6 || $n < -6) {
-        //     throw new Exception('Invalid turn parameter');
-        // }
-        $oldDirection = $this->location->direction;
-        $newDirection = 45 * $n;
-        $newDirection = ($oldDirection + $newDirection) % 360;
-        $newDirection = ($newDirection > 0) ? $newDirection : (360 + $newDirection);
-        $this->location->direction = ($oldDirection + $newDirection) % 360;
+        // $oldDirection = $this->location->direction;
+        // $newDirection = 45 * $n;
+        // $newDirection = ($oldDirection + $newDirection) % 360;
+        // $newDirection = ($newDirection > 0) ? $newDirection : (360 + $newDirection);
+        // $this->location->direction = ($oldDirection + $newDirection) % 360;
+        $action = new Action('turn');
+        return $action;
     }
 
     /**

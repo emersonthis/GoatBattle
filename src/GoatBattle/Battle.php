@@ -52,7 +52,10 @@ class Battle
         if (!$this->goat2->validateAttributes()) {
             $this->battleTranscript[] = "Goat2 invalid atts";
         }
+    }
 
+    public function go()
+    {
         while ($this->gameOn()) {
             $this->roundCount++;
             $roundActions = $this->getActions();
@@ -60,9 +63,8 @@ class Battle
         }
 
         $this->determineOutcome();
-
-        // debug($this->battleTranscript);
     }
+
 
     /**
      *
@@ -94,7 +96,6 @@ class Battle
     private function getActions()
     {
         $roundActionsFromGoat1 = $this->goat1->action(clone $this->goat2->location);
-        debug($roundActionsFromGoat1);
         $roundActionsFromGoat2 = $this->goat2->action(clone $this->goat1->location);
 
         $realRoundActionsGoat1 = $this->updateGoat($this->goat1, $roundActionsFromGoat1);
