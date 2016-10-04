@@ -111,6 +111,86 @@ class Action
         $this->measure = $direction;
     }
 
+    public function result($activeGoat, $activeGoatLocation, $otherGoat, $otherGoatLocation)
+    {
+        $result;
+        switch ($this->type) {
+            case self::MOVE:
+                $result = [
+                    'activeGoat' => $activeGoat,
+                    'activeGoatLocation' => $this->moveGoat($activeGoatLocation),
+                    'otherGoat' => $otherGoat,
+                    'otherGoatLocation' => $otherGoatLocation
+                ];
+                break;
+
+            //@TODO This does nothing now
+            case self::TURN:
+                $result = [
+                    'activeGoat' => $activeGoat,
+                    'activeGoatLocation' => $activeGoatLocation,
+                    'otherGoat' => $otherGoat,
+                    'otherGoatLocation' => $otherGoatLocation
+                ];
+                break;
+        }
+        return $result;
+    }
+
+    private function moveGoat($goatLocation)
+    {
+        debug($goatLocation);
+        $newLocation =  clone $goatLocation;
+        $n = $this->measure;
+        debug($n);
+         switch ($goatLocation->direction) {
+            case 0:
+            case 'N':
+                $newLocation->y += $n;
+                break;
+
+            case 45:
+            case 'NW':
+                $newLocation->y += $n;
+                $newLocation->x += $n;
+                break;
+            case 90:
+            case 'E':
+                $newLocation->x += $n;
+                break;
+
+            case 135:
+            case 'SE':
+                $newLocation->x += $n;
+                $newLocation->y -= $n;
+                break;
+
+            case 180:
+            case 'S':
+                $newLocation->y -= $n;
+                break;
+
+            case 225:
+            case 'SW':
+                $newLocation->y -= $n;
+                $newLocation->x -= $n;
+                break;
+
+            case 270:
+            case 'W':
+                $newLocation->x -= $n;
+                break;
+
+            case 315:
+            case 'NW':
+                $newLocation->y += $n;
+                $newLocation->x -= $n;
+                break;
+            }
+        debug($newLocation);
+        return $newLocation;
+    }
+
     /**
      *
      */

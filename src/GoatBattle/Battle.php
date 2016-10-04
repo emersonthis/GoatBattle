@@ -17,9 +17,9 @@ class Battle
         3 => 'Neither goat wins. Tie!',
         4 => 'Both goats loose. Tie!'
     ];
-    public $outcome;
-    private $goat1Location;
-    private $goat2Location;
+    public $outcome = false;
+    public $goat1Location;
+    public $goat2Location;
 
     public $goat1StartLocation;
     public $goat2StartLocation;
@@ -29,8 +29,6 @@ class Battle
      */
     public function __construct(Goat $goat1, Goat $goat2)
     {
-        // ini_set('memory_limit', '500M');
-
         $this->goat1 = $goat1;
         $this->goat2 = $goat2;
 

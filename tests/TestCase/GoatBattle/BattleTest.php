@@ -48,7 +48,9 @@ class BattleTest extends TestCase
 
         $battle = new Battle($goat1, $goat2);
 
-        $this->assertTrue($battle->goat1 instanceof Goat);
+        $this->assertTrue($battle->goat1 instanceof Goat); //assertInstanceOf()
+        $this->assertTrue($battle->goat1Location instanceof GoatLocation);
         $this->assertTrue($battle->goat2 instanceof Goat);
+        $this->assertTrue($battle->goat2Location instanceof GoatLocation);
     }
 }

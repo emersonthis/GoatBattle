@@ -83,61 +83,61 @@ abstract class Goat
         // $newDirection = ($oldDirection + $newDirection) % 360;
         // $newDirection = ($newDirection > 0) ? $newDirection : (360 + $newDirection);
         // $this->location->direction = ($oldDirection + $newDirection) % 360;
-        $action = new Action('turn');
+        $action = new Action('TURN');
         return $action;
     }
 
     /**
      *
      */
-    final public function advance($n)
+    final public function move($n)
     {
-        // debug($this->location);
-        switch ($this->location->direction()) {
-            case 0:
-            case 'N':
-                $this->location->y += $n;
-                break;
+        $action = new Action('MOVE');
+        return $action;
+        // switch ($this->location->direction()) {
+        //     case 0:
+        //     case 'N':
+        //         $this->location->y += $n;
+        //         break;
 
-            case 45:
-            case 'NW':
-                $this->location->y += $n;
-                $this->location->x += $n;
-                break;
-            case 90:
-            case 'E':
-                $this->location->x += $n;
-                break;
+        //     case 45:
+        //     case 'NW':
+        //         $this->location->y += $n;
+        //         $this->location->x += $n;
+        //         break;
+        //     case 90:
+        //     case 'E':
+        //         $this->location->x += $n;
+        //         break;
 
-            case 135:
-            case 'SE':
-                $this->location->x += $n;
-                $this->location->y -= $n;
-                break;
+        //     case 135:
+        //     case 'SE':
+        //         $this->location->x += $n;
+        //         $this->location->y -= $n;
+        //         break;
 
-            case 180:
-            case 'S':
-                $this->location->y -= $n;
-                break;
+        //     case 180:
+        //     case 'S':
+        //         $this->location->y -= $n;
+        //         break;
 
-            case 225:
-            case 'SW':
-                $this->location->y -= $n;
-                $this->location->x -= $n;
-                break;
+        //     case 225:
+        //     case 'SW':
+        //         $this->location->y -= $n;
+        //         $this->location->x -= $n;
+        //         break;
 
-            case 270:
-            case 'W':
-                $this->location->x -= $n;
-                break;
+        //     case 270:
+        //     case 'W':
+        //         $this->location->x -= $n;
+        //         break;
 
-            case 315:
-            case 'NW':
-                $this->location->y += $n;
-                $this->location->x -= $n;
-                break;
-        }
-        // debug($this->location);
+        //     case 315:
+        //     case 'NW':
+        //         $this->location->y += $n;
+        //         $this->location->x -= $n;
+        //         break;
+        // }
     }
 
     final protected function ram()

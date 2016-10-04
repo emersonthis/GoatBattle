@@ -47,4 +47,32 @@ class GoatTest extends TestCase
         $result = $goat2->validateAttributes();
         $this->assertFalse($result);
     }
+
+    /**
+     * @test
+     * @return void
+     */
+    public function turnTest()
+    {
+        $goatLocation = new GoatLocation();
+        $goat = new Stilly($goatLocation);
+        $result = $goat->turn(5);
+        $this->assertTrue($result instanceof \App\GoatBattle\Action);
+
+        // $goat2 = new Faily1($goatLocation); # sum of attributes too high
+        // $result = $goat2->validateAttributes();
+        // $this->assertFalse($result);
+    }
+
+    /**
+     * @test
+     * @return void
+     */
+    public function moveTest()
+    {
+        $goatLocation = new GoatLocation();
+        $goat = new Stilly($goatLocation);
+        $result = $goat->move(5);
+        $this->assertTrue($result instanceof \App\GoatBattle\Action);
+    }
 }

@@ -56,4 +56,33 @@ class ActionTest extends TestCase
         $this->assertEquals(2, $action->type);
         $this->assertEquals(7, $action->measure);
     }
+
+    /**
+     * @test
+     * @return void
+     */
+    public function resultTest()
+    {
+        $redLocation = new GoatLocation('RED');
+        $redGoat = new Stilly();
+        $blueLocation = new GoatLocation('BLUE');
+        $blueGoat = new Stilly();
+        $action = new Action('MOVE', 2);
+        $result = $action->result($redGoat, $redLocation, $blueGoat, $blueLocation);
+        $this->assertArrayHasKey('activeGoat', $result);
+        $this->assertArrayHasKey('activeGoatLocation', $result);
+        $this->assertArrayHasKey('otherGoat', $result);
+        $this->assertArrayHasKey('otherGoatLocation', $result);
+        $this->assertEquals(-48, $result['activeGoatLocation']->x); //@TODO Change these magic numbers to use the class properties for max/min x/y
+        $this->assertEquals(48, $result['activeGoatLocation']->y);
+
+        $action = new Action('MOVE', 4);
+        $result = $action->result($blueGoat, $blueLocation, $redGoat, $redLocation);
+        $this->assertEquals(46, $result['activeGoatLocation']->x);
+        $this->assertEquals(-46, $result['activeGoatLocation']->y);
+
+        //@TODO Tests for other directions!
+
+        //@TODO Tests for the TURN action!
+    }
 }
