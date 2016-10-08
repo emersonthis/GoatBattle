@@ -139,10 +139,10 @@ class Action
 
     private function moveGoat($goatLocation)
     {
-        debug($goatLocation);
+        // debug($goatLocation);
         $newLocation =  clone $goatLocation;
         $n = $this->measure;
-        debug($n);
+        // debug($n);
          switch ($goatLocation->direction) {
             case 0:
             case 'N':
@@ -187,7 +187,7 @@ class Action
                 $newLocation->x -= $n;
                 break;
             }
-        debug($newLocation);
+        // debug($newLocation);
         return $newLocation;
     }
 
