@@ -41,6 +41,16 @@ abstract class Goat
     {
         return $this->horns;
     }
+    public function toughness()
+    {
+        return $this->toughness;
+    }
+
+    final public function ouch($n)
+    {
+        $this->toughness -= $n;
+        return $this->toughness;
+    }
 
     final public function setLocation(GoatLocation $location)
     {
@@ -83,7 +93,7 @@ abstract class Goat
         // $newDirection = ($oldDirection + $newDirection) % 360;
         // $newDirection = ($newDirection > 0) ? $newDirection : (360 + $newDirection);
         // $this->location->direction = ($oldDirection + $newDirection) % 360;
-        $action = new Action('TURN');
+        $action = new Action('TURN', $n);
         return $action;
     }
 
@@ -92,7 +102,7 @@ abstract class Goat
      */
     final public function move($n)
     {
-        $action = new Action('MOVE');
+        $action = new Action('MOVE', $n);
         return $action;
         // switch ($this->location->direction()) {
         //     case 0:
@@ -142,6 +152,8 @@ abstract class Goat
 
     final protected function ram()
     {
+        $action = new Action('RAM');
+        return $action;
     }
 
 

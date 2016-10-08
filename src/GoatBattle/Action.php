@@ -23,6 +23,10 @@ class Action
      */
     public function __construct($actionName, $measure = null)
     {
+        if (!in_array($actionName, $this->actionsMap)) {
+            return false;
+        }
+
         $actionName = strtoupper($actionName);
 
         switch ($actionName) {
@@ -83,7 +87,7 @@ class Action
     /**
      *
      */
-    public function advance($distance)
+    public function move($distance)
     {
         $this->type = 1;
         $this->measure = $distance;
@@ -211,7 +215,7 @@ class Action
 
     public function isAdvance()
     {
-        return ($this->type == self::ADVANCE);
+        return ($this->type == self::MOVE);
     }
 
     public function describe()
@@ -224,7 +228,7 @@ class Action
             case self::TURN:
                 $string = "Turns " . $this->measure;
                 break;
-            case self::ADVANCE:
+            case self::MOVE:
                 $string = "Advances " . $this->measure;
                 break;
         }

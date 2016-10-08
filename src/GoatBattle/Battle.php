@@ -10,7 +10,7 @@ class Battle
     public $winner = false;
     public $battleTranscript = [];
     public $roundCount = 0;
-    private $maxRounds = 50;
+    public $maxRounds = 50;
     private $outcomesMap = [
         1 => 'Goat 1 wins!',
         2 => 'Goat 2 wins!',
@@ -45,13 +45,16 @@ class Battle
         $this->goat2->setLocation($this->goat2Location);
 
         if (!$this->goat1->validateAttributes()) {
-            $this->battleTranscript[] = "Goat1 invalid atts";
+            throw new Exception("Goat1 invalid atts");
         }
         if (!$this->goat2->validateAttributes()) {
-            $this->battleTranscript[] = "Goat2 invalid atts";
+            throw new \Exception("Goat2 invalid atts");
         }
     }
 
+    /**
+     *
+     */
     public function go()
     {
         while ($this->gameOn()) {
@@ -147,6 +150,9 @@ class Battle
         return $actions;
     }
 
+    /**
+     *
+     */
     private function applyAction(Goat $actionGoat, Action $action, $actionMeasureOverride = null)
     {
         $measure = ($actionMeasureOverride) ? $actionMeasureOverride : $action->measure;
@@ -159,9 +165,8 @@ class Battle
         }
 
         if ($action->isAdvance()) {
-            $actionGoat->advance($measure);
+            $actionGoat->move($measure);
         }
-        // debug($actionGoat->location);
         return $actionGoat->location;
     }
 
@@ -200,6 +205,9 @@ class Battle
         echo "The End.\n\n";
     }
 
+    /**
+     *
+     */
     private function describeActionRound($actions)
     {
         $statement = '';

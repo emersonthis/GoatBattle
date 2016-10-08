@@ -45,6 +45,7 @@ class GoatBattleShell extends Shell
         $stilly = new Stilly();
         
         $battle = new Battle($quicky, $stilly);
+        $battle->go();
 
         echo "\n";
         $battle->printTranscript();

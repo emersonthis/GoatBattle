@@ -30,10 +30,7 @@ class Stilly extends Goat
     {
         $actions = [];
         if (!$this->isAtCenter()) {
-            $action = new Action($this);
-            $action->advance(1);
-            $actions[] = $action;
-            // debug($actions);
+            $action[] = $this->move(1);
         }
         return $actions;
     }
