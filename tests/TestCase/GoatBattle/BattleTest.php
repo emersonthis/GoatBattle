@@ -115,4 +115,29 @@ class BattleTest extends TestCase
 
         $this->assertFalse($battle->gameOn());
     }
+
+    /**
+     * @test
+     * @return void
+     */
+    public function testGetGoatActions()
+    {
+        $goatLocation1 = new GoatLocation('RED');
+        $goat1 = new Stilly($goatLocation1);
+
+        $goatLocation2 = new GoatLocation('BLUE');
+        $goat2 = new Stilly($goatLocation2);
+
+        $battle = new Battle($goat1, $goat2);
+
+        $actions = $battle->getGoatActions($battle->goat1, $goatLocation2);
+
+        $this->assertTrue(is_array($actions));
+        $this->assertInstanceOf(Action::class, $actions[0]);
+
+        $actions = $battle->getGoatActions($battle->goat2, $goatLocation1);
+
+        $this->assertTrue(is_array($actions));
+        $this->assertInstanceOf(Action::class, $actions[0]);
+    }
 }

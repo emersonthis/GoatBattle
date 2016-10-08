@@ -41,8 +41,8 @@ class Battle
         $this->goat2StartLocation = clone $this->goat2Location;
         $this->goat2->color = 'BLUE';
 
-        $this->goat1->setLocation($this->goat1Location);
-        $this->goat2->setLocation($this->goat2Location);
+        // $this->goat1->setLocation($this->goat1Location);
+        // $this->goat2->setLocation($this->goat2Location);
 
         if (!$this->goat1->validateAttributes()) {
             throw new Exception("Goat1 invalid atts");
@@ -59,10 +59,11 @@ class Battle
     {
         while ($this->gameOn()) {
             $this->roundCount++;
-            $roundActions = $this->getActions();
+            $goat1Actions = $this->getGoatActions($this->goat1, $this->goat2Location);
+            $goat2Actions = $this->getGoatActions($this->goat2, $this->goat1Location);
+            $roundActions = ['goat1' => $goat1Actions, 'goat2' => $goat2Actions];
             $this->battleTranscript[] = ['round' => $this->roundCount, 'actions' => $roundActions];
         }
-
         $this->determineOutcome();
     }
 
@@ -94,15 +95,11 @@ class Battle
     /**
      *
      */
-    private function getActions()
+    public function getGoatActions(Goat $goat, GoatLocation $opponentGoatLocation)
     {
-        $roundActionsFromGoat1 = $this->goat1->action(clone $this->goat2->location);
-        $roundActionsFromGoat2 = $this->goat2->action(clone $this->goat1->location);
-
-        $realRoundActionsGoat1 = $this->updateGoat($this->goat1, $roundActionsFromGoat1);
-        $realRoundActionsGoat2 = $this->updateGoat($this->goat2, $roundActionsFromGoat2);
-
-        return ['goat1' => $realRoundActionsGoat1, 'goat2' => $realRoundActionsGoat2];
+        $opponentGoatLocation = clone $opponentGoatLocation;
+        $roundActionsFromGoat = $goat->action($opponentGoatLocation);
+        return $roundActionsFromGoat;
     }
 
     /**

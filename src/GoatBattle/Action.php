@@ -115,6 +115,9 @@ class Action
         $this->measure = $direction;
     }
 
+    /**
+     *
+     */
     public function result($activeGoat, $activeGoatLocation, $otherGoat, $otherGoatLocation)
     {
         $result;
@@ -141,13 +144,14 @@ class Action
         return $result;
     }
 
+    /**
+     *
+     */
     private function moveGoat($goatLocation)
     {
-        // debug($goatLocation);
-        $newLocation =  clone $goatLocation;
+        $newLocation = clone $goatLocation;
         $n = $this->measure;
-        // debug($n);
-         switch ($goatLocation->direction) {
+        switch ($goatLocation->direction) {
             case 0:
             case 'N':
                 $newLocation->y += $n;
@@ -190,8 +194,7 @@ class Action
                 $newLocation->y += $n;
                 $newLocation->x -= $n;
                 break;
-            }
-        // debug($newLocation);
+        }
         return $newLocation;
     }
 
@@ -203,21 +206,33 @@ class Action
         $this->type = 3;
     }
 
+    /**
+     *
+     */
     public function isRam()
     {
         return ($this->type == self::RAM);
     }
 
+    /**
+     *
+     */
     public function isTurn()
     {
         return ($this->type == self::TURN);
     }
 
+    /**
+     *
+     */
     public function isAdvance()
     {
         return ($this->type == self::MOVE);
     }
 
+    /**
+     *
+     */
     public function describe()
     {
         $string;
@@ -229,7 +244,7 @@ class Action
                 $string = "Turns " . $this->measure;
                 break;
             case self::MOVE:
-                $string = "Advances " . $this->measure;
+                $string = "Moves " . $this->measure;
                 break;
         }
         return $string;

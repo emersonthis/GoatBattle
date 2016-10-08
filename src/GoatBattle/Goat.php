@@ -104,50 +104,6 @@ abstract class Goat
     {
         $action = new Action('MOVE', $n);
         return $action;
-        // switch ($this->location->direction()) {
-        //     case 0:
-        //     case 'N':
-        //         $this->location->y += $n;
-        //         break;
-
-        //     case 45:
-        //     case 'NW':
-        //         $this->location->y += $n;
-        //         $this->location->x += $n;
-        //         break;
-        //     case 90:
-        //     case 'E':
-        //         $this->location->x += $n;
-        //         break;
-
-        //     case 135:
-        //     case 'SE':
-        //         $this->location->x += $n;
-        //         $this->location->y -= $n;
-        //         break;
-
-        //     case 180:
-        //     case 'S':
-        //         $this->location->y -= $n;
-        //         break;
-
-        //     case 225:
-        //     case 'SW':
-        //         $this->location->y -= $n;
-        //         $this->location->x -= $n;
-        //         break;
-
-        //     case 270:
-        //     case 'W':
-        //         $this->location->x -= $n;
-        //         break;
-
-        //     case 315:
-        //     case 'NW':
-        //         $this->location->y += $n;
-        //         $this->location->x -= $n;
-        //         break;
-        // }
     }
 
     final protected function ram()
