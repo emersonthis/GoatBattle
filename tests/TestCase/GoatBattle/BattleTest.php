@@ -140,4 +140,25 @@ class BattleTest extends TestCase
         $this->assertTrue(is_array($actions));
         $this->assertInstanceOf(Action::class, $actions[0]);
     }
+
+    public function testAthorizeActions()
+    {
+        $goat1 = new Stilly(); //speed = 4, toughness = 8
+        $goat1Location = new GoatLocation('RED');
+        $goat2 = new Stilly();
+        $goat2Location = new GoatLocation('BLUE');
+        $battle = new Battle($goat1, $goat2);
+        
+        $action1 = new Action('MOVE', 3);
+        $action2 = new Action('TURN', 5);
+        $goatActions = [$action1, $action2];
+        $realActions = $battle->authorizeActions($goat1, $goatActions, $goat1Location, $goat2Location);
+
+        $this->assertInstanceOf(Action::class, $realActions[0]);
+        $this->assertEquals(3, $realActions[0]->measure);
+        $this->assertTrue($realActions[0]->isMove());
+        $this->assertInstanceOf(Action::class, $realActions[1]);
+        $this->assertEquals(1, $realActions[1]->measure);
+        $this->assertTrue($realActions[1]->isTurn());
+    }
 }

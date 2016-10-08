@@ -225,7 +225,7 @@ class Action
     /**
      *
      */
-    public function isAdvance()
+    public function isMove()
     {
         return ($this->type == self::MOVE);
     }

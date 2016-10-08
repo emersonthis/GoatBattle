@@ -59,14 +59,67 @@ class Battle
     {
         while ($this->gameOn()) {
             $this->roundCount++;
-            $goat1Actions = $this->getGoatActions($this->goat1, $this->goat2Location);
-            $goat2Actions = $this->getGoatActions($this->goat2, $this->goat1Location);
+            
+            $goat1Actions = $this->turn($this->goat1, $this->goat1Location, $this->goat2, $this->goat2Location);
+            $goat2Actions = $this->turn($this->goat2, $this->goat2Location, $this->goat1, $this->goat1Location);
+
             $roundActions = ['goat1' => $goat1Actions, 'goat2' => $goat2Actions];
+            
             $this->battleTranscript[] = ['round' => $this->roundCount, 'actions' => $roundActions];
         }
         $this->determineOutcome();
     }
 
+    /**
+     *
+     */
+    public function turn(
+        Goat $thisGoat,
+        GoatLocation $thisGoatLocation,
+        Goat $otherGoat,
+        GoatLocation $otherGoatLocation
+    ) {
+        $goatActions = $this->getGoatActions($thisGoat, $otherGoatLocation);
+        $realGoatActions = $this->authorizeActions($thisGoat, $goatActions, $thisGoatLocation, $otherGoatLocation);
+        $this->updateGoat($thisGoat, $goatActions);
+        return $realGoatActions;
+    }
+
+    /**
+     *
+     */
+    public function authorizeActions(Goat $goat, $goatActions, $goatLocation, $otherGoatLocation)
+    {
+        $actions = [];
+        $availableAction = $goat->speed();
+
+        foreach ($goatActions as $action) {
+            if (!$action instanceof Action) {
+                $this->log("Invalid action:");
+                $this->log($action);
+                return $actions;
+            }
+
+            if ($action->cost() <= $availableAction) {
+                $actions[] = $action;
+                $availableAction -= $action->cost();
+            } else {
+                if ($action->isMove()) {
+                    $action->measure = $availableAction;
+                    $actions[] = $action;
+                }
+                if ($action->isTurn()) {
+                    $action->measure = ($action->measure > 0) ? $availableAction : $availableAction * -1;
+                    $actions[] = $action;
+                }
+                // ramming but no action left
+                $availableAction = 0;
+            }
+
+        }
+
+        return $actions;
+    }
 
     /**
      *
@@ -107,23 +160,22 @@ class Battle
      */
     private function updateGoat($goat, $roundActions)
     {
-        $availableAction = $goat->speed();
+        // $availableAction = $goat->speed();
         $actions = [];
 
-        $i = 0;
-        $c = count($roundActions);
-        while ($availableAction > 0 && $i < $c) {
-            $action = $roundActions[$i];
-            $i++;
+        // $i = 0;
+        // $c = count($roundActions);
+        // while ($availableAction > 0 && $i < $c) {
+        foreach ($roundActions as $action) {
+            // $action = $roundActions[$i];
+            // $i++;
 
-            // $reflect = new ReflectionClass($action);
-            if (!$action instanceof Action) {
-                debug('INVALID ACTION. See below:');
-                debug($action);
-                debug('ROUND ACTIONS:');
-                debug($roundActions);
-                break;
-            }
+            // // $reflect = new ReflectionClass($action); //@TODO
+            // if (!$action instanceof Action) {
+            //     throw new Exception('Invalid action!');
+            //     debug($action);
+            //     break;
+            // }
 
             if ($action->cost() <= $availableAction) {
                 $action->endLocation = $this->applyAction($goat, $action);
@@ -147,25 +199,25 @@ class Battle
         return $actions;
     }
 
-    /**
-     *
-     */
-    private function applyAction(Goat $actionGoat, Action $action, $actionMeasureOverride = null)
-    {
-        $measure = ($actionMeasureOverride) ? $actionMeasureOverride : $action->measure;
-        if ($action->isRam()) {
-            $actionGoat->ram();
-        }
+    // /**
+    //  *
+    //  */
+    // private function applyAction(Goat $actionGoat, Action $action, $actionMeasureOverride = null)
+    // {
+    //     $measure = ($actionMeasureOverride) ? $actionMeasureOverride : $action->measure;
+    //     if ($action->isRam()) {
+    //         $actionGoat->ram();
+    //     }
 
-        if ($action->isTurn()) {
-            $actionGoat->turn($measure);
-        }
+    //     if ($action->isTurn()) {
+    //         $actionGoat->turn($measure);
+    //     }
 
-        if ($action->isAdvance()) {
-            $actionGoat->move($measure);
-        }
-        return $actionGoat->location;
-    }
+    //     if ($action->isAdvance()) {
+    //         $actionGoat->move($measure);
+    //     }
+    //     return $actionGoat->location;
+    // }
 
     /**
      *
