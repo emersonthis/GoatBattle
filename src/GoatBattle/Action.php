@@ -8,6 +8,8 @@ class Action
     const TURN = 2;
     const RAM = 3;
 
+    public $ramCost = 4;
+
     public $actionsMap = [
         1 => 'MOVE', // takes a distance value
         2 => 'TURN', // takes a + or - roation
@@ -17,6 +19,7 @@ class Action
 
     public $measure = 0;
     public $type;
+    public $endLocation;
 
     /**
      *
@@ -38,6 +41,9 @@ class Action
                 $this->type = 2;
                 $this->measure = $measure;
                 break;
+            case "RAM":
+                $this->type = 3;
+                $this->measure = $this->ramCost;
         }
     }
 
@@ -115,39 +121,82 @@ class Action
         $this->measure = $direction;
     }
 
+    // /**
+    //  *
+    //  */
+    // public function result($activeGoat, $activeGoatLocation, $otherGoat, $otherGoatLocation)
+    // {
+    //     $result;
+    //     switch ($this->type) {
+    //         case self::MOVE:
+    //             $result = [
+    //                 'activeGoat' => $activeGoat,
+    //                 'activeGoatLocation' => $this->moveGoat($activeGoatLocation),
+    //                 'otherGoat' => $otherGoat,
+    //                 'otherGoatLocation' => $otherGoatLocation
+    //             ];
+    //             break;
+
+    //         //@TODO This does nothing now
+    //         case self::TURN:
+    //             $result = [
+    //                 'activeGoat' => $activeGoat,
+    //                 'activeGoatLocation' => $activeGoatLocation,
+    //                 'otherGoat' => $otherGoat,
+    //                 'otherGoatLocation' => $otherGoatLocation
+    //             ];
+    //             break;
+    //     }
+    //     return $result;
+    // }
+
     /**
      *
      */
-    public function result($activeGoat, $activeGoatLocation, $otherGoat, $otherGoatLocation)
-    {
-        $result;
-        switch ($this->type) {
-            case self::MOVE:
-                $result = [
-                    'activeGoat' => $activeGoat,
-                    'activeGoatLocation' => $this->moveGoat($activeGoatLocation),
-                    'otherGoat' => $otherGoat,
-                    'otherGoatLocation' => $otherGoatLocation
-                ];
-                break;
+    public function apply(
+        Goat $thisGoat,
+        GoatLocation $thisGoatLocation,
+        Goat $otherGoat,
+        GoatLocation $otherGoatLocation
+    ) {
+        $endLocation;
 
-            //@TODO This does nothing now
-            case self::TURN:
-                $result = [
-                    'activeGoat' => $activeGoat,
-                    'activeGoatLocation' => $activeGoatLocation,
-                    'otherGoat' => $otherGoat,
-                    'otherGoatLocation' => $otherGoatLocation
-                ];
-                break;
+        if ($this->isMove($this)) {
+            $endLocation = $this->moveGoat($thisGoatLocation);
         }
-        return $result;
+        if ($this->isTurn($this)) {
+            $endLocation = $this->turnGoat($thisGoatLocation);
+        }
+        if ($this->isRam($this)) {
+            //@TODO
+        }
+
+        $this->endLocation = $endLocation;
+
+        return $endLocation;
+    }
+
+    private function turnGoat(GoatLocation $goatLocation)
+    {
+        $oldDirection = $goatLocation->direction;
+        $newDirection = 45 * $this->measure;
+        $newDirection = ($oldDirection + $newDirection) % 360;
+        $newDirection = ($newDirection > 0) ? $newDirection : (360 + $newDirection);
+
+        // $newLocation = new GoatLocation();
+        // $newLocation->x = $goatLocation->x;
+        // $newLocation->y = $goatLocation->y;
+        // $newLocation->direction = $newDirection;
+
+        $goatLocation->direction = $newDirection;
+
+        return $goatLocation;
     }
 
     /**
      *
      */
-    private function moveGoat($goatLocation)
+    private function moveGoat(GoatLocation $goatLocation)
     {
         $newLocation = clone $goatLocation;
         $n = $this->measure;
@@ -195,7 +244,9 @@ class Action
                 $newLocation->x -= $n;
                 break;
         }
-        return $newLocation;
+        $goatLocation->x = $newLocation->x;
+        $goatLocation->y = $newLocation->y;
+        return $goatLocation;
     }
 
     /**
@@ -236,7 +287,7 @@ class Action
     public function describe()
     {
         $string;
-        switch ($this->number) {
+        switch ($this->type) {
             case self::RAM:
                 $string = "Rams!";
                 break;

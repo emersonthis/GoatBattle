@@ -49,5 +49,7 @@ class GoatBattleShell extends Shell
 
         echo "\n";
         $battle->printTranscript();
+        // debug($battle->battleTranscript);
+
     }
 }

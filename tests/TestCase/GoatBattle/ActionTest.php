@@ -57,32 +57,57 @@ class ActionTest extends TestCase
         $this->assertEquals(7, $action->measure);
     }
 
-    /**
-     * @test
-     * @return void
-     */
-    public function resultTest()
+    // /**
+    //  * @test
+    //  * @return void
+    //  */
+    // public function resultTest()
+    // {
+    //     $redLocation = new GoatLocation('RED');
+    //     $redGoat = new Stilly();
+    //     $blueLocation = new GoatLocation('BLUE');
+    //     $blueGoat = new Stilly();
+    //     $action = new Action('MOVE', 2);
+    //     $result = $action->result($redGoat, $redLocation, $blueGoat, $blueLocation);
+    //     $this->assertArrayHasKey('activeGoat', $result);
+    //     $this->assertArrayHasKey('activeGoatLocation', $result);
+    //     $this->assertArrayHasKey('otherGoat', $result);
+    //     $this->assertArrayHasKey('otherGoatLocation', $result);
+    //     $this->assertEquals(-48, $result['activeGoatLocation']->x); //@TODO Change these magic numbers to use the class properties for max/min x/y
+    //     $this->assertEquals(48, $result['activeGoatLocation']->y);
+
+    //     $action = new Action('MOVE', 4);
+    //     $result = $action->result($blueGoat, $blueLocation, $redGoat, $redLocation);
+    //     $this->assertEquals(46, $result['activeGoatLocation']->x);
+    //     $this->assertEquals(-46, $result['activeGoatLocation']->y);
+
+    //     //@TODO Tests for other directions!
+
+    //     //@TODO Tests for the TURN action!
+    // }
+
+    public function testApply()
     {
         $redLocation = new GoatLocation('RED');
-        $redGoat = new Stilly();
+        $redGoat = new Stilly($redLocation);
         $blueLocation = new GoatLocation('BLUE');
-        $blueGoat = new Stilly();
+        $blueGoat = new Stilly($blueLocation);
+        
         $action = new Action('MOVE', 2);
-        $result = $action->result($redGoat, $redLocation, $blueGoat, $blueLocation);
-        $this->assertArrayHasKey('activeGoat', $result);
-        $this->assertArrayHasKey('activeGoatLocation', $result);
-        $this->assertArrayHasKey('otherGoat', $result);
-        $this->assertArrayHasKey('otherGoatLocation', $result);
-        $this->assertEquals(-48, $result['activeGoatLocation']->x); //@TODO Change these magic numbers to use the class properties for max/min x/y
-        $this->assertEquals(48, $result['activeGoatLocation']->y);
+        $endLocation = $action->apply($redGoat, $redLocation, $blueGoat, $blueLocation);
 
-        $action = new Action('MOVE', 4);
-        $result = $action->result($blueGoat, $blueLocation, $redGoat, $redLocation);
-        $this->assertEquals(46, $result['activeGoatLocation']->x);
-        $this->assertEquals(-46, $result['activeGoatLocation']->y);
+        $this->assertInstanceOf(GoatLocation::class, $endLocation);
+        $this->assertEquals(48, $endLocation->y);
+        $this->assertEquals(-48, $endLocation->x);
+        $this->assertEquals(135, $endLocation->direction);
 
-        //@TODO Tests for other directions!
+        $action = new Action('TURN', 1);
+        $endLocation = $action->apply($redGoat, $endLocation, $blueGoat, $blueLocation);
 
-        //@TODO Tests for the TURN action!
+        $this->assertInstanceOf(GoatLocation::class, $endLocation);
+        $this->assertEquals(48, $endLocation->y);
+        $this->assertEquals(-48, $endLocation->x);
+        $this->assertEquals(180, $endLocation->direction);
+
     }
 }

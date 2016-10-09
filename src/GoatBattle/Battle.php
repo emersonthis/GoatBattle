@@ -1,7 +1,7 @@
 <?php
 namespace App\GoatBattle;
 
-use ReflectionClass;
+use Cake\Log\Log;
 
 class Battle
 {
@@ -60,8 +60,8 @@ class Battle
         while ($this->gameOn()) {
             $this->roundCount++;
             
-            $goat1Actions = $this->turn($this->goat1, $this->goat1Location, $this->goat2, $this->goat2Location);
-            $goat2Actions = $this->turn($this->goat2, $this->goat2Location, $this->goat1, $this->goat1Location);
+            $goat1Actions = $this->takeTurn($this->goat1, $this->goat1Location, $this->goat2, $this->goat2Location);
+            $goat2Actions = $this->takeTurn($this->goat2, $this->goat2Location, $this->goat1, $this->goat1Location);
 
             $roundActions = ['goat1' => $goat1Actions, 'goat2' => $goat2Actions];
             
@@ -73,7 +73,7 @@ class Battle
     /**
      *
      */
-    public function turn(
+    public function takeTurn(
         Goat $thisGoat,
         GoatLocation $thisGoatLocation,
         Goat $otherGoat,
@@ -81,7 +81,12 @@ class Battle
     ) {
         $goatActions = $this->getGoatActions($thisGoat, $otherGoatLocation);
         $realGoatActions = $this->authorizeActions($thisGoat, $goatActions, $thisGoatLocation, $otherGoatLocation);
-        $this->updateGoat($thisGoat, $goatActions);
+        foreach ($realGoatActions as $realAction) {
+            $newLocation = $this->updateGoat($thisGoat, $thisGoatLocation, $otherGoat, $otherGoatLocation, $realAction);
+            // $thisGoatLocation->x = $newLocation->x;
+            // $thisGoatLocation->y = $newLocation->y;
+            // $thisGoatLocation->direction = $newLocation->direction;
+        }
         return $realGoatActions;
     }
 
@@ -95,8 +100,8 @@ class Battle
 
         foreach ($goatActions as $action) {
             if (!$action instanceof Action) {
-                $this->log("Invalid action:");
-                $this->log($action);
+                Log::write('debug', "Invalid action:");
+                Log::write('debug', $action);
                 return $actions;
             }
 
@@ -158,45 +163,15 @@ class Battle
     /**
      *
      */
-    private function updateGoat($goat, $roundActions)
-    {
-        // $availableAction = $goat->speed();
-        $actions = [];
-
-        // $i = 0;
-        // $c = count($roundActions);
-        // while ($availableAction > 0 && $i < $c) {
-        foreach ($roundActions as $action) {
-            // $action = $roundActions[$i];
-            // $i++;
-
-            // // $reflect = new ReflectionClass($action); //@TODO
-            // if (!$action instanceof Action) {
-            //     throw new Exception('Invalid action!');
-            //     debug($action);
-            //     break;
-            // }
-
-            if ($action->cost() <= $availableAction) {
-                $action->endLocation = $this->applyAction($goat, $action);
-                $availableAction -= $action->cost();
-                $actions[] = $action;
-            } else {
-                if ($action->isAdvance()) {
-                    $action->measure = $availableAction;
-                    $action->endLocation = $this->applyAction($goat, $action);
-                    $actions[] = $action;
-                }
-                if ($action->isTurn()) {
-                    $action->measure = ($action->measure > 0) ? $availableAction : $availableAction * -1;
-                    $action->endLocation = $this->applyAction($goat, $action);
-                    $actions[] = $action;
-                }
-                // ramming but no action left
-                $availableAction = 0;
-            }
-        }
-        return $actions;
+    public function updateGoat(
+        Goat $thisGoat,
+        GoatLocation $thisGoatLocation,
+        Goat $otherGoat,
+        GoatLocation $otherGoatLocation,
+        Action $action
+    ) {
+        $newLocation = $action->apply($thisGoat, $thisGoatLocation, $otherGoat, $otherGoatLocation);
+        return $newLocation;
     }
 
     // /**
@@ -235,6 +210,7 @@ class Battle
      */
     public function printTranscript()
     {
+        // debug($this->battleTranscript);exit;
         echo "The battle begins!\n\n";
 
         echo '=Round: 0=' . "\n";
@@ -259,12 +235,14 @@ class Battle
      */
     private function describeActionRound($actions)
     {
+        if (empty($actions)) {
+            return 'Nothing';
+        }
         $statement = '';
         foreach ($actions as $action) {
             $statement .= $action->describe() . ' ';
         }
-
-        $statement .= $actions[count($actions) - 1]->endLocation->describe();
+        $statement .= end($actions)->endLocation->describe();
 
         return $statement;
     }

@@ -3,6 +3,7 @@ namespace App\GoatBattle;
 
 use App\GoatBattle\Action;
 use App\GoatBattle\Goat;
+use APP\GoatBattle\Quicky;
 
 class Quicky extends Goat
 {
@@ -73,20 +74,20 @@ class Quicky extends Goat
         if ($north) {
             $actions[] = $this->turnTo(4);
             $a = new Action($this);
-            $a->advance($this->location->y - $opponentLocation->y - 1);
+            $a->move($this->location->y - $opponentLocation->y - 1);
             $actions[] = $a;
         } elseif ($east) {
             $actions[] = $this->turnTo(2);
             $a = new Action($this);
-            $actions[] = $a->advance($this->location->x - $opponentLocation->x - 1);
+            $actions[] = $a->move($this->location->x - $opponentLocation->x - 1);
         } elseif ($south) {
             $actions[] = $this->turnTo(0);
             $a = new Action($this);
-            $actions[] = $a->advance($opponentLocation->y - $this->location->y - 1);
+            $actions[] = $a->move($opponentLocation->y - $this->location->y - 1);
         } elseif ($west) {
             $actions[] = $this->turnTo(6);
             $a = new Action($this);
-            $actions[] = $a->advance($opponentLocation->x - $this->location->x - 1);
+            $actions[] = $a->move($opponentLocation->x - $this->location->x - 1);
         }
 
         return $actions;

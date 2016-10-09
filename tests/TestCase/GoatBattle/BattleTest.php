@@ -161,4 +161,38 @@ class BattleTest extends TestCase
         $this->assertEquals(1, $realActions[1]->measure);
         $this->assertTrue($realActions[1]->isTurn());
     }
+
+    /**
+     *
+     */
+    public function testTakeTurn()
+    {
+        $goat1Location = new GoatLocation('RED');
+        $goat1 = new Stilly($goat1Location); //speed = 4, toughness = 8
+        $goat2Location = new GoatLocation('BLUE');
+        $goat2 = new Stilly($goat2Location);
+        $battle = new Battle($goat1, $goat2);
+
+        $return = $battle->takeTurn(
+            $battle->goat1,
+            $battle->goat1Location,
+            $battle->goat2,
+            $battle->goat2Location
+        );
+        $this->assertTrue(is_array($return));
+        $this->assertInstanceOf(Action::class, $return[0]);
+        $this->assertEquals(-49, $battle->goat1Location->x);
+        $this->assertEquals(49, $battle->goat1Location->y);
+
+        $return = $battle->takeTurn(
+            $battle->goat2,
+            $battle->goat2Location,
+            $battle->goat1,
+            $battle->goat1Location
+        );
+        $this->assertTrue(is_array($return));
+        $this->assertInstanceOf(Action::class, $return[0]);
+        $this->assertEquals(49, $battle->goat2Location->x);
+        $this->assertEquals(-49, $battle->goat2Location->y);
+    }
 }
