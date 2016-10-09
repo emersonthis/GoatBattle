@@ -26,7 +26,7 @@ class Stilly extends Goat
         return 8;
     }
 
-    public function action(GoatLocation $opponentLocation)
+    public function action(GoatLocation $myLocation, GoatLocation $opponentLocation)
     {
         $actions = [];
         if (!$this->isAtCenter()) {

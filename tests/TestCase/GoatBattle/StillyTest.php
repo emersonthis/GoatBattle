@@ -17,14 +17,14 @@ class StillyTest extends TestCase
         $location = new GoatLocation('BLUE');
         $anotherLocation = new GoatLocation('RED');
         $stilly = new Stilly($location);
-        $actions = $stilly->action($anotherLocation);
+        $actions = $stilly->action($location, $anotherLocation);
         $this->assertInstanceOf(Action::class, $actions[0]);
 
         $location = new GoatLocation();
         $location->x = 0;
         $location->y = 0;
         $stilly = new Stilly($location);
-        $actions = $stilly->action($anotherLocation);
+        $actions = $stilly->action($location, $anotherLocation);
         $this->assertEmpty($actions);
     }
 }

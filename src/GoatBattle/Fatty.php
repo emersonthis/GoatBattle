@@ -26,7 +26,7 @@ class Fatty extends Goat
         return 10;
     }
 
-    public function action(GoatLocation $opponentLocation)
+    public function action(GoatLocation $myLocation, GoatLocation $opponentLocation)
     {
     }
 

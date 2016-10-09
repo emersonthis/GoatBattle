@@ -1,5 +1,7 @@
 <?php
 namespace App\Test\TestCase\GoatBattle;
+// namespace App\GoatBattle;
+use App\GoatBattle\GoatLocation;
 
 use App\GoatBattle\Goat;
 
@@ -22,7 +24,7 @@ class Faily1 extends Goat
         return 18;
     }
 
-    public function action(\App\GoatBattle\GoatLocation $opponentLocation)
+    public function action(GoatLocation $myLocation, GoatLocation $opponentLocation)
     {
         $actions = [];
         return $actions;
