@@ -7,8 +7,7 @@ class Action
     const MOVE = 1;
     const TURN = 2;
     const RAM = 3;
-
-    public $ramCost = 4;
+    const RAM_COST = 5;
 
     public $actionsMap = [
         1 => 'MOVE', // takes a distance value
@@ -43,7 +42,7 @@ class Action
                 break;
             case "RAM":
                 $this->type = 3;
-                $this->measure = $this->ramCost;
+                $this->measure = self::RAM_COST;
         }
     }
 
@@ -90,14 +89,14 @@ class Action
         return $this->actionsMap[$this->action];
     }
 
-    /**
-     *
-     */
-    public function move($distance)
-    {
-        $this->type = 1;
-        $this->measure = $distance;
-    }
+    // /**
+    //  *
+    //  */
+    // public function move($distance)
+    // {
+    //     $this->type = 1;
+    //     $this->measure = $distance;
+    // }
 
     /**
      * Turn
@@ -202,6 +201,7 @@ class Action
         $n = $this->measure;
         switch ($goatLocation->direction) {
             case 0:
+            case 360:
             case 'N':
                 $newLocation->y += $n;
                 break;
@@ -299,5 +299,33 @@ class Action
                 break;
         }
         return $string;
+    }
+
+    /**
+     * Validate direction
+     * @param int $direction 0-360
+     * @return bool true if valid false otherwise
+     */
+    public static function validateDirection($direction)
+    {
+        if (!is_int($direction)) {
+            return false;
+        }
+        switch ($direction) {
+            case 0:
+            case 360:
+            case 45:
+            case 90:
+            case 135:
+            case 180:
+            case 225:
+            case 270:
+            case 315:
+                $valid = true;
+                break;
+            default:
+                $valid = false;
+        }
+        return $valid;
     }
 }

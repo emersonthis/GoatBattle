@@ -11,16 +11,14 @@ class Quicky extends Goat
     // private $horns = 5;
     // private $toughness = 5;
 
-    protected function setName(){
-        return "Quicky";
-    }
+    protected function setName(){ return "Quicky"; }
     protected function setSpeed() { return 10; }
     protected function setHorns() { return 5; }
     protected function setToughness() { return 5; }
 
     public function action(GoatLocation $myLocation, GoatLocation $opponentLocation)
     {        
-        $actions1 = $this->turnToFaceAndAdvance($opponentLocation);
+        $actions1 = $this->turnToFaceAndAdvance($myLocation, $opponentLocation);
         // $actions2 = $this->turnToFaceAndAdvance($opponentLocation);
         // $action3 = (new Action($this))->ram();
 
@@ -28,24 +26,33 @@ class Quicky extends Goat
     }
 
     /**
-     *
+     * Turn to
+     * @param int $endDirection the direction to turn to
+     * @param GoatLocation $myLocation the current goat location
+     * @return Action
      */
-    private function turnTo($direction)
+    public function turnTo($endDirection, $myLocation)
     {
-        if ($this->location->direction() - $direction > 4) {
-            $a = new Action($this);
-            $a->turn(-1 * ($direction - $a->measure));
-            return $a;
+        if (!Action::validateDirection($endDirection)) {
+            debug("Invalid direction");
+            return $this->turn(0);
         }
-        $a = new Action($this);
-        $a->turn($this->location->direction() - $direction);
-        return $a;
+
+        $turnDegree = $endDirection - $myLocation->direction;
+
+        if (abs($turnDegree) > 180) {
+            $turnDegree = (360 - (-1 * $turnDegree));
+        }
+
+        $turnMeasure = $turnDegree / 45;
+        
+        return $this->turn($turnMeasure);
     }
 
     /**
      *
      */
-    private function turnToFaceAndAdvance(GoatLocation $opponentLocation)
+    public function turnToFaceAndAdvance(GoatLocation $myLocation, GoatLocation $opponentLocation)
     {
         $north = false;
         $east = false;
@@ -55,39 +62,34 @@ class Quicky extends Goat
         $actions = [];
 
         # we're east
-        if ($this->location->x > $opponentLocation->x) {
+        if ($myLocation->x > $opponentLocation->x) {
             $east = true;
         }
         # we're west
-        if ($this->location->x < $opponentLocation->x) {
+        if ($myLocation->x < $opponentLocation->x) {
             $west = true;
         }
         # we're south
-        if ($this->location->y < $opponentLocation->y) {
+        if ($myLocation->y < $opponentLocation->y) {
             $south = true;
         }
         # we're north
-        if ($this->location->y > $opponentLocation->y) {
+        if ($myLocation->y > $opponentLocation->y) {
             $north = true;
         }
 
         if ($north) {
-            $actions[] = $this->turnTo(4);
-            $a = new Action($this);
-            $a->move($this->location->y - $opponentLocation->y - 1);
-            $actions[] = $a;
+            $actions[] = $this->turnTo(180, $myLocation);
+            $actions[] = $this->move($myLocation->y - $opponentLocation->y - 1);
         } elseif ($east) {
-            $actions[] = $this->turnTo(2);
-            $a = new Action($this);
-            $actions[] = $a->move($this->location->x - $opponentLocation->x - 1);
+            $actions[] = $this->turnTo(270, $myLocation);
+            $actions[] = $this->move($myLocation->x - $opponentLocation->x - 1);
         } elseif ($south) {
-            $actions[] = $this->turnTo(0);
-            $a = new Action($this);
-            $actions[] = $a->move($opponentLocation->y - $this->location->y - 1);
+            $actions[] = $this->turnTo(0, $myLocation);
+            $actions[] = $this->move($opponentLocation->y - $myLocation->y - 1);
         } elseif ($west) {
-            $actions[] = $this->turnTo(6);
-            $a = new Action($this);
-            $actions[] = $a->move($opponentLocation->x - $this->location->x - 1);
+            $actions[] = $this->turnTo(90, $myLocation);
+            $actions[] = $this->move($opponentLocation->x - $myLocation->x - 1);
         }
 
         return $actions;

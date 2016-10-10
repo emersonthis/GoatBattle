@@ -110,4 +110,19 @@ class ActionTest extends TestCase
         $this->assertEquals(180, $endLocation->direction);
 
     }
+
+    public function testValidateDirection()
+    {
+        $true = Action::validateDirection(90);
+        $this->assertTrue($true);
+
+        $false = Action::validateDirection(95);
+        $this->assertFalse($false);
+
+        $false = Action::validateDirection(null);
+        $this->assertFalse($false);
+
+        $true = Action::validateDirection(360);
+        $this->assertTrue($true);
+    }
 }
