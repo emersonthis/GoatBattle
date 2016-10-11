@@ -5,10 +5,10 @@ use App\GoatBattle\GoatLocation;
 
 abstract class Goat
 {
-    private $name;
-    private $speed;
-    private $horns;
-    private $toughness;
+    public $name;
+    public $speed = 2;
+    public $horns = 2;
+    public $toughness = 2;
     public $location;
     public $color;
 
@@ -17,17 +17,17 @@ abstract class Goat
      */
     final public function __construct(GoatLocation $location = null)
     {
-        $this->name = $this->setName();
-        $this->speed = $this->setSpeed();
-        $this->horns = $this->setHorns();
-        $this->toughness = $this->setToughness();
+        // $this->name = $this->setName();
+        // $this->speed = $this->setSpeed();
+        // $this->horns = $this->setHorns();
+        // $this->toughness = $this->setToughness();
         $this->location = ($location) ? $location : new GoatLocation();
     }
 
-    abstract protected function setName();
-    abstract protected function setSpeed();
-    abstract protected function setHorns();
-    abstract protected function setToughness();
+    // abstract protected function setName();
+    // abstract protected function setSpeed();
+    // abstract protected function setHorns();
+    // abstract protected function setToughness();
 
     public function name()
     {

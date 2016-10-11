@@ -80,7 +80,9 @@ class Battle
         GoatLocation $otherGoatLocation
     ) {
         $goatActions = $this->getGoatActions($thisGoat, $thisGoatLocation, $otherGoatLocation);
+        // debug($goatActions);
         $realGoatActions = $this->authorizeActions($thisGoat, $goatActions, $thisGoatLocation, $otherGoatLocation);
+        // debug($realGoatActions);
         foreach ($realGoatActions as $realAction) {
             $newLocation = $this->updateGoat($thisGoat, $thisGoatLocation, $otherGoat, $otherGoatLocation, $realAction);
             // $thisGoatLocation->x = $newLocation->x;
@@ -91,12 +93,13 @@ class Battle
     }
 
     /**
-     *
+     * //@TODO LIMIT NUMBER OF ACTIONS TO THE MAX POSSIBLE SPEED
      */
-    public function authorizeActions(Goat $goat, $goatActions, $goatLocation, $otherGoatLocation)
+    public function authorizeActions(Goat $goat, $goatActions, GoatLocation $goatLocation, GoatLocation $otherGoatLocation)
     {
         $actions = [];
-        $availableAction = $goat->speed();
+        $availableAction = $goat->speed;
+        // debug($availableAction);
 
         foreach ($goatActions as $action) {
             if (!$action instanceof Action) {
@@ -105,25 +108,50 @@ class Battle
                 return $actions;
             }
 
+            # actinos that are under budget we pass through
             if ($action->cost() <= $availableAction) {
                 $actions[] = $action;
                 $availableAction -= $action->cost();
+            # actions that are over budget we try to trim
             } else {
                 if ($action->isMove()) {
                     $action->measure = $availableAction;
                     $actions[] = $action;
                 }
                 if ($action->isTurn()) {
-                    $action->measure = ($action->measure > 0) ? $availableAction : $availableAction * -1;
-                    $actions[] = $action;
+                    $actions[] = $this->trimTurn($action, $availableAction);
                 }
                 // ramming but no action left
                 $availableAction = 0;
+                break;
             }
 
         }
 
         return $actions;
+    }
+
+    /**
+     * Trim Turn
+     * @param Action $action the action to trim
+     * @param int $trimTo the value to trim to
+     * @return Action
+     */
+    public function trimTurn($action, $trimTo)
+    {
+        if (!$action->isTurn()) {
+            throw new Exception('Non-turn action passed');
+        }
+        if ($trimTo < 0) {
+            throw new Exception('Second param cannot be negative');
+        }
+        if ($action->measure > 0) {
+            $action->measure = $trimTo;
+        }
+        if ($action->measure < 0) {
+            $action->measure = $trimTo * -1;
+        }
+        return $action;
     }
 
     /**
@@ -213,19 +241,23 @@ class Battle
         // debug($this->battleTranscript);exit;
         echo "The battle begins!\n\n";
 
-        echo '=Round: 0=' . "\n";
-        echo 'GOAT1: Starts ' . $this->goat1StartLocation->describe() . "\n";
-        echo 'GOAT2: Starts ' . $this->goat2StartLocation->describe() . "\n";
-        echo "\n";
+        // echo '=Round: 0=' . "\n";
+        // echo 'GOAT1: Starts ' . $this->goat1StartLocation->describe() . "\n";
+        // echo 'GOAT2: Starts ' . $this->goat2StartLocation->describe() . "\n";
+        // echo "\n";
 
-        foreach ($this->battleTranscript as $line) {
-            echo '=Round: ' . $line['round'] . "=\n";
-            echo 'GOAT1: ' . $this->describeActionRound($line['actions']['goat1']) . "\n";
-            echo 'GOAT2: ' . $this->describeActionRound($line['actions']['goat2']) . "\n";
-            echo "\n\n";
-        }
+        // foreach ($this->battleTranscript as $line) {
+        //     echo '=Round: ' . $line['round'] . "=\n";
+        //     echo 'GOAT1: ' . $this->describeActionRound($line['actions']['goat1']) . "\n";
+        //     echo 'GOAT2: ' . $this->describeActionRound($line['actions']['goat2']) . "\n";
+        //     echo "\n\n";
+        // }
 
-        echo $this->outcomesMap[$this->outcome] . "\n";
+        // echo $this->outcomesMap[$this->outcome] . "\n";
+
+        debug($this->goat1StartLocation);
+        debug($this->goat2StartLocation);
+        debug($this->battleTranscript);
 
         echo "The End.\n\n";
     }

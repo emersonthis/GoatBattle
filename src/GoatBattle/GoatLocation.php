@@ -32,25 +32,16 @@ class GoatLocation
         }
     }
 
-    public function direction()
+    public function describe()
     {
-        return $this->direction;
+        return "@ {$this->x},{$this->y} facing {$this->facing()}";
     }
 
-    public function x()
-    {
-        return $this->x;
-    }
-
-    public function y()
-    {
-        return $this->y;
-    }
-    public function faceingMe()
-    {
-
-    }
-
+    /**
+     * Facing
+     * Returns the spoken description of the numeric heading
+     * @return str
+     */
     public function facing()
     {
         $string;
@@ -85,10 +76,5 @@ class GoatLocation
                 throw new \Exception('Unrecognized direction');
         }
         return $string;
-    }
-
-    public function describe()
-    {
-        return "@ {$this->x},{$this->y} facing {$this->facing()}";
     }
 }

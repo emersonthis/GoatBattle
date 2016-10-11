@@ -92,37 +92,6 @@ class Action
     // /**
     //  *
     //  */
-    // public function move($distance)
-    // {
-    //     $this->type = 1;
-    //     $this->measure = $distance;
-    // }
-
-    /**
-     * Turn
-     * @param int $direction 1-6
-     * 1 = 45 right
-     * 2 = 90 right
-     * 3 = 135 right
-     * 4 = 180 right
-     * 5 = 225 right
-     * 6 = 270 right
-     * -1 = 45 left
-     * -2 = 90 left
-     * -3 = 135 left
-     * -4 = 180 left
-     * -5 = 225 left
-     * -6 = 270 left
-     */
-    public function turn($direction)
-    {
-        $this->type = 2;
-        $this->measure = $direction;
-    }
-
-    // /**
-    //  *
-    //  */
     // public function result($activeGoat, $activeGoatLocation, $otherGoat, $otherGoatLocation)
     // {
     //     $result;

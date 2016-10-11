@@ -4,8 +4,9 @@ namespace App\Test\TestCase\GoatBattle;
 
 use App\GoatBattle\Goat;
 use App\GoatBattle\GoatLocation;
+use App\GoatBattle\Quicky;
 use App\GoatBattle\Stilly;
-use App\Test\TestCase\GoatBattle\Faily;
+use App\Test\TestCase\GoatBattle\Faily1;
 use Cake\TestSuite\Fixture\PhpFixture;
 use Cake\TestSuite\TestCase;
 

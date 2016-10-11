@@ -13,6 +13,15 @@ use Cake\TestSuite\TestCase;
 
 class QuickyTest extends TestCase
 {
+
+    public function testConstruct()
+    {
+        $quicky = new Quicky();
+        $this->assertEquals(10, $quicky->speed = 10);
+        $this->assertEquals(5, $quicky->horns = 5);
+        $this->assertEquals(5, $quicky->toughness = 5);
+    }
+
     public function testAction()
     {
         $location = new GoatLocation('RED');

@@ -11,10 +11,10 @@ class Quicky extends Goat
     // private $horns = 5;
     // private $toughness = 5;
 
-    protected function setName(){ return "Quicky"; }
-    protected function setSpeed() { return 10; }
-    protected function setHorns() { return 5; }
-    protected function setToughness() { return 5; }
+    public $name = "Quicky";
+    public $speed = 10;
+    public $horns = 5;
+    public $thoughness = 5;
 
     public function action(GoatLocation $myLocation, GoatLocation $opponentLocation)
     {        

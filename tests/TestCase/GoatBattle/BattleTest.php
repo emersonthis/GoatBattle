@@ -6,6 +6,7 @@ use App\GoatBattle\Action;
 use App\GoatBattle\Battle;
 use App\GoatBattle\Goat;
 use App\GoatBattle\GoatLocation;
+use App\GoatBattle\Quicky;
 use App\GoatBattle\Stilly;
 use App\Test\TestCase\GoatBattle\Faily1;
 use Cake\TestSuite\Fixture\PhpFixture;
@@ -143,14 +144,14 @@ class BattleTest extends TestCase
 
     public function testAthorizeActions()
     {
-        $goat1 = new Stilly(); //speed = 4, toughness = 8
+        $goat1 = new Quicky(); //speed = 10, toughness = 5
         $goat1Location = new GoatLocation('RED');
         $goat2 = new Stilly();
         $goat2Location = new GoatLocation('BLUE');
         $battle = new Battle($goat1, $goat2);
         
         $action1 = new Action('MOVE', 3);
-        $action2 = new Action('TURN', 5);
+        $action2 = new Action('TURN', 15);
         $goatActions = [$action1, $action2];
         $realActions = $battle->authorizeActions($goat1, $goatActions, $goat1Location, $goat2Location);
 
@@ -158,7 +159,7 @@ class BattleTest extends TestCase
         $this->assertEquals(3, $realActions[0]->measure);
         $this->assertTrue($realActions[0]->isMove());
         $this->assertInstanceOf(Action::class, $realActions[1]);
-        $this->assertEquals(1, $realActions[1]->measure);
+        $this->assertEquals(7, $realActions[1]->measure);
         $this->assertTrue($realActions[1]->isTurn());
     }
 
@@ -194,5 +195,30 @@ class BattleTest extends TestCase
         $this->assertInstanceOf(Action::class, $return[0]);
         $this->assertEquals(49, $battle->goat2Location->x);
         $this->assertEquals(-49, $battle->goat2Location->y);
+    }
+
+    public function testTrimTurn()
+    {
+        $goat1Location = new GoatLocation('RED');
+        $goat1 = new Stilly($goat1Location); //speed = 4, toughness = 8
+        $goat2Location = new GoatLocation('BLUE');
+        $goat2 = new Stilly($goat2Location);
+        $battle = new Battle($goat1, $goat2);
+
+        $action = $goat1->turn(8);
+        $battle->trimTurn($action, 2);
+        $this->assertEquals(2, $action->measure);
+
+        $action = $goat1->turn(-8);
+        $battle->trimTurn($action, 2);
+        $this->assertEquals(-2, $action->measure);
+
+        $action = $goat1->turn(80);
+        $battle->trimTurn($action, 1);
+        $this->assertEquals(1, $action->measure);
+
+        $action = $goat1->turn(0);
+        $battle->trimTurn($action, 1);
+        $this->assertEquals(0, $action->measure);
     }
 }
