@@ -5,7 +5,7 @@ use App\GoatBattle\GoatLocation;
 
 abstract class Goat
 {
-    public $name;
+    protected $name;
     public $speed = 2;
     public $horns = 2;
     public $toughness = 2;

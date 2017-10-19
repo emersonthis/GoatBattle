@@ -9,6 +9,8 @@ class Stilly extends Goat
     // private $horns = 8;
     // private $toughness = 8;
 
+    public $name = "Stilly";
+
     protected function setName()
     {
         return "Stilly";

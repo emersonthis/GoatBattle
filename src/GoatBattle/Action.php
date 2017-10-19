@@ -56,7 +56,7 @@ class Action
         }
 
         if ($this->type === self::RAM) {
-            return 5;
+            return RAM_COST;
         }
 
         if ($this->type === self::MOVE) {
@@ -144,17 +144,15 @@ class Action
         return $endLocation;
     }
 
+    /**
+     *
+     */
     private function turnGoat(GoatLocation $goatLocation)
     {
         $oldDirection = $goatLocation->direction;
         $newDirection = 45 * $this->measure;
         $newDirection = ($oldDirection + $newDirection) % 360;
         $newDirection = ($newDirection > 0) ? $newDirection : (360 + $newDirection);
-
-        // $newLocation = new GoatLocation();
-        // $newLocation->x = $goatLocation->x;
-        // $newLocation->y = $goatLocation->y;
-        // $newLocation->direction = $newDirection;
 
         $goatLocation->direction = $newDirection;
 
@@ -164,6 +162,7 @@ class Action
     /**
      *
      */
+    //@TODO Prevent goats from standing on top of one another!
     private function moveGoat(GoatLocation $goatLocation)
     {
         $newLocation = clone $goatLocation;
@@ -173,58 +172,73 @@ class Action
             case 360:
             case 'N':
                 $newLocation->y += $n;
+                // can't go out of bounds
+                $newLocation->y = ($newLocation->y > 50) ? 50 : $newLocation->y;
                 break;
 
             case 45:
             case 'NW':
                 $newLocation->y += $n;
                 $newLocation->x += $n;
+                //can't go out of bounds
+                $newLocation->y = ($newLocation->y > 50) ? 50 : $newLocation->y;
+                $newLocation->x = ($newLocation->x > 50) ? 50 : $newLocation->x;
                 break;
             case 90:
             case 'E':
                 $newLocation->x += $n;
+                $newLocation->x = ($newLocation->x > 50) ? 50 : $newLocation->x;
                 break;
 
             case 135:
             case 'SE':
                 $newLocation->x += $n;
                 $newLocation->y -= $n;
+                $newLocation->y = ($newLocation->y < -50) ? -50 : $newLocation->y;
+                $newLocation->x = ($newLocation->x > 50) ? 50 : $newLocation->x;
                 break;
 
             case 180:
             case 'S':
                 $newLocation->y -= $n;
+                $newLocation->y = ($newLocation->y < -50) ? -50 : $newLocation->y;
+
                 break;
 
             case 225:
             case 'SW':
                 $newLocation->y -= $n;
                 $newLocation->x -= $n;
+                $newLocation->y = ($newLocation->y < -50) ? -50 : $newLocation->y;
+                $newLocation->x = ($newLocation->x < -50) ? -50 : $newLocation->x;
                 break;
 
             case 270:
             case 'W':
                 $newLocation->x -= $n;
+                $newLocation->x = ($newLocation->x < -50) ? -50 : $newLocation->x;
                 break;
 
             case 315:
             case 'NW':
                 $newLocation->y += $n;
                 $newLocation->x -= $n;
+                $newLocation->y = ($newLocation->y > 50) ? 50 : $newLocation->y;
+                $newLocation->x = ($newLocation->x < -50) ? -50 : $newLocation->x;
                 break;
         }
         $goatLocation->x = $newLocation->x;
         $goatLocation->y = $newLocation->y;
-        return $goatLocation;
+        return $newLocation;
     }
 
-    /**
-     *
-     */
-    public function ram()
-    {
-        $this->type = 3;
-    }
+    // /**
+    //  *
+    //  */
+    // public function ram()
+    // {
+    //     $this->type = 3;
+    // }
 
     /**
      *

@@ -63,9 +63,17 @@ class Battle
             $goat1Actions = $this->takeTurn($this->goat1, $this->goat1Location, $this->goat2, $this->goat2Location);
             $goat2Actions = $this->takeTurn($this->goat2, $this->goat2Location, $this->goat1, $this->goat1Location);
 
-            $roundActions = ['goat1' => $goat1Actions, 'goat2' => $goat2Actions];
+            $roundActions = [
+                'goat1' => $goat1Actions,
+                'goat2' => $goat2Actions
+            ];
             
-            $this->battleTranscript[] = ['round' => $this->roundCount, 'actions' => $roundActions];
+            $this->battleTranscript[] = [
+                'round' => $this->roundCount,
+                'actions' => $roundActions,
+                'goat1EndingLocation' => clone $this->goat1Location,
+                'goat2EndingLocation' => clone $this->goat2Location,
+            ];
         }
         $this->determineOutcome();
     }
@@ -88,6 +96,7 @@ class Battle
             // $thisGoatLocation->x = $newLocation->x;
             // $thisGoatLocation->y = $newLocation->y;
             // $thisGoatLocation->direction = $newLocation->direction;
+            // debug($newLocation);exit;
         }
         return $realGoatActions;
     }
@@ -199,6 +208,7 @@ class Battle
         Action $action
     ) {
         $newLocation = $action->apply($thisGoat, $thisGoatLocation, $otherGoat, $otherGoatLocation);
+        // $thisGoatLocation = $newLocation;
         return $newLocation;
     }
 
@@ -255,9 +265,30 @@ class Battle
 
         // echo $this->outcomesMap[$this->outcome] . "\n";
 
-        debug($this->goat1StartLocation);
-        debug($this->goat2StartLocation);
-        debug($this->battleTranscript);
+        // debug($this->goat1StartLocation);
+        // debug($this->goat2StartLocation);
+        // debug($this->battleTranscript);
+
+        // debug($this->goat2);
+
+        foreach ($this->battleTranscript as $round) {
+            echo "In round {$round['round']}...\n";
+
+            echo "{$this->goat1->name()} ";
+            foreach ($round['actions']['goat1'] as $action) {
+                echo $action->describe() . ", ";
+            }
+            echo "...ending at {$round['goat1EndingLocation']->x},{$round['goat1EndingLocation']->y} facing {$round[
+                'goat1EndingLocation']->facing()}\n";
+
+            echo "{$this->goat2->name()} ";
+            foreach ($round['actions']['goat2'] as $action) {
+                echo $action->describe() . ", ";
+            }
+            echo "...ending at {$round['goat2EndingLocation']->x},{$round['goat2EndingLocation']->y} facing {$round[
+                'goat2EndingLocation']->facing()}\n\n";
+
+        }
 
         echo "The End.\n\n";
     }
