@@ -35,7 +35,7 @@ class QuickyTest extends TestCase
         $this->assertEquals($actions[0]->measure, 1);
         $this->assertInstanceOf(Action::class, $actions[1]);
         $this->assertTrue($actions[1]->isMove());
-        $this->assertEquals($actions[1]->measure, 99);
+        $this->assertEquals($actions[1]->measure, 100);
     }
 
     public function testTurnTo()

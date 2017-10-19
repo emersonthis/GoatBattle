@@ -89,35 +89,6 @@ class Action
         return $this->actionsMap[$this->action];
     }
 
-    // /**
-    //  *
-    //  */
-    // public function result($activeGoat, $activeGoatLocation, $otherGoat, $otherGoatLocation)
-    // {
-    //     $result;
-    //     switch ($this->type) {
-    //         case self::MOVE:
-    //             $result = [
-    //                 'activeGoat' => $activeGoat,
-    //                 'activeGoatLocation' => $this->moveGoat($activeGoatLocation),
-    //                 'otherGoat' => $otherGoat,
-    //                 'otherGoatLocation' => $otherGoatLocation
-    //             ];
-    //             break;
-
-    //         //@TODO This does nothing now
-    //         case self::TURN:
-    //             $result = [
-    //                 'activeGoat' => $activeGoat,
-    //                 'activeGoatLocation' => $activeGoatLocation,
-    //                 'otherGoat' => $otherGoat,
-    //                 'otherGoatLocation' => $otherGoatLocation
-    //             ];
-    //             break;
-    //     }
-    //     return $result;
-    // }
-
     /**
      *
      */
