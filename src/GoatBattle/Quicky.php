@@ -14,14 +14,12 @@ class Quicky extends Goat
     protected $name = "Quicky";
     public $speed = 10;
     public $horns = 5;
-    public $thoughness = 5;
+    public $toughness = 5;
 
     public function action(GoatLocation $myLocation, GoatLocation $opponentLocation)
     {
         $actions1 = $this->turnToFaceAndAdvance($myLocation, $opponentLocation);
-        // $actions2 = $this->turnToFaceAndAdvance($opponentLocation);
-        // $action3 = (new Action($this))->ram();
-
+        $actions1[] = $this->ram();
         return $actions1; // + $actions2 + [$action3];
     }
 
@@ -78,7 +76,6 @@ class Quicky extends Goat
             $north = true;
         }
 
-        //@TODO This will eventually try to stand on the same sapce
         if ($north) {
             $actions[] = $this->turnTo(180, $myLocation);
             $actions[] = $this->move($myLocation->y - $opponentLocation->y);

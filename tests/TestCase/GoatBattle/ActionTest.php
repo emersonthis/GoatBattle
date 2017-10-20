@@ -251,7 +251,75 @@ class ActionTest extends TestCase
         $this->assertEquals(-49, $endLocation->x);
     }
 
+    public function testRamGoat()
+    {
+        // East
+        $redLocation = new GoatLocation();
+        $redLocation->x = 45;
+        $redLocation->y = 45;
+        $redLocation->direction = 90;
+        $redGoat = new Quicky($redLocation);
+        $blueLocation = new GoatLocation();
+        $blueLocation->x = 46;
+        $blueLocation->y = 45;
+        $blueLocation->direction = 270;
+        $blueGoat = new Quicky($blueLocation);
+        $action = new Action('RAM');
+        $endLocation = $action->apply($redGoat, $redLocation, $blueGoat, $blueLocation);
+        $this->assertEquals(45, $endLocation->x);
+        $this->assertEquals(45, $endLocation->y);
+        $this->assertEquals(0, $blueGoat->toughness);
 
+        // SE
+        $redLocation->direction = 135;
+        $blueLocation->x = 46;
+        $blueLocation->y = 44;
+        $endLocation = $action->apply($redGoat, $redLocation, $blueGoat, $blueLocation);
+        $this->assertEquals(0, $blueGoat->toughness);
+
+        // S
+        $redLocation->direction = 180;
+        $blueLocation->x = 45;
+        $blueLocation->y = 44;
+        $endLocation = $action->apply($redGoat, $redLocation, $blueGoat, $blueLocation);
+        $this->assertEquals(0, $blueGoat->toughness);
+
+        // SW
+        $redLocation->direction = 225;
+        $blueLocation->x = 44;
+        $blueLocation->y = 44;
+        $endLocation = $action->apply($redGoat, $redLocation, $blueGoat, $blueLocation);
+        $this->assertEquals(0, $blueGoat->toughness);
+
+        // W
+        $redLocation->direction = 270;
+        $blueLocation->x = 44;
+        $blueLocation->y = 45;
+        $endLocation = $action->apply($redGoat, $redLocation, $blueGoat, $blueLocation);
+        $this->assertEquals(0, $blueGoat->toughness);
+
+        // NW
+        $redLocation->direction = 315;
+        $blueLocation->x = 44;
+        $blueLocation->y = 46;
+        $endLocation = $action->apply($redGoat, $redLocation, $blueGoat, $blueLocation);
+        $this->assertEquals(0, $blueGoat->toughness);
+
+        // N
+        $redLocation->direction = 0;
+        $blueLocation->x = 45;
+        $blueLocation->y = 46;
+        $endLocation = $action->apply($redGoat, $redLocation, $blueGoat, $blueLocation);
+        $this->assertEquals(0, $blueGoat->toughness);
+
+        // NE
+        $redLocation->direction = 45;
+        $blueLocation->x = 46;
+        $blueLocation->y = 46;
+        $blueGoat->toughness = 6;
+        $endLocation = $action->apply($redGoat, $redLocation, $blueGoat, $blueLocation);
+        $this->assertEquals(1, $blueGoat->toughness);
+    }
 
     public function testValidateDirection()
     {

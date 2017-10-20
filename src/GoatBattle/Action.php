@@ -56,7 +56,7 @@ class Action
         }
 
         if ($this->type === self::RAM) {
-            return RAM_COST;
+            return self::RAM_COST;
         }
 
         if ($this->type === self::MOVE) {
@@ -90,7 +90,12 @@ class Action
     }
 
     /**
-     *
+     * Apply the action
+     * @param Goat $thisGoat the goat doing the action
+     * @param GoatLocation $thisGoatLocation the location of this goat
+     * @param Goat $otherGoat the other goat
+     * @param GoatLocation $otherGoatLocation the other goat's location
+     * @return GoatLocation
      */
     public function apply(
         Goat $thisGoat,
@@ -107,12 +112,116 @@ class Action
             $endLocation = $this->turnGoat($thisGoatLocation);
         }
         if ($this->isRam($this)) {
-            //@TODO
+            $endLocation = $thisGoatLocation;
+            $this->ramGoat($thisGoat, $thisGoatLocation, $otherGoat, $otherGoatLocation);
         }
 
         $this->endLocation = $endLocation;
 
         return $endLocation;
+    }
+
+    /**
+     * Make a goat ram
+     * @param Goat $thisGoat the goat doing the ramming
+     * @param GoatLocation $thisGoatLocation the location of the ramming goat
+     * @param Goat $otherGoat the goat being rammed
+     * @param GoatLocation $otherGoatLocation the location of the other goat
+     */
+    private function ramGoat(
+        Goat $thisGoat,
+        GoatLocation $thisGoatLocation,
+        Goat $otherGoat,
+        GoatLocation $otherGoatLocation
+    ) {
+        if ($this->isOtherGoatRammable($thisGoatLocation, $otherGoatLocation)) {
+            $otherGoat->toughness = $otherGoat->toughness - $thisGoat->horns;
+        }
+    }
+
+    /**
+     * Return true or false if the other goat is in position for ramming
+     * @param GoatLocation $rammingGoatLocation the location of the ramming goat
+     * @param GoatLocation $otherGoatLocation the location of the goat to be rammed
+     * @return bool
+     */
+    private function isOtherGoatRammable($rammingGoatLocation, $otherGoatLocation)
+    {
+        switch ($rammingGoatLocation->direction) {
+            case 0:
+            case 360:
+                if ($rammingGoatLocation->x != $otherGoatLocation->x) {
+                    return false;
+                }
+                if ($rammingGoatLocation->y != ($otherGoatLocation->y + 1)) {
+                    return false;
+                }
+                break;
+
+            case 45:
+                if ($rammingGoatLocation->x != ($otherGoatLocation->x - 1)) {
+                    return false;
+                }
+                if ($rammingGoatLocation->y != ($otherGoatLocation->y - 1)) {
+                    return false;
+                }
+                break;
+
+            case 90:
+                if ($rammingGoatLocation->x != ($otherGoatLocation->x - 1)) {
+                    return false;
+                }
+                if ($rammingGoatLocation->y != $otherGoatLocation->y) {
+                    return false;
+                }
+                break;
+
+            case 135:
+                if ($rammingGoatLocation->x != ($otherGoatLocation->x + 1)) {
+                    return false;
+                }
+                if ($rammingGoatLocation->y != ($otherGoatLocation->y - 1)) {
+                    return false;
+                }
+                break;
+
+            case 180:
+                if ($rammingGoatLocation->x != $otherGoatLocation->x) {
+                    return false;
+                }
+                if ($rammingGoatLocation->y != ($otherGoatLocation->y - 1)) {
+                    return false;
+                }
+                break;
+
+            case 225:
+                if ($rammingGoatLocation->x != ($otherGoatLocation->x - 1)) {
+                    return false;
+                }
+                if ($rammingGoatLocation->y != ($otherGoatLocation->y - 1)) {
+                    return false;
+                }
+                break;
+
+            case 270:
+                if ($rammingGoatLocation->x != $otherGoatLocation->x - 1) {
+                    return false;
+                }
+                if ($rammingGoatLocation->y != ($otherGoatLocation->y)) {
+                    return false;
+                }
+                break;
+
+            case 315:
+                if ($rammingGoatLocation->x != ($otherGoatLocation->x - 1)) {
+                    return false;
+                }
+                if ($rammingGoatLocation->y != ($otherGoatLocation->y + 1)) {
+                    return false;
+                }
+                break;
+        }
+        return true;
     }
 
     /**
