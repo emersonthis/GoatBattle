@@ -126,7 +126,132 @@ class ActionTest extends TestCase
         $this->assertEquals(180, $endLocation2->direction);
         $this->assertEquals(41, $endLocation2->y);
         $this->assertEquals(-50, $endLocation2->x);
+
+
+        // Test for "ghosting northward"
+        $redLocation = new GoatLocation();
+        $redLocation->x = 50;
+        $redLocation->y = -50;
+        $redLocation->direction = 0;
+        $redGoat = new Stilly($redLocation);
+        $blueLocation = new GoatLocation();
+        $blueLocation->x = 50;
+        $blueLocation->y = -49;
+        $blueLocation->direction = 270;
+        $blueGoat = new Stilly($blueLocation);
+        $action = new Action('MOVE', 2);
+        $endLocation = $action->apply($redGoat, $redLocation, $blueGoat, $blueLocation);
+        $this->assertEquals(-50, $endLocation->y);
+
+        // Test for "ghosting" northeast
+        $redLocation = new GoatLocation();
+        $redLocation->x = 47;
+        $redLocation->y = 47;
+        $redLocation->direction = 45;
+        $redGoat = new Stilly($redLocation);
+        $blueLocation = new GoatLocation();
+        $blueLocation->x = 50;
+        $blueLocation->y = 50;
+        $blueLocation->direction = 270;
+        $blueGoat = new Stilly($blueLocation);
+        $action = new Action('MOVE', 8);
+        $endLocation = $action->apply($redGoat, $redLocation, $blueGoat, $blueLocation);
+        $this->assertEquals(49, $endLocation->y);
+
+        // Test for "ghosting" east
+        $redLocation = new GoatLocation();
+        $redLocation->x = 45;
+        $redLocation->y = 50;
+        $redLocation->direction = 90;
+        $redGoat = new Stilly($redLocation);
+        $blueLocation = new GoatLocation();
+        $blueLocation->x = 50;
+        $blueLocation->y = 50;
+        $blueLocation->direction = 270;
+        $blueGoat = new Stilly($blueLocation);
+        $action = new Action('MOVE', 8);
+        $endLocation = $action->apply($redGoat, $redLocation, $blueGoat, $blueLocation);
+        $this->assertEquals(49, $endLocation->x);
+
+        // Test for "ghosting" southeast
+        $redLocation = new GoatLocation();
+        $redLocation->x = 45;
+        $redLocation->y = -45;
+        $redLocation->direction = 135;
+        $redGoat = new Stilly($redLocation);
+        $blueLocation = new GoatLocation();
+        $blueLocation->x = 50;
+        $blueLocation->y = -50;
+        $blueLocation->direction = 270;
+        $blueGoat = new Stilly($blueLocation);
+        $action = new Action('MOVE', 8);
+        $endLocation = $action->apply($redGoat, $redLocation, $blueGoat, $blueLocation);
+        $this->assertEquals(49, $endLocation->x);
+        $this->assertEquals(-49, $endLocation->y);
+
+
+        // Test for "ghosting southward"
+        $redLocation = new GoatLocation();
+        $redLocation->x = -50;
+        $redLocation->y = 50;
+        $redLocation->direction = 180;
+        $redGoat = new Stilly($redLocation);
+        $blueLocation = new GoatLocation();
+        $blueLocation->x = -50;
+        $blueLocation->y = 49;
+        $blueLocation->direction = 270;
+        $blueGoat = new Stilly($blueLocation);
+        $action = new Action('MOVE', 2);
+        $endLocation = $action->apply($redGoat, $redLocation, $blueGoat, $blueLocation);
+        $this->assertEquals(50, $endLocation->y);
+
+        // Test for "ghosting" southwest
+        $redLocation = new GoatLocation();
+        $redLocation->x = -47;
+        $redLocation->y = -47;
+        $redLocation->direction = 225;
+        $redGoat = new Stilly($redLocation);
+        $blueLocation = new GoatLocation();
+        $blueLocation->x = -50;
+        $blueLocation->y = -50;
+        $blueLocation->direction = 270;
+        $blueGoat = new Stilly($blueLocation);
+        $action = new Action('MOVE', 8);
+        $endLocation = $action->apply($redGoat, $redLocation, $blueGoat, $blueLocation);
+        $this->assertEquals(-49, $endLocation->y);
+
+        // Test for "ghosting" west
+        $redLocation = new GoatLocation();
+        $redLocation->x = -45;
+        $redLocation->y = 50;
+        $redLocation->direction = 270;
+        $redGoat = new Stilly($redLocation);
+        $blueLocation = new GoatLocation();
+        $blueLocation->x = -50;
+        $blueLocation->y = 50;
+        $blueLocation->direction = 270;
+        $blueGoat = new Stilly($blueLocation);
+        $action = new Action('MOVE', 8);
+        $endLocation = $action->apply($redGoat, $redLocation, $blueGoat, $blueLocation);
+        $this->assertEquals(-49, $endLocation->x);
+
+        // Test for "ghosting" northwest
+        $redLocation = new GoatLocation();
+        $redLocation->x = -45;
+        $redLocation->y = 45;
+        $redLocation->direction = 315;
+        $redGoat = new Stilly($redLocation);
+        $blueLocation = new GoatLocation();
+        $blueLocation->x = -50;
+        $blueLocation->y = 50;
+        $blueLocation->direction = 270;
+        $blueGoat = new Stilly($blueLocation);
+        $action = new Action('MOVE', 8);
+        $endLocation = $action->apply($redGoat, $redLocation, $blueGoat, $blueLocation);
+        $this->assertEquals(-49, $endLocation->x);
     }
+
+
 
     public function testValidateDirection()
     {
