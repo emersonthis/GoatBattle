@@ -142,7 +142,7 @@ class Action
      * @param GoatLocation $otherGoatLocation the location of the goat to be rammed
      * @return bool
      */
-    private function isOtherGoatRammable($rammingGoatLocation, $otherGoatLocation)
+    public static function isOtherGoatRammable($rammingGoatLocation, $otherGoatLocation)
     {
         switch ($rammingGoatLocation->direction) {
             case 0:

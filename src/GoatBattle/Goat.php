@@ -98,6 +98,30 @@ abstract class Goat
     }
 
     /**
+     * Turn to
+     * @param int $endDirection the direction to turn to
+     * @param GoatLocation $myLocation the current goat location
+     * @return Action
+     */
+    public function turnTo($endDirection, $myLocation)
+    {
+        if (!Action::validateDirection($endDirection)) {
+            debug("Invalid direction");
+            return $this->turn(0);
+        }
+
+        $turnDegree = $endDirection - $myLocation->direction;
+
+        if (abs($turnDegree) > 180) {
+            $turnDegree = (360 - (-1 * $turnDegree));
+        }
+
+        $turnMeasure = $turnDegree / 45;
+        
+        return $this->turn($turnMeasure);
+    }
+
+    /**
      *
      */
     final public function move($n)
@@ -119,7 +143,8 @@ abstract class Goat
     }
 
     /**
-     *
+     * Is this goat okay?
+     * @return bool
      */
     final public function ok()
     {
