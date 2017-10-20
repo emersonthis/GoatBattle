@@ -21,7 +21,7 @@ class Action
     public $endLocation;
 
     /**
-     *
+     * Construct
      */
     public function __construct($actionName, $measure = null)
     {
@@ -47,7 +47,8 @@ class Action
     }
 
     /**
-     *
+     * Determine the cost of an action
+     * @return int
      */
     public function cost()
     {
@@ -67,11 +68,6 @@ class Action
             return abs($this->measure); //remove negative values
         }
     }
-
-    // public function setEndLocation(GoatLocation $location)
-    // {
-    //     $this->endLocation = $location;
-    // }
 
     /**
      *
