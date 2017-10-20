@@ -2,6 +2,7 @@
 
 namespace App\Test\TestCase\GoatBattle;
 
+use App\GoatBattle\Action;
 use App\GoatBattle\Goat;
 use App\GoatBattle\GoatLocation;
 use App\GoatBattle\Quicky;
@@ -89,5 +90,50 @@ class GoatTest extends TestCase
         $endToughness = $goat->ouch(5);
 
         $this->assertEquals($startToughness - 5, $endToughness);
+    }
+
+    /**
+     * @test
+     * @return void
+     */
+    public function testFace()
+    {
+        $location = new GoatLocation();
+        $location->x = 0;
+        $location->y = 0;
+        $location->direction = 90;
+        $goat = new Stilly($location);
+
+        $action = $goat->face(0, 50);
+
+        $this->assertInstanceOf(Action::class, $action);
+        $this->assertEquals(-2, $action->measure);
+
+        $action = $goat->face(50, -50);
+        $this->assertEquals(1, $action->measure);
+
+        $action = $goat->face(47, -50);
+        $this->assertEquals(1, $action->measure);
+
+        $action = $goat->face(-47, 2);
+        $this->assertEquals(4, abs($action->measure));
+
+        //RED CORNER NOT WORKING
+        $location = new GoatLocation();
+        $location->x = -50;
+        $location->y = 50;
+        $location->direction = 135;
+        $goat = new Stilly($location);
+        $action = $goat->face(0, 0);
+        $this->assertEquals(0, $action->measure);
+
+        //BLUE CORNER NOT WORKING
+        $location = new GoatLocation();
+        $location->x = 50;
+        $location->y = -50;
+        $location->direction = 315;
+        $goat = new Stilly($location);
+        $action = $goat->face(0, 0);
+        $this->assertEquals(0, $action->measure);
     }
 }

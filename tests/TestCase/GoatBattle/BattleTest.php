@@ -180,6 +180,7 @@ class BattleTest extends TestCase
             $battle->goat2,
             $battle->goat2Location
         );
+
         $this->assertTrue(is_array($return));
         $this->assertInstanceOf(Action::class, $return[0]);
         $this->assertEquals(-49, $battle->goat1Location->x);
@@ -191,6 +192,7 @@ class BattleTest extends TestCase
             $battle->goat1,
             $battle->goat1Location
         );
+
         $this->assertTrue(is_array($return));
         $this->assertInstanceOf(Action::class, $return[0]);
         $this->assertEquals(49, $battle->goat2Location->x);

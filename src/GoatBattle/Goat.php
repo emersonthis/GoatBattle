@@ -29,33 +29,55 @@ abstract class Goat
     // abstract protected function setHorns();
     // abstract protected function setToughness();
 
+    /**
+     *
+     */
     public function name()
     {
         return $this->name;
     }
+
+    /**
+     *
+     */
     public function speed()
     {
         return $this->speed;
     }
+
+    /**
+     *
+     */
     public function horns()
     {
         return $this->horns;
     }
+
+    /**
+     *
+     */
     public function toughness()
     {
         return $this->toughness;
     }
 
+    /**
+     *
+     */
     final public function ouch($n)
     {
         $this->toughness -= $n;
         return $this->toughness;
     }
 
+    /**
+     *
+     */
     final public function setLocation(GoatLocation $location)
     {
         $this->location = $location;
     }
+
     /**
      *
      */
@@ -122,6 +144,27 @@ abstract class Goat
     }
 
     /**
+     * Face towards a coordinate
+     * @param int $x the x coordinate to face
+     * @param int $y the y coordinate to face
+     * @return Action
+     * Be careful... PHP's atan2 function works differently than the conventions use so far
+     * In geometry the 3:00 is considered "0" and positive rotations are counter-clockwise
+     * So 9:00 = 180 etc. For historical reasons, this codebase consideres 12:00 = 0 and positive rotations
+     * move clockwise. This is confusing and will be remedidied in the near future! @TODO @TODO @TODO
+     */
+    public function face($x, $y)
+    {
+        $radians = atan2(($y - $this->location->y), ($x - $this->location->x));
+        $deg = $radians * (180 / pi()); //this value always assumes you're facing East
+        $turnMeasure = $deg + $this->location->direction - 90; //<-- see above
+        $turnMeasure = round($turnMeasure / 45) * -1; //flip the sign because we rotate the opposite direction
+        //fix 360 deg rotation
+        $turnMeasure = (abs($turnMeasure) == 8) ? 0 : $turnMeasure;
+        return $this->turn($turnMeasure);
+    }
+
+    /**
      *
      */
     final public function move($n)
@@ -130,6 +173,9 @@ abstract class Goat
         return $action;
     }
 
+    /**
+     *
+     */
     final protected function ram()
     {
         $action = new Action('RAM');
@@ -137,9 +183,11 @@ abstract class Goat
     }
 
 
+    /**
+     *
+     */
     final protected function approach(GoatLocation $location)
     {
-
     }
 
     /**
