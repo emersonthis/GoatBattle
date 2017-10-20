@@ -10,42 +10,35 @@ class Stilly extends Goat
     public $toughness = 8;
     public $name = "Stilly";
 
-    // protected function setName()
-    // {
-    //     return "Stilly";
-    // }
-    // protected function setSpeed()
-    // {
-    //     return 4;
-    // }
-    // protected function setHorns()
-    // {
-    //     return 8;
-    // }
-    // protected function setToughness()
-    // {
-    //     return 8;
-    // }
-
+    /**
+     */
     public function action(GoatLocation $myLocation, GoatLocation $opponentLocation)
     {
         $actions = [];
         if (!$this->isAtCenter()) {
-            $actions[] = $this->face(0,0);
+            $actions[] = $this->face(0, 0, $myLocation);
             $actions[] = $this->move(1);
+        } else {
+            $actions[] = $this->face($opponentLocation->x, $opponentLocation->y, $myLocation);
+            $actions[] = $this->ram();
         }
+        // debug($this->location);
+        // debug($myLocation);
+        // debug($actions);
+        // exit;
         return $actions;
     }
 
+    /**
+     */
     private function isAtCenter()
     {
-        if ($this->location->x) {
+        if ($this->location->x !== 0) {
             return false;
         }
-        if ($this->location->y) {
+        if ($this->location->y !== 0) {
             return false;
         }
         return true;
     }
-
 }

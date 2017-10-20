@@ -19,12 +19,6 @@ class StillyTest extends TestCase
         $stilly = new Stilly($location);
         $actions = $stilly->action($location, $anotherLocation);
         $this->assertInstanceOf(Action::class, $actions[0]);
-
-        $location = new GoatLocation();
-        $location->x = 0;
-        $location->y = 0;
-        $stilly = new Stilly($location);
-        $actions = $stilly->action($location, $anotherLocation);
-        $this->assertEmpty($actions);
+        $this->assertInstanceOf(Action::class, $actions[1]);
     }
 }

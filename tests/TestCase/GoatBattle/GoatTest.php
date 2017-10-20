@@ -104,18 +104,18 @@ class GoatTest extends TestCase
         $location->direction = 90;
         $goat = new Stilly($location);
 
-        $action = $goat->face(0, 50);
+        $action = $goat->face(0, 50, $location);
 
         $this->assertInstanceOf(Action::class, $action);
         $this->assertEquals(-2, $action->measure);
 
-        $action = $goat->face(50, -50);
+        $action = $goat->face(50, -50, $location);
         $this->assertEquals(1, $action->measure);
 
-        $action = $goat->face(47, -50);
+        $action = $goat->face(47, -50, $location);
         $this->assertEquals(1, $action->measure);
 
-        $action = $goat->face(-47, 2);
+        $action = $goat->face(-47, 2, $location);
         $this->assertEquals(4, abs($action->measure));
 
         //RED CORNER NOT WORKING
@@ -124,7 +124,7 @@ class GoatTest extends TestCase
         $location->y = 50;
         $location->direction = 135;
         $goat = new Stilly($location);
-        $action = $goat->face(0, 0);
+        $action = $goat->face(0, 0, $location);
         $this->assertEquals(0, $action->measure);
 
         //BLUE CORNER NOT WORKING
@@ -133,7 +133,7 @@ class GoatTest extends TestCase
         $location->y = -50;
         $location->direction = 315;
         $goat = new Stilly($location);
-        $action = $goat->face(0, 0);
+        $action = $goat->face(0, 0, $location);
         $this->assertEquals(0, $action->measure);
     }
 }

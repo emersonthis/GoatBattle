@@ -147,17 +147,18 @@ abstract class Goat
      * Face towards a coordinate
      * @param int $x the x coordinate to face
      * @param int $y the y coordinate to face
+     * @param GoatLocation $myLocation the current location of this goat
      * @return Action
      * Be careful... PHP's atan2 function works differently than the conventions use so far
      * In geometry the 3:00 is considered "0" and positive rotations are counter-clockwise
      * So 9:00 = 180 etc. For historical reasons, this codebase consideres 12:00 = 0 and positive rotations
      * move clockwise. This is confusing and will be remedidied in the near future! @TODO @TODO @TODO
      */
-    public function face($x, $y)
+    public function face($x, $y, $myLocation)
     {
-        $radians = atan2(($y - $this->location->y), ($x - $this->location->x));
+        $radians = atan2(($y - $myLocation->y), ($x - $myLocation->x));
         $deg = $radians * (180 / pi()); //this value always assumes you're facing East
-        $turnMeasure = $deg + $this->location->direction - 90; //<-- see above
+        $turnMeasure = $deg + $myLocation->direction - 90; //<-- see above
         $turnMeasure = round($turnMeasure / 45) * -1; //flip the sign because we rotate the opposite direction
         //fix 360 deg rotation
         $turnMeasure = (abs($turnMeasure) == 8) ? 0 : $turnMeasure;
