@@ -69,16 +69,17 @@ class Action
         }
     }
 
-    /**
-     *
-     */
-    public function number()
-    {
-        return $this->action;
-    }
+    // /**
+    //  *
+    //  */
+    // public function number()
+    // {
+    //     return $this->action;
+    // }
 
     /**
-     *
+     * Name of the action
+     * @return str
      */
     public function name()
     {
@@ -221,7 +222,9 @@ class Action
     }
 
     /**
-     *
+     * Turn the goat
+     * @param GoatLocation $goatLocation the location of the goat before turn
+     * @return GoatLocation the new location after turning
      */
     private function turnGoat(GoatLocation $goatLocation)
     {
@@ -315,7 +318,10 @@ class Action
     }
 
     /**
-     * //@TODO Prevent goats from standing on top of one another!
+     * Move the goat
+     * @param GoatLocation $goatLocation the location of this goat
+     * @param GoatLocation $otherGoatLocation the location of the other goat
+     * @return GoatLocation the ending location after the move
      */
     private function moveGoat(GoatLocation $goatLocation, GoatLocation $otherGoatLocation)
     {
@@ -327,59 +333,44 @@ class Action
             case 360:
             case 'N':
                 $newLocation->y += $n;
-                // can't go out of bounds
-                // $newLocation->y = ($newLocation->y > 50) ? 50 : $newLocation->y;
                 break;
 
             case 45:
             case 'NW':
                 $newLocation->y += $n;
                 $newLocation->x += $n;
-                // //can't go out of bounds
-                // $newLocation->y = ($newLocation->y > 50) ? 50 : $newLocation->y;
-                // $newLocation->x = ($newLocation->x > 50) ? 50 : $newLocation->x;
                 break;
             case 90:
             case 'E':
                 $newLocation->x += $n;
-                // $newLocation->x = ($newLocation->x > 50) ? 50 : $newLocation->x;
                 break;
 
             case 135:
             case 'SE':
                 $newLocation->x += $n;
                 $newLocation->y -= $n;
-                // $newLocation->y = ($newLocation->y < -50) ? -50 : $newLocation->y;
-                // $newLocation->x = ($newLocation->x > 50) ? 50 : $newLocation->x;
                 break;
 
             case 180:
             case 'S':
                 $newLocation->y -= $n;
-                // $newLocation->y = ($newLocation->y < -50) ? -50 : $newLocation->y;
-
                 break;
 
             case 225:
             case 'SW':
                 $newLocation->y -= $n;
                 $newLocation->x -= $n;
-                // $newLocation->y = ($newLocation->y < -50) ? -50 : $newLocation->y;
-                // $newLocation->x = ($newLocation->x < -50) ? -50 : $newLocation->x;
                 break;
 
             case 270:
             case 'W':
                 $newLocation->x -= $n;
-                // $newLocation->x = ($newLocation->x < -50) ? -50 : $newLocation->x;
                 break;
 
             case 315:
             case 'NW':
                 $newLocation->y += $n;
                 $newLocation->x -= $n;
-                // $newLocation->y = ($newLocation->y > 50) ? 50 : $newLocation->y;
-                // $newLocation->x = ($newLocation->x < -50) ? -50 : $newLocation->x;
                 break;
         }
         $newLocation = $this->trimMoveToBounds($newLocation);
@@ -388,16 +379,9 @@ class Action
         return $newLocation;
     }
 
-    // /**
-    //  *
-    //  */
-    // public function ram()
-    // {
-    //     $this->type = 3;
-    // }
-
     /**
-     *
+     * is this action a ram?
+     * @return bool
      */
     public function isRam()
     {
@@ -405,7 +389,8 @@ class Action
     }
 
     /**
-     *
+     * is this action a turn?
+     * @return bool
      */
     public function isTurn()
     {
@@ -413,7 +398,8 @@ class Action
     }
 
     /**
-     *
+     * is this action a move?
+     * @return bool
      */
     public function isMove()
     {
@@ -421,7 +407,8 @@ class Action
     }
 
     /**
-     *
+     * Describe the action in words
+     * @return str
      */
     public function describe()
     {
