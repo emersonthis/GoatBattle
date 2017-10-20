@@ -101,8 +101,8 @@ class ActionTest extends TestCase
         $this->assertEquals(41, $endLocation2->y);
         $this->assertEquals(-50, $endLocation2->x);
         # no change
-        $this->assertEquals($blueGoat->location->x, 50);
-        $this->assertEquals($blueGoat->location->y, -50);
+        $this->assertEquals($blueLocation->x, 50);
+        $this->assertEquals($blueLocation->y, -50);
 
         // Test for "ghosting northward"
         $redLocation = new GoatLocation();
@@ -119,8 +119,8 @@ class ActionTest extends TestCase
         $endLocation = $action->apply($redGoat, $redLocation, $blueGoat, $blueLocation);
         $this->assertEquals(-50, $endLocation->y);
         # no change
-        $this->assertEquals($blueGoat->location->x, 50);
-        $this->assertEquals($blueGoat->location->y, -49);
+        $this->assertEquals($blueLocation->x, 50);
+        $this->assertEquals($blueLocation->y, -49);
 
         // Test for "ghosting" northeast
         $redLocation = new GoatLocation();

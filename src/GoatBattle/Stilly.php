@@ -15,7 +15,7 @@ class Stilly extends Goat
     public function action(GoatLocation $myLocation, GoatLocation $opponentLocation)
     {
         $actions = [];
-        if (!$this->isAtCenter()) {
+        if (!$this->isAtCenter($myLocation)) {
             $actions[] = $this->face(0, 0, $myLocation);
             $actions[] = $this->move(1);
         } else {
@@ -31,12 +31,12 @@ class Stilly extends Goat
 
     /**
      */
-    private function isAtCenter()
+    private function isAtCenter($myLocation)
     {
-        if ($this->location->x !== 0) {
+        if ($myLocation->x !== 0) {
             return false;
         }
-        if ($this->location->y !== 0) {
+        if ($myLocation->y !== 0) {
             return false;
         }
         return true;

@@ -9,25 +9,20 @@ abstract class Goat
     public $speed = 2;
     public $horns = 2;
     public $toughness = 2;
-    public $location;
+    // public $location;
     public $color;
 
     /**
      *
      */
-    final public function __construct(GoatLocation $location = null)
+    final public function __construct()
     {
         // $this->name = $this->setName();
         // $this->speed = $this->setSpeed();
         // $this->horns = $this->setHorns();
         // $this->toughness = $this->setToughness();
-        $this->location = ($location) ? $location : new GoatLocation();
+        // $this->location = ($location) ? $location : new GoatLocation();
     }
-
-    // abstract protected function setName();
-    // abstract protected function setSpeed();
-    // abstract protected function setHorns();
-    // abstract protected function setToughness();
 
     /**
      *
@@ -70,13 +65,13 @@ abstract class Goat
         return $this->toughness;
     }
 
-    /**
-     *
-     */
-    final public function setLocation(GoatLocation $location)
-    {
-        $this->location = $location;
-    }
+    // /**
+    //  *
+    //  */
+    // final public function setLocation(GoatLocation $location)
+    // {
+    //     $this->location = $location;
+    // }
 
     /**
      *

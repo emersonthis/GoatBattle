@@ -83,7 +83,7 @@ class Battle
      */
     public function takeTurn(
         Goat $thisGoat,
-        GoatLocation $thisGoatLocation,
+        GoatLocation &$thisGoatLocation,
         Goat $otherGoat,
         GoatLocation $otherGoatLocation
     ) {
@@ -92,7 +92,8 @@ class Battle
         $realGoatActions = $this->authorizeActions($thisGoat, $goatActions, $thisGoatLocation, $otherGoatLocation);
         // debug($realGoatActions);
         foreach ($realGoatActions as $realAction) {
-            $newLocation = $this->updateGoat($thisGoat, $thisGoatLocation, $otherGoat, $otherGoatLocation, $realAction);
+            //@TODO Does this work? Is ti updating the refeerence or the identifier??
+            $thisGoatLocation = $this->updateGoat($thisGoat, $thisGoatLocation, $otherGoat, $otherGoatLocation, $realAction);
             // $thisGoatLocation->x = $newLocation->x;
             // $thisGoatLocation->y = $newLocation->y;
             // $thisGoatLocation->direction = $newLocation->direction;
