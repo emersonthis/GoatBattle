@@ -7,7 +7,7 @@ class Action
     const MOVE = 1;
     const TURN = 2;
     const RAM = 3;
-    const RAM_COST = 5;
+    const RAM_COST = 1;
 
     public $actionsMap = [
         1 => 'MOVE', // takes a distance value
@@ -132,7 +132,7 @@ class Action
         GoatLocation $otherGoatLocation
     ) {
         if ($this->isOtherGoatRammable($thisGoatLocation, $otherGoatLocation)) {
-            $otherGoat->toughness = $otherGoat->toughness - $thisGoat->horns;
+            $otherGoat->toughness -= $thisGoat->horns;
         }
     }
 

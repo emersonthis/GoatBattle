@@ -10,7 +10,7 @@ class Battle
     public $winner = false;
     public $battleTranscript = [];
     public $roundCount = 0;
-    public $maxRounds = 50;
+    public $maxRounds = 100;
     private $outcomesMap = [
         1 => 'Goat 1 wins!',
         2 => 'Goat 2 wins!',
@@ -190,6 +190,14 @@ class Battle
     /**
      *
      */
+    public function outcomeText()
+    {
+        return $this->outcomesMap[$this->outcome];
+    }
+
+    /**
+     *
+     */
     public function getGoatActions(Goat $goat, GoatLocation $thisGoatLocation, GoatLocation $opponentGoatLocation)
     {
         $opponentGoatLocation = clone $opponentGoatLocation;
@@ -208,29 +216,8 @@ class Battle
         Action $action
     ) {
         $newLocation = $action->apply($thisGoat, $thisGoatLocation, $otherGoat, $otherGoatLocation);
-        // $thisGoatLocation = $newLocation;
         return $newLocation;
     }
-
-    // /**
-    //  *
-    //  */
-    // private function applyAction(Goat $actionGoat, Action $action, $actionMeasureOverride = null)
-    // {
-    //     $measure = ($actionMeasureOverride) ? $actionMeasureOverride : $action->measure;
-    //     if ($action->isRam()) {
-    //         $actionGoat->ram();
-    //     }
-
-    //     if ($action->isTurn()) {
-    //         $actionGoat->turn($measure);
-    //     }
-
-    //     if ($action->isAdvance()) {
-    //         $actionGoat->move($measure);
-    //     }
-    //     return $actionGoat->location;
-    // }
 
     /**
      *
@@ -248,28 +235,7 @@ class Battle
      */
     public function printTranscript()
     {
-        // debug($this->battleTranscript);exit;
         echo "The battle begins!\n\n";
-
-        // echo '=Round: 0=' . "\n";
-        // echo 'GOAT1: Starts ' . $this->goat1StartLocation->describe() . "\n";
-        // echo 'GOAT2: Starts ' . $this->goat2StartLocation->describe() . "\n";
-        // echo "\n";
-
-        // foreach ($this->battleTranscript as $line) {
-        //     echo '=Round: ' . $line['round'] . "=\n";
-        //     echo 'GOAT1: ' . $this->describeActionRound($line['actions']['goat1']) . "\n";
-        //     echo 'GOAT2: ' . $this->describeActionRound($line['actions']['goat2']) . "\n";
-        //     echo "\n\n";
-        // }
-
-        // echo $this->outcomesMap[$this->outcome] . "\n";
-
-        // debug($this->goat1StartLocation);
-        // debug($this->goat2StartLocation);
-        // debug($this->battleTranscript);
-
-        // debug($this->goat2);
 
         foreach ($this->battleTranscript as $round) {
             echo "In round {$round['round']}...\n";
@@ -287,8 +253,9 @@ class Battle
             }
             echo "...ending at {$round['goat2EndingLocation']->x},{$round['goat2EndingLocation']->y} facing {$round[
                 'goat2EndingLocation']->facing()}\n\n";
-
         }
+
+        echo $this->outcomeText() . "\n\n";
 
         echo "The End.\n\n";
     }
