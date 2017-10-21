@@ -56,6 +56,16 @@ class Battle
     {
         while ($this->gameOn()) {
             $this->roundCount++;
+
+            $newRound = new Round(
+                [
+                    'number' => $this->roundCount,
+                    'redGoat' => $this->goat1,
+                    'blueGoat' => $this->goat2,
+                    'redGoatStartLocation' => clone $this->goat1Location,
+                    'blueGoatStartLocation' => clone $this->goat2Location
+                ]
+            );
             
             $goat1Actions = $this->takeTurn(
                 $this->goat1,
@@ -63,6 +73,9 @@ class Battle
                 $this->goat2,
                 $this->goat2Location
             );
+
+            $newRound->redGoatActions = $goat1Actions;
+            $newRound->redGoatEndLocation = clone $this->goat1Location;
             
             $goat2Actions = $this->takeTurn(
                 $this->goat2,
@@ -71,17 +84,10 @@ class Battle
                 $this->goat1Location
             );
 
-            $roundActions = [
-                'goat1' => $goat1Actions,
-                'goat2' => $goat2Actions
-            ];
+            $newRound->blueGoatActions = $goat2Actions;
+            $newRound->blueGoatEndLocation = clone $this->goat2Location;
             
-            $this->battleTranscript[] = [
-                'round' => $this->roundCount,
-                'actions' => $roundActions,
-                'goat1EndingLocation' => clone $this->goat1Location,
-                'goat2EndingLocation' => clone $this->goat2Location,
-            ];
+            $this->battleTranscript[] = $newRound;
         }
         $this->determineOutcome();
     }
@@ -241,21 +247,19 @@ class Battle
         echo "The battle begins!\n\n";
 
         foreach ($this->battleTranscript as $round) {
-            echo "In round {$round['round']}...\n";
+            echo "In round {$round->number}...\n";
 
-            echo "{$this->goat1->name()} ";
-            foreach ($round['actions']['goat1'] as $action) {
+            echo "{$round->redGoat->name()} ";
+            foreach ($round->redGoatActions as $action) {
                 echo $action->describe() . ", ";
             }
-            echo "...ending at {$round['goat1EndingLocation']->x},{$round['goat1EndingLocation']->y} facing {$round[
-                'goat1EndingLocation']->facing()}\n";
+            echo "...ending at {$round->redGoatEndLocation->x},{$round->blueGoatEndLocation->y} facing {$round->blueGoatEndLocation->facing()}\n";
 
-            echo "{$this->goat2->name()} ";
-            foreach ($round['actions']['goat2'] as $action) {
+            echo "{$round->blueGoat->name()} ";
+            foreach ($round->blueGoatActions as $action) {
                 echo $action->describe() . ", ";
             }
-            echo "...ending at {$round['goat2EndingLocation']->x},{$round['goat2EndingLocation']->y} facing {$round[
-                'goat2EndingLocation']->facing()}\n\n";
+            echo "...ending at {$round->blueGoatEndLocation->x},{$round->blueGoatEndLocation->y} facing {$round->blueGoatEndLocation->facing()}\n\n";
         }
 
         echo $this->outcomeText() . "\n\n";
