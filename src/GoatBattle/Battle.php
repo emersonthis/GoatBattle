@@ -57,8 +57,19 @@ class Battle
         while ($this->gameOn()) {
             $this->roundCount++;
             
-            $goat1Actions = $this->takeTurn($this->goat1, $this->goat1Location, $this->goat2, $this->goat2Location);
-            $goat2Actions = $this->takeTurn($this->goat2, $this->goat2Location, $this->goat1, $this->goat1Location);
+            $goat1Actions = $this->takeTurn(
+                $this->goat1,
+                $this->goat1Location,
+                $this->goat2,
+                $this->goat2Location
+            );
+            
+            $goat2Actions = $this->takeTurn(
+                $this->goat2,
+                $this->goat2Location,
+                $this->goat1,
+                $this->goat1Location
+            );
 
             $roundActions = [
                 'goat1' => $goat1Actions,

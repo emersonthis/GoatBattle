@@ -290,7 +290,7 @@ class Action
         }
 
         //E
-        if (($location->direction == 0) && $sameY && ($xDifference <= $this->measure)) {
+        if (($location->direction == 0 || $location->direction == 360) && $sameY && ($xDifference <= $this->measure)) {
             $measure = $xDifference - 1;
         }
 

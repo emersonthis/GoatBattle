@@ -231,6 +231,22 @@ class ActionTest extends TestCase
         $action = new Action('MOVE', 8);
         $endLocation = $action->apply($redGoat, $redLocation, $blueGoat, $blueLocation);
         $this->assertEquals(-49, $endLocation->x);
+
+        // Quicky vs Stilly experiment
+        $quickyLocation = new GoatLocation();
+        $quickyLocation->x = -2;
+        $quickyLocation->y = 0;
+        $quickyLocation->direction = 360;
+        $quicky = new Quicky($quickyLocation);
+        $stillyLocation = new GoatLocation();
+        $stillyLocation->x = 0;
+        $stillyLocation->y = 0;
+        $stillyLocation->direction = 0;
+        $stilly = new Stilly($stillyLocation);
+        $action = new Action('MOVE', 2);
+        $endLocation = $action->apply($quicky, $quickyLocation, $stilly, $stillyLocation);
+        $this->assertEquals(-1, $endLocation->x);
+        $this->assertEquals(-1, $quickyLocation->x);
     }
 
     public function testRamGoat()
