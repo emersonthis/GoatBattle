@@ -266,7 +266,7 @@ class ActionTest extends TestCase
         $endLocation = $action->apply($redGoat, $redLocation, $blueGoat, $blueLocation);
         $this->assertEquals(45, $endLocation->x);
         $this->assertEquals(45, $endLocation->y);
-        $this->assertEquals(0, $blueGoat->toughness);
+        $this->assertEquals(0, $blueGoat->health);
 
         // SE
         $redLocation->direction = 315;
@@ -274,7 +274,7 @@ class ActionTest extends TestCase
         $blueLocation->y = 44;
         $blueGoat = new Quicky($blueLocation);
         $endLocation = $action->apply($redGoat, $redLocation, $blueGoat, $blueLocation);
-        $this->assertEquals(0, $blueGoat->toughness);
+        $this->assertEquals(0, $blueGoat->health);
 
         // S
         $redLocation->direction = 270;
@@ -282,7 +282,7 @@ class ActionTest extends TestCase
         $blueLocation->y = 44;
         $blueGoat = new Quicky($blueLocation);
         $endLocation = $action->apply($redGoat, $redLocation, $blueGoat, $blueLocation);
-        $this->assertEquals(0, $blueGoat->toughness);
+        $this->assertEquals(0, $blueGoat->health);
 
         // SW
         $redLocation->direction = 225;
@@ -290,7 +290,7 @@ class ActionTest extends TestCase
         $blueLocation->y = 44;
         $blueGoat = new Quicky($blueLocation);
         $endLocation = $action->apply($redGoat, $redLocation, $blueGoat, $blueLocation);
-        $this->assertEquals(0, $blueGoat->toughness);
+        $this->assertEquals(0, $blueGoat->health);
 
         // W
         $redLocation->direction = 180;
@@ -298,7 +298,7 @@ class ActionTest extends TestCase
         $blueLocation->y = 45;
         $blueGoat = new Quicky($blueLocation);
         $endLocation = $action->apply($redGoat, $redLocation, $blueGoat, $blueLocation);
-        $this->assertEquals(0, $blueGoat->toughness);
+        $this->assertEquals(0, $blueGoat->health);
 
         // NW
         $redLocation->direction = 135;
@@ -306,7 +306,7 @@ class ActionTest extends TestCase
         $blueLocation->y = 46;
         $blueGoat = new Quicky($blueLocation);
         $endLocation = $action->apply($redGoat, $redLocation, $blueGoat, $blueLocation);
-        $this->assertEquals(0, $blueGoat->toughness);
+        $this->assertEquals(0, $blueGoat->health);
 
         // N
         $redLocation->direction = 90;
@@ -314,15 +314,16 @@ class ActionTest extends TestCase
         $blueLocation->y = 46;
         $blueGoat = new Quicky($blueLocation);
         $endLocation = $action->apply($redGoat, $redLocation, $blueGoat, $blueLocation);
-        $this->assertEquals(0, $blueGoat->toughness);
+        $this->assertEquals(0, $blueGoat->health);
 
         // NE
         $redLocation->direction = 45;
         $blueLocation->x = 46;
         $blueLocation->y = 46;
         $blueGoat->toughness = 6;
+        $blueGoat->health = 6;
         $endLocation = $action->apply($redGoat, $redLocation, $blueGoat, $blueLocation);
-        $this->assertEquals(1, $blueGoat->toughness);
+        $this->assertEquals(1, $blueGoat->health);
     }
 
     public function testValidateDirection()

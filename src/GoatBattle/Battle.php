@@ -12,6 +12,7 @@ class Battle
     public $roundCount = 0;
     public $maxRounds = 100;
     private $outcomesMap = [
+        # we personalize 1 and 2 in __construct
         1 => 'Goat 1 wins!',
         2 => 'Goat 2 wins!',
         3 => 'Neither goat wins. Tie!',
@@ -31,6 +32,9 @@ class Battle
     {
         $this->goat1 = $goat1;
         $this->goat2 = $goat2;
+
+        $this->outcomesMap[1] = "{$goat1->name} wins!";
+        $this->outcomesMap[2] = "{$goat2->name} wins!";
 
         $this->goat1Location = new GoatLocation('RED');
         $this->goat2Location = new GoatLocation('BLUE');
@@ -125,9 +129,9 @@ class Battle
             }
 
             # actinos that are under budget we pass through
-            if ($action->cost() <= $availableAction) {
+            if ($action->cost($goat) <= $availableAction) {
                 $actions[] = $action;
-                $availableAction -= $action->cost();
+                $availableAction -= $action->cost($goat);
             # actions that are over budget we try to trim
             } else {
                 if ($action->isMove()) {

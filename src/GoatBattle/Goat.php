@@ -10,6 +10,7 @@ abstract class Goat
     public $horns = 2;
     public $toughness = 2;
     public $color;
+    public $health;
 
     /**
      *
@@ -21,6 +22,7 @@ abstract class Goat
         // $this->horns = $this->setHorns();
         // $this->toughness = $this->setToughness();
         // $this->location = ($location) ? $location : new GoatLocation();
+        $this->health = ($this->toughness) ? $this->toughness : 1;
     }
 
     /**
@@ -54,23 +56,6 @@ abstract class Goat
     {
         return $this->toughness;
     }
-
-    /**
-     *
-     */
-    final public function ouch($n)
-    {
-        $this->toughness -= $n;
-        return $this->toughness;
-    }
-
-    // /**
-    //  *
-    //  */
-    // final public function setLocation(GoatLocation $location)
-    // {
-    //     $this->location = $location;
-    // }
 
     /**
      *
@@ -189,7 +174,7 @@ abstract class Goat
      */
     final public function ok()
     {
-        if ($this->toughness > 0) {
+        if ($this->health > 0) {
             return true;
         }
     }

@@ -113,7 +113,7 @@ class BattleTest extends TestCase
         $battle->roundCount = $battle->maxRounds - 1;
         $this->assertTrue($battle->gameOn());
 
-        $goat2->ouch(50);
+        $goat2->health = 0;
 
         $this->assertFalse($battle->gameOn());
     }

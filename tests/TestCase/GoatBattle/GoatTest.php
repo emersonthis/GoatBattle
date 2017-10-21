@@ -80,22 +80,6 @@ class GoatTest extends TestCase
      * @test
      * @return void
      */
-    public function testOuch()
-    {
-        $goatLocation = new GoatLocation();
-        $goat = new Stilly($goatLocation);
-
-        $startToughness = $goat->toughness();
-
-        $endToughness = $goat->ouch(5);
-
-        $this->assertEquals($startToughness - 5, $endToughness);
-    }
-
-    /**
-     * @test
-     * @return void
-     */
     public function testFace()
     {
         $location = new GoatLocation();

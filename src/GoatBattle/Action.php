@@ -7,7 +7,6 @@ class Action
     const MOVE = 1;
     const TURN = 2;
     const RAM = 3;
-    const RAM_COST = 1;
 
     public $actionsMap = [
         1 => 'MOVE', // takes a distance value
@@ -42,7 +41,7 @@ class Action
                 break;
             case "RAM":
                 $this->type = 3;
-                $this->measure = self::RAM_COST;
+                // $this->measure = $this->;
         }
     }
 
@@ -50,14 +49,15 @@ class Action
      * Determine the cost of an action
      * @return int
      */
-    public function cost()
+    public function cost(Goat $goat)
     {
         if (!$this->type) {
             return false;
         }
 
         if ($this->type === self::RAM) {
-            return self::RAM_COST;
+            $diff = $goat->horns - $goat->toughness;
+            return ($diff < 1) ? 1 : $diff;
         }
 
         if ($this->type === self::MOVE) {
@@ -128,7 +128,7 @@ class Action
         GoatLocation $otherGoatLocation
     ) {
         if ($this->isOtherGoatRammable($thisGoatLocation, $otherGoatLocation)) {
-            $otherGoat->toughness -= $thisGoat->horns;
+            $otherGoat->health -= $thisGoat->horns;
         }
     }
 
