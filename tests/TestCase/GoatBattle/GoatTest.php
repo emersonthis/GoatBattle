@@ -101,7 +101,7 @@ class GoatTest extends TestCase
         $location = new GoatLocation();
         $location->x = 0;
         $location->y = 0;
-        $location->direction = 90;
+        $location->direction = 0;
         $goat = new Stilly($location);
 
         $action = $goat->face(0, 50, $location);
@@ -122,7 +122,7 @@ class GoatTest extends TestCase
         $location = new GoatLocation();
         $location->x = -50;
         $location->y = 50;
-        $location->direction = 135;
+        $location->direction = 315;
         $goat = new Stilly($location);
         $action = $goat->face(0, 0, $location);
         $this->assertEquals(0, $action->measure);
@@ -131,9 +131,30 @@ class GoatTest extends TestCase
         $location = new GoatLocation();
         $location->x = 50;
         $location->y = -50;
-        $location->direction = 315;
+        $location->direction = 135;
         $goat = new Stilly($location);
         $action = $goat->face(0, 0, $location);
         $this->assertEquals(0, $action->measure);
+    }
+
+    public function testTurnTo()
+    {
+        $location = new GoatLocation('BLUE');
+        $quicky = new Quicky($location);
+        $action = $quicky->turnTo(0, $location);
+        $this->assertInstanceOf(Action::class, $action);
+        $this->assertEquals(-3, $action->measure);
+
+        $action = $quicky->turnTo(180, $location);
+        $this->assertInstanceOf(Action::class, $action);
+        $this->assertEquals(1, $action->measure);
+
+        $action = $quicky->turnTo(270, $location);
+        $this->assertInstanceOf(Action::class, $action);
+        $this->assertEquals(3, $action->measure);
+
+        $action = $quicky->turnTo(360, $location);
+        $this->assertInstanceOf(Action::class, $action);
+        $this->assertEquals(-3, $action->measure);
     }
 }

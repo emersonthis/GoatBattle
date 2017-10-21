@@ -96,26 +96,22 @@ class Action
      */
     public function apply(
         Goat $thisGoat,
-        GoatLocation $thisGoatLocation,
+        GoatLocation &$thisGoatLocation,
         Goat $otherGoat,
         GoatLocation $otherGoatLocation
     ) {
-        $endLocation;
-
         if ($this->isMove($this)) {
-            $endLocation = $this->moveGoat($thisGoatLocation, $otherGoatLocation);
+            $this->endLocation = $this->moveGoat($thisGoatLocation, $otherGoatLocation);
         }
         if ($this->isTurn($this)) {
-            $endLocation = $this->turnGoat($thisGoatLocation);
+            $this->endLocation = $this->turnGoat($thisGoatLocation);
         }
         if ($this->isRam($this)) {
-            $endLocation = $thisGoatLocation;
+            $this->endLocation = $thisGoatLocation;
             $this->ramGoat($thisGoat, $thisGoatLocation, $otherGoat, $otherGoatLocation);
         }
-
-        $this->endLocation = $endLocation;
-
-        return $endLocation;
+        $thisGoatLocation = $this->endLocation;
+        return $this->endLocation;
     }
 
     /**
@@ -145,16 +141,18 @@ class Action
     public static function isOtherGoatRammable($rammingGoatLocation, $otherGoatLocation)
     {
         switch ($rammingGoatLocation->direction) {
+            //E
             case 0:
             case 360:
-                if ($rammingGoatLocation->x != $otherGoatLocation->x) {
+                if ($rammingGoatLocation->x != ($otherGoatLocation->x - 1)) {
                     return false;
                 }
-                if ($rammingGoatLocation->y != ($otherGoatLocation->y + 1)) {
+                if ($rammingGoatLocation->y != $otherGoatLocation->y) {
                     return false;
                 }
                 break;
 
+            //NE
             case 45:
                 if ($rammingGoatLocation->x != ($otherGoatLocation->x - 1)) {
                     return false;
@@ -164,15 +162,18 @@ class Action
                 }
                 break;
 
+            //N
             case 90:
-                if ($rammingGoatLocation->x != ($otherGoatLocation->x - 1)) {
+                if ($rammingGoatLocation->x != $otherGoatLocation->x) {
                     return false;
                 }
-                if ($rammingGoatLocation->y != $otherGoatLocation->y) {
+                if ($rammingGoatLocation->y != ($otherGoatLocation->y - 1)) {
                     return false;
                 }
                 break;
 
+
+            // NW
             case 135:
                 if ($rammingGoatLocation->x != ($otherGoatLocation->x + 1)) {
                     return false;
@@ -182,26 +183,9 @@ class Action
                 }
                 break;
 
+            //W
             case 180:
-                if ($rammingGoatLocation->x != $otherGoatLocation->x) {
-                    return false;
-                }
-                if ($rammingGoatLocation->y != ($otherGoatLocation->y - 1)) {
-                    return false;
-                }
-                break;
-
-            case 225:
-                if ($rammingGoatLocation->x != ($otherGoatLocation->x - 1)) {
-                    return false;
-                }
-                if ($rammingGoatLocation->y != ($otherGoatLocation->y - 1)) {
-                    return false;
-                }
-                break;
-
-            case 270:
-                if ($rammingGoatLocation->x != $otherGoatLocation->x - 1) {
+                if ($rammingGoatLocation->x != ($otherGoatLocation->x + 1)) {
                     return false;
                 }
                 if ($rammingGoatLocation->y != ($otherGoatLocation->y)) {
@@ -209,6 +193,27 @@ class Action
                 }
                 break;
 
+            // SW
+            case 225:
+                if ($rammingGoatLocation->x != ($otherGoatLocation->x + 1)) {
+                    return false;
+                }
+                if ($rammingGoatLocation->y != ($otherGoatLocation->y + 1)) {
+                    return false;
+                }
+                break;
+
+            //S
+            case 270:
+                if ($rammingGoatLocation->x != $otherGoatLocation->x) {
+                    return false;
+                }
+                if ($rammingGoatLocation->y != ($otherGoatLocation->y + 1)) {
+                    return false;
+                }
+                break;
+
+            // SE
             case 315:
                 if ($rammingGoatLocation->x != ($otherGoatLocation->x - 1)) {
                     return false;
@@ -275,7 +280,7 @@ class Action
         $measure = $this->measure;
 
         //N
-        if (($location->direction == 0) && $sameX && ($yDifference <= $this->measure)) {
+        if (($location->direction == 90) && $sameX && ($yDifference <= $this->measure)) {
             $measure = $yDifference - 1;
         }
 
@@ -285,17 +290,17 @@ class Action
         }
 
         //E
-        if (($location->direction == 90) && $sameY && ($xDifference <= $this->measure)) {
+        if (($location->direction == 0) && $sameY && ($xDifference <= $this->measure)) {
             $measure = $xDifference - 1;
         }
 
         //SE
-        if (($location->direction == 135) && ($xDifference == ($yDifference * -1)) && ($xDifference <= $this->measure)) {
+        if (($location->direction == 315) && ($xDifference == ($yDifference * -1)) && ($xDifference <= $this->measure)) {
             $measure = $xDifference - 1;
         }
 
         //S
-        if (($location->direction == 180) && $sameX && ($yDifference <= $this->measure)) {
+        if (($location->direction == 270) && $sameX && ($yDifference <= $this->measure)) {
             $measure = $yDifference - 1;
         }
 
@@ -305,12 +310,12 @@ class Action
         }
 
         //W
-        if (($location->direction == 270) && $sameY && ($xDifference <= $this->measure)) {
+        if (($location->direction == 180) && $sameY && ($xDifference <= $this->measure)) {
             $measure = abs($xDifference) - 1;
         }
 
         //NW                                                                        could be $yDifference
-        if (($location->direction == 315) && ($yDifference == ($xDifference * -1)) && ($yDifference <= $this->measure)) {
+        if (($location->direction == 135) && ($yDifference == ($xDifference * -1)) && ($yDifference <= $this->measure)) {
             $measure = abs($xDifference) - 1;
         }
 
@@ -323,60 +328,64 @@ class Action
      * @param GoatLocation $otherGoatLocation the location of the other goat
      * @return GoatLocation the ending location after the move
      */
-    private function moveGoat(GoatLocation $goatLocation, GoatLocation $otherGoatLocation)
+    private function moveGoat(GoatLocation &$goatLocation, GoatLocation $otherGoatLocation)
     {
-        $newLocation = clone $goatLocation;
+        // $newLocation = clone $goatLocation;
+        // debug($this->measure);
+        $this->measure = $this->trimMeasureIfBlocked($goatLocation, $otherGoatLocation);
         $n = $this->measure;
-        $n = $this->trimMeasureIfBlocked($goatLocation, $otherGoatLocation);
+        
         switch ($goatLocation->direction) {
-            case 0:
             case 360:
-            case 'N':
-                $newLocation->y += $n;
+            case 0:
+            case 'E':
+                $goatLocation->x += $n;
                 break;
 
             case 45:
-            case 'NW':
-                $newLocation->y += $n;
-                $newLocation->x += $n;
+            case 'NE':
+                $goatLocation->y += $n;
+                $goatLocation->x += $n;
                 break;
+
             case 90:
-            case 'E':
-                $newLocation->x += $n;
+            case 'N':
+                $goatLocation->y += $n;
                 break;
 
             case 135:
-            case 'SE':
-                $newLocation->x += $n;
-                $newLocation->y -= $n;
+            case 'NW':
+                $goatLocation->y += $n;
+                $goatLocation->x -= $n;
                 break;
 
             case 180:
-            case 'S':
-                $newLocation->y -= $n;
+            case 'W':
+                $goatLocation->x -= $n;
                 break;
 
             case 225:
             case 'SW':
-                $newLocation->y -= $n;
-                $newLocation->x -= $n;
+                $goatLocation->y -= $n;
+                $goatLocation->x -= $n;
                 break;
 
             case 270:
-            case 'W':
-                $newLocation->x -= $n;
+            case 'S':
+                $goatLocation->y -= $n;
                 break;
 
             case 315:
-            case 'NW':
-                $newLocation->y += $n;
-                $newLocation->x -= $n;
+            case 'SE':
+                $goatLocation->x += $n;
+                $goatLocation->y -= $n;
                 break;
         }
-        $newLocation = $this->trimMoveToBounds($newLocation);
-        $goatLocation->x = $newLocation->x;
-        $goatLocation->y = $newLocation->y;
-        return $newLocation;
+        
+        $goatLocation = $this->trimMoveToBounds($goatLocation);
+        // $goatLocation->x = $newLocation->x;
+        // $goatLocation->y = $newLocation->y;
+        return $goatLocation;
     }
 
     /**

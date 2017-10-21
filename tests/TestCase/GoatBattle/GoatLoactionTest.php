@@ -45,6 +45,6 @@ class GoatLocationTest extends TestCase
         $loc->direction = 180;
 
         $description = $loc->describe();
-        $this->assertEquals("@ -50,41 facing South", $description);
+        $this->assertEquals("@ -50,41 facing West", $description);
     }
 }

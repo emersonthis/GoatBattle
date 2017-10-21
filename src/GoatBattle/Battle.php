@@ -41,11 +41,8 @@ class Battle
         $this->goat2StartLocation = clone $this->goat2Location;
         $this->goat2->color = 'BLUE';
 
-        // $this->goat1->setLocation($this->goat1Location);
-        // $this->goat2->setLocation($this->goat2Location);
-
         if (!$this->goat1->validateAttributes()) {
-            throw new Exception("Goat1 invalid atts");
+            throw new \Exception("Goat1 invalid atts");
         }
         if (!$this->goat2->validateAttributes()) {
             throw new \Exception("Goat2 invalid atts");
@@ -88,28 +85,20 @@ class Battle
         GoatLocation $otherGoatLocation
     ) {
         $goatActions = $this->getGoatActions($thisGoat, $thisGoatLocation, $otherGoatLocation);
-        // debug($goatActions);
         $realGoatActions = $this->authorizeActions($thisGoat, $goatActions, $thisGoatLocation, $otherGoatLocation);
-        // debug($realGoatActions);
         foreach ($realGoatActions as $realAction) {
-            //@TODO Does this work? Is ti updating the refeerence or the identifier??
             $thisGoatLocation = $this->updateGoat($thisGoat, $thisGoatLocation, $otherGoat, $otherGoatLocation, $realAction);
-            // $thisGoatLocation->x = $newLocation->x;
-            // $thisGoatLocation->y = $newLocation->y;
-            // $thisGoatLocation->direction = $newLocation->direction;
-            // debug($newLocation);exit;
         }
         return $realGoatActions;
     }
 
     /**
-     * //@TODO LIMIT NUMBER OF ACTIONS TO THE MAX POSSIBLE SPEED
+     *
      */
     public function authorizeActions(Goat $goat, $goatActions, GoatLocation $goatLocation, GoatLocation $otherGoatLocation)
     {
         $actions = [];
         $availableAction = $goat->speed;
-        // debug($availableAction);
 
         foreach ($goatActions as $action) {
             if (!$action instanceof Action) {
@@ -155,6 +144,8 @@ class Battle
         if ($trimTo < 0) {
             throw new Exception('Second param cannot be negative');
         }
+
+        //these should use abs()
         if ($action->measure > 0) {
             $action->measure = $trimTo;
         }
@@ -211,7 +202,7 @@ class Battle
      */
     public function updateGoat(
         Goat $thisGoat,
-        GoatLocation $thisGoatLocation,
+        GoatLocation &$thisGoatLocation,
         Goat $otherGoat,
         GoatLocation $otherGoatLocation,
         Action $action

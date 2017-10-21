@@ -22,10 +22,6 @@ class Stilly extends Goat
             $actions[] = $this->face($opponentLocation->x, $opponentLocation->y, $myLocation);
             $actions[] = $this->ram();
         }
-        // debug($this->location);
-        // debug($myLocation);
-        // debug($actions);
-        // exit;
         return $actions;
     }
 

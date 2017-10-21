@@ -13,17 +13,18 @@ class GoatLocation
     const MIN_Y = -50;
     const MAX_Y = 50;
 
+    /**
+     */
     public function __construct($pos = null)
     {
         switch ($pos) {
             case 'RED':
-                $this->direction = 3 * 45; //135
+                $this->direction = 315; //SE
                 $this->x = -50;
                 $this->y = 50;
                 break;
-
             case 'BLUE':
-                $this->direction = 7 * 45; //315
+                $this->direction = 135; //NW
                 $this->x = 50;
                 $this->y = -50;
                 break;
@@ -32,6 +33,8 @@ class GoatLocation
         }
     }
 
+    /**
+     */
     public function describe()
     {
         return "@ {$this->x},{$this->y} facing {$this->facing()}";
@@ -48,28 +51,28 @@ class GoatLocation
         switch ($this->direction) {
             case 0:
             case 360:
-                $string = 'North';
+                $string = 'East';
                 break;
             case 45:
                 $string = 'Northeast';
                 break;
             case 90:
-                $string = 'East';
+                $string = 'North';
                 break;
             case 135:
-                $string = 'Southeast';
+                $string = 'Northwest';
                 break;
             case 180:
-                $string = 'South';
+                $string = 'West';
                 break;
             case 225:
                 $string = 'Southwest';
                 break;
             case 270:
-                $string = 'West';
+                $string = 'South';
                 break;
             case 315:
-                $string = 'Northwest';
+                $string = 'Southeast';
                 break;
             default:
                 debug($this->direction);

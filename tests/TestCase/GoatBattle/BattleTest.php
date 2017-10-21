@@ -8,6 +8,7 @@ use App\GoatBattle\Goat;
 use App\GoatBattle\GoatLocation;
 use App\GoatBattle\Quicky;
 use App\GoatBattle\Stilly;
+use App\Test\TestCase\GoatBattle\DoNothing;
 use App\Test\TestCase\GoatBattle\Faily1;
 use Cake\TestSuite\Fixture\PhpFixture;
 use Cake\TestSuite\TestCase;
@@ -78,10 +79,10 @@ class BattleTest extends TestCase
     public function testGo()
     {
         $goatLocation1 = new GoatLocation();
-        $goat1 = new Stilly($goatLocation1);
+        $goat1 = new DoNothing($goatLocation1);
 
         $goatLocation2 = new GoatLocation();
-        $goat2 = new Stilly($goatLocation2);
+        $goat2 = new DoNothing($goatLocation2);
 
         $battle = new Battle($goat1, $goat2);
 

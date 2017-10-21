@@ -53,16 +53,16 @@ class Quicky extends Goat
         }
 
         if ($north) {
-            $actions[] = Goat::turnTo(180, $myLocation);
+            $actions[] = Goat::turnTo(270, $myLocation);
             $actions[] = $this->move($myLocation->y - $opponentLocation->y);
         } elseif ($east) {
-            $actions[] = Goat::turnTo(270, $myLocation);
+            $actions[] = Goat::turnTo(180, $myLocation);
             $actions[] = $this->move($myLocation->x - $opponentLocation->x);
         } elseif ($south) {
-            $actions[] = Goat::turnTo(0, $myLocation);
+            $actions[] = Goat::turnTo(90, $myLocation);
             $actions[] = $this->move($opponentLocation->y - $myLocation->y);
         } elseif ($west) {
-            $actions[] = Goat::turnTo(90, $myLocation);
+            $actions[] = Goat::turnTo(0, $myLocation);
             $actions[] = $this->move($opponentLocation->x - $myLocation->x);
         }
 

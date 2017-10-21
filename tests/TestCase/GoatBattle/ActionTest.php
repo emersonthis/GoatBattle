@@ -62,7 +62,7 @@ class ActionTest extends TestCase
         $this->assertInstanceOf(GoatLocation::class, $endLocation);
         $this->assertEquals(48, $endLocation->y);
         $this->assertEquals(-48, $endLocation->x);
-        $this->assertEquals(135, $endLocation->direction);
+        $this->assertEquals(315, $endLocation->direction);
         # no change
         $this->assertEquals($blueLocation->x, 50);
         $this->assertEquals($blueLocation->y, -50);
@@ -73,7 +73,7 @@ class ActionTest extends TestCase
         $this->assertInstanceOf(GoatLocation::class, $endLocation);
         $this->assertEquals(48, $endLocation->y);
         $this->assertEquals(-48, $endLocation->x);
-        $this->assertEquals(180, $endLocation->direction);
+        $this->assertEquals(360, $endLocation->direction);
         # no change
         $this->assertEquals($blueLocation->x, 50);
         $this->assertEquals($blueLocation->y, -50);
@@ -88,18 +88,18 @@ class ActionTest extends TestCase
 
         $action1 = $redGoat->turn(1);
         $endLocation1 = $action1->apply($redGoat, $redLocation, $blueGoat, $blueLocation);
-        $this->assertEquals(180, $endLocation1->direction);
-        $this->assertEquals(50, $endLocation1->y);
+        $this->assertEquals(360, $endLocation1->direction);
         $this->assertEquals(-50, $endLocation1->x);
+        $this->assertEquals(50, $endLocation1->y);
         # no change
         $this->assertEquals($blueLocation->x, 50);
         $this->assertEquals($blueLocation->y, -50);
 
         $action2 = $redGoat->move(9);
         $endLocation2 = $action2->apply($redGoat, $endLocation1, $blueGoat, $blueLocation);
-        $this->assertEquals(180, $endLocation2->direction);
-        $this->assertEquals(41, $endLocation2->y);
-        $this->assertEquals(-50, $endLocation2->x);
+        $this->assertEquals(360, $endLocation2->direction);
+        $this->assertEquals(-41, $endLocation2->x);
+        $this->assertEquals(50, $endLocation2->y);
         # no change
         $this->assertEquals($blueLocation->x, 50);
         $this->assertEquals($blueLocation->y, -50);
@@ -108,7 +108,7 @@ class ActionTest extends TestCase
         $redLocation = new GoatLocation();
         $redLocation->x = 50;
         $redLocation->y = -50;
-        $redLocation->direction = 0;
+        $redLocation->direction = 90;
         $redGoat = new Stilly($redLocation);
         $blueLocation = new GoatLocation();
         $blueLocation->x = 50;
@@ -139,9 +139,9 @@ class ActionTest extends TestCase
 
         // Test for "ghosting" east
         $redLocation = new GoatLocation();
-        $redLocation->x = 45;
+        $redLocation->x = 44;
         $redLocation->y = 50;
-        $redLocation->direction = 90;
+        $redLocation->direction = 0;
         $redGoat = new Stilly($redLocation);
         $blueLocation = new GoatLocation();
         $blueLocation->x = 50;
@@ -149,14 +149,17 @@ class ActionTest extends TestCase
         $blueLocation->direction = 270;
         $blueGoat = new Stilly($blueLocation);
         $action = new Action('MOVE', 8);
-        $endLocation = $action->apply($redGoat, $redLocation, $blueGoat, $blueLocation);
-        $this->assertEquals(49, $endLocation->x);
+        $action->apply($redGoat, $redLocation, $blueGoat, $blueLocation);
+        // debug($redLocation);
+        // debug($action->endLocation);
+        // debug($action);
+        $this->assertEquals(49, $redLocation->x);
 
         // Test for "ghosting" southeast
         $redLocation = new GoatLocation();
         $redLocation->x = 45;
         $redLocation->y = -45;
-        $redLocation->direction = 135;
+        $redLocation->direction = 315;
         $redGoat = new Stilly($redLocation);
         $blueLocation = new GoatLocation();
         $blueLocation->x = 50;
@@ -173,7 +176,7 @@ class ActionTest extends TestCase
         $redLocation = new GoatLocation();
         $redLocation->x = -50;
         $redLocation->y = 50;
-        $redLocation->direction = 180;
+        $redLocation->direction = 270;
         $redGoat = new Stilly($redLocation);
         $blueLocation = new GoatLocation();
         $blueLocation->x = -50;
@@ -203,7 +206,7 @@ class ActionTest extends TestCase
         $redLocation = new GoatLocation();
         $redLocation->x = -45;
         $redLocation->y = 50;
-        $redLocation->direction = 270;
+        $redLocation->direction = 180;
         $redGoat = new Stilly($redLocation);
         $blueLocation = new GoatLocation();
         $blueLocation->x = -50;
@@ -218,7 +221,7 @@ class ActionTest extends TestCase
         $redLocation = new GoatLocation();
         $redLocation->x = -45;
         $redLocation->y = 45;
-        $redLocation->direction = 315;
+        $redLocation->direction = 135;
         $redGoat = new Stilly($redLocation);
         $blueLocation = new GoatLocation();
         $blueLocation->x = -50;
@@ -236,7 +239,7 @@ class ActionTest extends TestCase
         $redLocation = new GoatLocation();
         $redLocation->x = 45;
         $redLocation->y = 45;
-        $redLocation->direction = 90;
+        $redLocation->direction = 0;
         $redGoat = new Quicky($redLocation);
         $blueLocation = new GoatLocation();
         $blueLocation->x = 46;
@@ -250,16 +253,18 @@ class ActionTest extends TestCase
         $this->assertEquals(0, $blueGoat->toughness);
 
         // SE
-        $redLocation->direction = 135;
+        $redLocation->direction = 315;
         $blueLocation->x = 46;
         $blueLocation->y = 44;
+        $blueGoat = new Quicky($blueLocation);
         $endLocation = $action->apply($redGoat, $redLocation, $blueGoat, $blueLocation);
         $this->assertEquals(0, $blueGoat->toughness);
 
         // S
-        $redLocation->direction = 180;
+        $redLocation->direction = 270;
         $blueLocation->x = 45;
         $blueLocation->y = 44;
+        $blueGoat = new Quicky($blueLocation);
         $endLocation = $action->apply($redGoat, $redLocation, $blueGoat, $blueLocation);
         $this->assertEquals(0, $blueGoat->toughness);
 
@@ -267,27 +272,31 @@ class ActionTest extends TestCase
         $redLocation->direction = 225;
         $blueLocation->x = 44;
         $blueLocation->y = 44;
+        $blueGoat = new Quicky($blueLocation);
         $endLocation = $action->apply($redGoat, $redLocation, $blueGoat, $blueLocation);
         $this->assertEquals(0, $blueGoat->toughness);
 
         // W
-        $redLocation->direction = 270;
+        $redLocation->direction = 180;
         $blueLocation->x = 44;
         $blueLocation->y = 45;
+        $blueGoat = new Quicky($blueLocation);
         $endLocation = $action->apply($redGoat, $redLocation, $blueGoat, $blueLocation);
         $this->assertEquals(0, $blueGoat->toughness);
 
         // NW
-        $redLocation->direction = 315;
+        $redLocation->direction = 135;
         $blueLocation->x = 44;
         $blueLocation->y = 46;
+        $blueGoat = new Quicky($blueLocation);
         $endLocation = $action->apply($redGoat, $redLocation, $blueGoat, $blueLocation);
         $this->assertEquals(0, $blueGoat->toughness);
 
         // N
-        $redLocation->direction = 0;
+        $redLocation->direction = 90;
         $blueLocation->x = 45;
         $blueLocation->y = 46;
+        $blueGoat = new Quicky($blueLocation);
         $endLocation = $action->apply($redGoat, $redLocation, $blueGoat, $blueLocation);
         $this->assertEquals(0, $blueGoat->toughness);
 

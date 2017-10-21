@@ -5,11 +5,10 @@ use App\GoatBattle\GoatLocation;
 
 abstract class Goat
 {
-    protected $name;
+    public $name = null;
     public $speed = 2;
     public $horns = 2;
     public $toughness = 2;
-    // public $location;
     public $color;
 
     /**
@@ -105,11 +104,6 @@ abstract class Goat
      */
     final public function turn($n)
     {
-        // $oldDirection = $this->location->direction;
-        // $newDirection = 45 * $n;
-        // $newDirection = ($oldDirection + $newDirection) % 360;
-        // $newDirection = ($newDirection > 0) ? $newDirection : (360 + $newDirection);
-        // $this->location->direction = ($oldDirection + $newDirection) % 360;
         $action = new Action('TURN', $n);
         return $action;
     }
@@ -126,6 +120,8 @@ abstract class Goat
             debug("Invalid direction");
             return $this->turn(0);
         }
+
+        $endDirection = ($endDirection == 360) ? 0 : $endDirection;
 
         $turnDegree = $endDirection - $myLocation->direction;
 
@@ -147,14 +143,15 @@ abstract class Goat
      * Be careful... PHP's atan2 function works differently than the conventions use so far
      * In geometry the 3:00 is considered "0" and positive rotations are counter-clockwise
      * So 9:00 = 180 etc. For historical reasons, this codebase consideres 12:00 = 0 and positive rotations
-     * move clockwise. This is confusing and will be remedidied in the near future! @TODO @TODO @TODO
+     * move clockwise. This is confusing and will be remedidied in the near future! @TODO
      */
     public function face($x, $y, $myLocation)
     {
         $radians = atan2(($y - $myLocation->y), ($x - $myLocation->x));
         $deg = $radians * (180 / pi()); //this value always assumes you're facing East
-        $turnMeasure = $deg + $myLocation->direction - 90; //<-- see above
-        $turnMeasure = round($turnMeasure / 45) * -1; //flip the sign because we rotate the opposite direction
+        
+        $turnMeasure = $myLocation->direction - $deg; //IS THIS RIGHT?
+        $turnMeasure = round($turnMeasure / 45);
         //fix 360 deg rotation
         $turnMeasure = (abs($turnMeasure) == 8) ? 0 : $turnMeasure;
         return $this->turn($turnMeasure);
