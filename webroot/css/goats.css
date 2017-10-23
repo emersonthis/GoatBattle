@@ -11,20 +11,23 @@ body {
 }
 
 .goat {
-    width: 2em;
-    height: 2em;
+    width: 4em;
+    height: 4em;
     position: absolute;
+    margin-left: -2em;
+    margin-bottom: -2em;
+
 }
 
 .goat--red {
-    /*fill : #F00; */
     transform: rotate(-135deg);
-    left: 0;
-    top: 0;
+    /*left: 0;
+    top: 0;*/
 }
+.goat--red path { fill : #F00; }
 .goat--blue {
-    /*fill : #00F; */
     transform: rotate(45deg);
-    right: 0;
-    top: calc(100% - 2em);
+    /*right: 0;
+    top: calc(100% - 2em);*/
 }
+.goat--blue path { fill : #00F; }
