@@ -1,0 +1,32 @@
+$goatWidth : 4em;
+$redColor : #F00;
+$blueColor : #00F;
+$yardColor : #F2FFEF;
+
+body {
+    font-size: 18px;
+}
+
+.yard {
+    width: 30em;
+    height: 30em;
+    /*border: 1px solid #999;*/
+    position: relative;
+    background-color: $yardColor;
+    margin: $goatWidth/2;
+}
+
+.goat {
+    width: $goatWidth;
+    height: $goatWidth;
+    position: absolute;
+    margin-left: -1 * $goatWidth/2;
+    margin-bottom: -1 * $goatWidth/2;
+}
+
+.goat--red {
+    path { fill : $redColor; }
+}
+.goat--blue {
+    path { fill : $blueColor; }
+}
