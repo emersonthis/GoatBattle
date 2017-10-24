@@ -105,8 +105,8 @@ class Battle
         Goat $otherGoat,
         GoatLocation $otherGoatLocation
     ) {
-        $goatActions = $this->getGoatActions($thisGoat, $thisGoatLocation, $otherGoatLocation);
-        $realGoatActions = $this->authorizeActions($thisGoat, $goatActions, $thisGoatLocation, $otherGoatLocation);
+        $goatActions = $this->getGoatActions($thisGoat, clone $thisGoatLocation, $otherGoatLocation);
+        $realGoatActions = $this->authorizeActions($thisGoat, $goatActions, clone $thisGoatLocation, $otherGoatLocation);
         foreach ($realGoatActions as $realAction) {
             $thisGoatLocation = $this->updateGoat($thisGoat, $thisGoatLocation, $otherGoat, $otherGoatLocation, $realAction);
         }

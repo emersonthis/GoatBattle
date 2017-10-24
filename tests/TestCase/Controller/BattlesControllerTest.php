@@ -1,7 +1,7 @@
 <?php
 namespace App\Test\TestCase\Controller;
 
-use App\Controller\BattleController;
+// use App\Controller\BattleController;
 use Cake\TestSuite\IntegrationTestCase;
 
 /**
@@ -16,7 +16,7 @@ class BattleControllerTest extends IntegrationTestCase
      * @var array
      */
     public $fixtures = [
-        'app.battle'
+        // 'app.battle'
     ];
 
     /**

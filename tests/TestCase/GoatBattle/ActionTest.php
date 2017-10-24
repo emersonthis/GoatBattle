@@ -249,6 +249,23 @@ class ActionTest extends TestCase
         $this->assertEquals(-1, $quickyLocation->x);
     }
 
+    public function testTurnZero()
+    {
+        $redLocation = new GoatLocation('RED');
+        $redGoat = new Stilly($redLocation);
+        $blueLocation = new GoatLocation('BLUE');
+        $blueGoat = new Quicky($blueLocation);
+        $action = new Action('TURN', 0);
+        $endLocation = $action->apply($redGoat, $redLocation, $blueGoat, $blueLocation);
+        $this->assertEquals(315, $endLocation->direction);
+
+        $secondAction = new Action('MOVE', 3);
+        $secondEndLocation = $secondAction->apply($redGoat, $redLocation, $blueGoat, $blueLocation);
+        $this->assertEquals(315, $endLocation->direction);
+        $this->assertEquals(-47, $endLocation->x);
+        $this->assertEquals(47, $endLocation->y);
+    }
+
     public function testRamGoat()
     {
         // East

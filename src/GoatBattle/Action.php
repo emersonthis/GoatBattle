@@ -240,7 +240,7 @@ class Action
 
         $goatLocation->direction = $newDirection;
 
-        return $goatLocation;
+        return clone $goatLocation;
     }
 
     /**
@@ -385,7 +385,7 @@ class Action
         $goatLocation = $this->trimMoveToBounds($goatLocation);
         // $goatLocation->x = $newLocation->x;
         // $goatLocation->y = $newLocation->y;
-        return $goatLocation;
+        return clone $goatLocation;
     }
 
     /**

@@ -21,13 +21,9 @@ body {
 
 .goat--red {
     transform: rotate(-135deg);
-    /*left: 0;
-    top: 0;*/
 }
 .goat--red path { fill : #F00; }
 .goat--blue {
     transform: rotate(45deg);
-    /*right: 0;
-    top: calc(100% - 2em);*/
 }
 .goat--blue path { fill : #00F; }
