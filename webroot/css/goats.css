@@ -20,10 +20,10 @@ body {
 }
 
 .goat--red {
-    transform: rotate(-135deg);
+    /*transform: rotate(-135deg);*/
 }
 .goat--red path { fill : #F00; }
 .goat--blue {
-    transform: rotate(45deg);
+    /*transform: rotate(45deg);*/
 }
 .goat--blue path { fill : #00F; }

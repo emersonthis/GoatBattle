@@ -249,8 +249,9 @@ class ActionTest extends TestCase
         $this->assertEquals(-1, $quickyLocation->x);
     }
 
-    public function testTurnZero()
+    public function testTurn()
     {
+        # zero turn
         $redLocation = new GoatLocation('RED');
         $redGoat = new Stilly($redLocation);
         $blueLocation = new GoatLocation('BLUE');
@@ -259,11 +260,20 @@ class ActionTest extends TestCase
         $endLocation = $action->apply($redGoat, $redLocation, $blueGoat, $blueLocation);
         $this->assertEquals(315, $endLocation->direction);
 
+        # move 3... not sure why this is in here
         $secondAction = new Action('MOVE', 3);
         $secondEndLocation = $secondAction->apply($redGoat, $redLocation, $blueGoat, $blueLocation);
         $this->assertEquals(315, $secondEndLocation->direction);
         $this->assertEquals(-47, $secondEndLocation->x);
         $this->assertEquals(47, $secondEndLocation->y);
+
+        $redLocation = new GoatLocation('RED');
+        $redGoat = new Stilly($redLocation);
+        $blueLocation = new GoatLocation('BLUE');
+        $blueGoat = new Quicky($blueLocation);
+        $action = new Action('TURN', 1);
+        $endLocation = $action->apply($blueGoat, $blueLocation, $redGoat, $redLocation);
+        $this->assertEquals(180, $endLocation->direction);
     }
 
     public function testRamGoat()

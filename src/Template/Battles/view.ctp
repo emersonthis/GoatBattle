@@ -25,22 +25,20 @@ $this->layout = false;
     <goat class="goat goat--blue" :x="blueGoat.x" :y="blueGoat.y" :direction="blueGoat.direction"></goat>
 </div><!-- .yard -->
 <button id="gobtn" v-on:click="startBattle()">GO!</button>
-<?php debug($battle); ?>
+<?php // debug($battle); ?>
 </div><!-- container -->
 <script src="https://unpkg.com/vue"></script>
 <script>
 var battle = <?= json_encode($battle); ?>;
 Vue.component('goat', {
-  template: '<svg :style="makeStyle()" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="275.163px" height="266.377px" viewBox="4.583 284.427 275.163 266.377" enable-background="new 4.583 284.427 275.163 266.377" xml:space="preserve"><path d="M110.221,294.093c-26.917,5.261-50.796,14.105-57.021,47.242c14.717-5.981,26.943-3.98,39.035,8.821 c-11.233,0.513-20.284,0.927-32.714,1.5c17.546,3.648,23.958,16.177,32.195,26.231c4.439,5.425,8.634,7.506,15.278,6.806 c9.212-0.966,18.065,0.275,27.306,2.455c12.577,2.979,26.118,0.859,37.729-4.833c19.814-9.694,39.059-11.245,58.64-0.641 c6.587,3.571,12.331,5.314,20.023,1.902c8.116-3.591,16.807-0.028,24.302,3.668c6.924,3.404,6.156,12.815-1.478,26.484 c-8.523-7.24-14.53-17.144-25.871-22.084c6.735,9.037,8.027,19.017,7.466,29.718c-0.699,13.532-2.979,25.843-11.977,37.02 c-7.457,9.264-14.912,20.032-4.379,32.529c2.141,2.537-0.453,5.386-0.572,8.119c-0.295,6.42-2.741,13.957,1.185,18.957 c8.581,10.922,1.715,20.23-1.993,29.327c-2.18,5.357-9.832,3.345-13.938,1.814c-5.465-2.041-0.72-6.639,1.125-8.425 c16.107-15.573,9.262-32.006,0.956-47.312c-8.878-16.364-17.339-32.601-20.2-53.877c-1.834,7.092-2.1,11.786-0.206,16.007 c4.468,9.955-1.055,12.478-9.272,14.113c-19.896,3.949-39.916,5.477-60.172,4.825c-10.984-0.347-21.733-0.247-19.859-16.77 c-1.644,20.329-6.891,39.82-0.641,59.685c2.727,8.663-3.373,17.224-1.993,26.861c0.708,4.972-9.947,1.477-15.392,2.554 c-0.181-1.381-0.674-2.518-0.334-2.892c21.523-23.89,1.412-45.631-3.458-68.146c-21.364-11.789-18.519-36.379-28.479-54.223 c-6.208-11.114-10.139-23.524-20.091-35.319c-2.441,12.37-5.593,22.431-15.066,30.016c-2.126-7.2,1.162-13.099,1.429-19.165 c0.266-5.967-1.154-7.959-7.645-5.918c-5.913,1.865-13.583,7.801-18.051-1.352c-3.892-7.971,0.286-15.457,6.729-20.219 c17.841-13.207,30.611-28.975,39.741-50.127C62.568,296.225,86.084,291.899,110.221,294.093z"/></svg>',
+  template: '<svg :style="makeStyle()" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="275.163px" height="266.377px" viewBox="4.583 284.427 275.163 266.377" enable-background="new 4.583 284.427 275.163 266.377" xml:space="preserve"><path d="M175.339,294.093c54.119-4.919,54.285,37.384,87.297,67.223c5.417,4.896,31.621,42.283,5.102,32.338 c-22.092-8.285-8.618,9.317-12.531,22.571c-9.431-7.551-12.829-18.679-15.066-30.016c-20,23.704-19.752,58.286-38.361,81.089 c-11.552,14.156-20.795,28.917-23.15,48.776c-1.643,13.858,10.646,19.301,9.148,30.715c-15.383-3.043-24.414-7.082-17.385-29.415 c6.178-19.633,0.963-39.86-0.641-59.685c2.803,24.718-35.9,17.205-50.08,16.082c-9.31-0.737-32.291-0.143-39.345-8.074 c-1.977-2.223,0.952-22.174-0.085-26.184c-3.579,26.616-37.166,63.308-27.356,89.379c2.591,6.889,21.632,21.727,1.546,21.911 c-8.683,0.079-12.572-16.331-12.36-22.382c0.537-15.334,14.633-46.146,7.145-60.268c-12.238-23.08-30.956-50.141-11.301-76.511 c-10.89,4.745-17.143,14.67-25.871,22.084c-19.13-34.254,12.66-25.571,33.251-28.484c26.991-3.818,39.99-16.749,68.236-2.929 c16.969,8.319,56.231,9.152,73.5,1.272c16.434-7.499,18.623-27.693,39.008-31.931c-10.904-0.502-21.809-1.002-32.714-1.5 c10.945-11.587,24.224-14.84,39.035-8.821C226.717,311.296,202.895,299.479,175.339,294.093 C199.476,291.899,202.256,299.354,175.339,294.093z"/> </svg>',
   props: ['x','y','direction'],
   methods : {
     makeStyle : function() {
         var x = (this.x + 50);
         var y = (this.y + 50);
-        // console.log('x',x);
-        // console.log('y',y);
-        console.log('makeStyle', this);
-        return "left:"+x+"%;bottom:"+y+"%;transform:rotate("+this.direction+");";
+        var flip = (this.direction > 90 == this.direction < 270) ? ' scaleY(-1)' : '';        
+        return "left:"+x+"%;bottom:"+y+"%;transform:rotate(-"+this.direction+"deg)"+flip+";";
     }
   }
 });
@@ -69,67 +67,38 @@ var app = new Vue({
     startBattle : function() {
         console.log('Start!');
         for (var i=0; i<this.battle.battleTranscript.length; i++) {
-            
-            
+
             var redGoatActions = this.battle.battleTranscript[i].redGoatActions;
             var blueGoatActions = this.battle.battleTranscript[i].blueGoatActions;
 
-            // for (var j=0; j<redGoatActions.length; j++) {
-            //     var that1 = this;
-            // }
-
-            var doAction = function(action, that) {
-                // console.log('this in doAction', this);
-                // console.log('that in doAction', that);
-                // console.log('app in doAction', app);
-
-                app.redGoat.x = action.endLocation.x;
-                app.redGoat.y = action.endLocation.y;
-                app.redGoat.direction = action.endLocation.direction;
-                // console.log(action);
+            var doAction = function(action, that, redOrBlue) {
+                if (redOrBlue == 'RED') {
+                    app.redGoat.x = action.endLocation.x;
+                    app.redGoat.y = action.endLocation.y;
+                    app.redGoat.direction = action.endLocation.direction;
+                } else {
+                    app.blueGoat.x = action.endLocation.x;
+                    app.blueGoat.y = action.endLocation.y;
+                    app.blueGoat.direction = action.endLocation.direction;
+                }
             };
 
+            //@TODO DRY this up
             for (var j = 0; j < redGoatActions.length; j++) {
-                
-                // console.log('j', j);
-
                 var delay = this.roundDuration*i + this.actionDuration*j;
-
                 setTimeout(function(index, action, goat, that, i) { return function() {
-
-                    // console.log('index', index);
                     app.viewRound = i;
-
-                    console.log(goat.name + 'action', action.actionsMap[action.type], action.measure);
-                    console.log('goat', goat);
-                    // console.log('that', that);
-                    doAction(action, that);
-                    console.log('app.redGoat', app.redGoat);
-                    console.log('action',action);
-
+                    doAction(action, that, 'RED');
                 }; }(j, redGoatActions[j], this.redGoat, this, i), delay);
             }
             
-
             for (var k = 0; k < blueGoatActions.length; k++) {
-                
                 var delay = this.roundDuration*i + this.actionDuration*k;
-
                 setTimeout(function(index, action, goat, that, i) { return function() {
-
-                    // console.log('index', index);
                     app.viewRound = i;
-
-                    // console.log(goat.name + 'action', action.actionsMap[action.type], action.measure);
-                    // console.log('goat', goat);
-                    // console.log('that', that);
-                    doAction(action, that);
-                    // console.log('app.redGoat', app.redGoat);
-                    // console.log('action',action);
-
+                    doAction(action, that, 'BLUE');
                 }; }(k, blueGoatActions[k], this.blueGoat, this, i), delay);
             }
-
 
         }
         console.log('The End');
