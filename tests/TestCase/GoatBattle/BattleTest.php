@@ -80,15 +80,26 @@ class BattleTest extends TestCase
     {
         $goatLocation1 = new GoatLocation();
         $goat1 = new DoNothing($goatLocation1);
-
         $goatLocation2 = new GoatLocation();
         $goat2 = new DoNothing($goatLocation2);
-
         $battle = new Battle($goat1, $goat2);
-
         $battle->go(); //we know these two goats will time out
-
         $this->assertEquals($battle->maxRounds, $battle->roundCount);
+
+        # We know that Stilly will start with a 0 turn, which should not change it's location
+        $goat1 = new Stilly();
+        $goat1Location = new GoatLocation('RED');
+        $goat2 = new Quicky();
+        $goat2Location = new GoatLocation('BLUE');
+        $battle = new Battle($goat1, $goat2);
+        $goat1Actions = $battle->takeTurn(
+            $goat1,
+            $goat1Location,
+            $goat2,
+            $goat2Location
+        );
+        $this->assertEquals(-50, $goat1Actions[0]->endLocation->x);
+        $this->assertEquals(50, $goat1Actions[0]->endLocation->y);
     }
 
     /**
@@ -223,5 +234,20 @@ class BattleTest extends TestCase
         $action = $goat1->turn(0);
         $battle->trimTurn($action, 1);
         $this->assertEquals(0, $action->measure);
+    }
+
+    public function testTranscriptStartsWithFullHealth()
+    {
+        $goat1Location = new GoatLocation('RED');
+        $goat1 = new Stilly($goat1Location); //speed = 4, toughness = 8
+        $goat1Health = $goat1->health;
+        $goat2Location = new GoatLocation('BLUE');
+        $goat2 = new Quicky($goat2Location);
+        $goat2Health = $goat2->health;
+        $battle = new Battle($goat1, $goat2);
+        $battle->go();
+
+        $this->assertEquals($goat1Health, $battle->battleTranscript[0]->redGoat->health);
+        $this->assertEquals($goat2Health, $battle->battleTranscript[0]->blueGoat->health);
     }
 }

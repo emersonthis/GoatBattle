@@ -89,21 +89,6 @@ var app = new Vue({
                 // console.log(action);
             };
 
-            // var j = 0;
-
-            // if (j < redGoatActions.length) {
-
-            //     // console.log('this.roundDuration', this.roundDuration);
-
-            //     setTimeout(function(that){
-            //         // console.log(that);
-            //         (function() { doAction(redGoatActions[j], that.redGoat, that); })()
-            //     }, this.roundDuration, this);
-
-            //     j++;
-
-            // }
-
             for (var j = 0; j < redGoatActions.length; j++) {
                 
                 // console.log('j', j);
@@ -123,19 +108,29 @@ var app = new Vue({
                     console.log('action',action);
 
                 }; }(j, redGoatActions[j], this.redGoat, this, i), delay);
-                // 1 2 3 4 5
             }
             
 
-            // for (var k=0; k<blueGoatActions.length; k++) {
-            //     var that2 = this;
-            //     setTimeout( function(that2){
-            //         that2.blueGoat.x = blueGoatActions[k].endLocation.x;
-            //         that2.blueGoat.y = blueGoatActions[k].endLocation.y;
-            //         that2.blueGoat.direction = blueGoatActions[k].endLocation.direction;
-            //         console.log(that2.blueGoat);
-            //     }, this.roundLength);
-            // }
+            for (var k = 0; k < blueGoatActions.length; k++) {
+                
+                var delay = this.roundDuration*i + this.actionDuration*k;
+
+                setTimeout(function(index, action, goat, that, i) { return function() {
+
+                    // console.log('index', index);
+                    app.viewRound = i;
+
+                    // console.log(goat.name + 'action', action.actionsMap[action.type], action.measure);
+                    // console.log('goat', goat);
+                    // console.log('that', that);
+                    doAction(action, that);
+                    // console.log('app.redGoat', app.redGoat);
+                    // console.log('action',action);
+
+                }; }(k, blueGoatActions[k], this.blueGoat, this, i), delay);
+            }
+
+
         }
         console.log('The End');
     }

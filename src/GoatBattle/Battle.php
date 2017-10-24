@@ -64,8 +64,8 @@ class Battle
             $newRound = new Round(
                 [
                     'number' => $this->roundCount,
-                    'redGoat' => $this->goat1,
-                    'blueGoat' => $this->goat2,
+                    'redGoat' => clone $this->goat1,
+                    'blueGoat' => clone $this->goat2,
                     'redGoatStartLocation' => clone $this->goat1Location,
                     'blueGoatStartLocation' => clone $this->goat2Location
                 ]

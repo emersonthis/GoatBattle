@@ -261,9 +261,9 @@ class ActionTest extends TestCase
 
         $secondAction = new Action('MOVE', 3);
         $secondEndLocation = $secondAction->apply($redGoat, $redLocation, $blueGoat, $blueLocation);
-        $this->assertEquals(315, $endLocation->direction);
-        $this->assertEquals(-47, $endLocation->x);
-        $this->assertEquals(47, $endLocation->y);
+        $this->assertEquals(315, $secondEndLocation->direction);
+        $this->assertEquals(-47, $secondEndLocation->x);
+        $this->assertEquals(47, $secondEndLocation->y);
     }
 
     public function testRamGoat()

@@ -111,7 +111,7 @@ class Action
             $this->ramGoat($thisGoat, $thisGoatLocation, $otherGoat, $otherGoatLocation);
         }
         $thisGoatLocation = $this->endLocation;
-        return $this->endLocation;
+        return clone $this->endLocation;
     }
 
     /**
@@ -231,7 +231,7 @@ class Action
      * @param GoatLocation $goatLocation the location of the goat before turn
      * @return GoatLocation the new location after turning
      */
-    private function turnGoat(GoatLocation $goatLocation)
+    private function turnGoat(GoatLocation &$goatLocation)
     {
         $oldDirection = $goatLocation->direction;
         $newDirection = 45 * $this->measure;
