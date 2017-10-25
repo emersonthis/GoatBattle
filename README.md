@@ -6,7 +6,7 @@ This is a game. It's very much still under development...
 
 ## The Rules
 
-## How to design your own competive \GoatBattle\Goat
+### How to design your own competive \GoatBattle\Goat
 1. Your goat class must extend \App\GoatBattle\Goat
 1. Your define three attributes which cannot add up to more than 20
   - Speed : determines how much you can do each turn
@@ -16,7 +16,7 @@ This is a game. It's very much still under development...
 1. Add your class file to src/GoatBattle and submit a PR
 1. When your class is merged it can battle other goats! @TODO URL HERE
 
-## More specs
+### More specs
 1. The playing field is 100 x 100 units tall and wide
 1. Goats can interact with the environment in one of three ways:
   - turn($n) : $n is an integer between 1-8. 1 is 45 degrees counterclockwise. -2 is 90 degrees clockwise. etc
