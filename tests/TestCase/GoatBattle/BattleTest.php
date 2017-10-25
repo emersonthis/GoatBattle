@@ -98,8 +98,8 @@ class BattleTest extends TestCase
             $goat2,
             $goat2Location
         );
-        $this->assertEquals(-50, $goat1Actions[0]->endLocation->x);
-        $this->assertEquals(50, $goat1Actions[0]->endLocation->y);
+        $this->assertEquals(-50, $goat1Actions[0]->endSituation->redGoatLocation->x);
+        $this->assertEquals(50, $goat1Actions[0]->endSituation->redGoatLocation->y);
     }
 
     /**
@@ -247,7 +247,7 @@ class BattleTest extends TestCase
         $battle = new Battle($goat1, $goat2);
         $battle->go();
 
-        $this->assertEquals($goat1Health, $battle->battleTranscript[0]->redGoat->health);
-        $this->assertEquals($goat2Health, $battle->battleTranscript[0]->blueGoat->health);
+        $this->assertEquals($goat1Health, $battle->battleTranscript[0]->redGoatActions[0]->startSituation->redGoat->health);
+        $this->assertEquals($goat2Health, $battle->battleTranscript[0]->redGoatActions[0]->startSituation->blueGoat->health);
     }
 }

@@ -64,10 +64,6 @@ class Battle
             $newRound = new Round(
                 [
                     'number' => $this->roundCount,
-                    'redGoat' => clone $this->goat1,
-                    'blueGoat' => clone $this->goat2,
-                    'redGoatStartLocation' => clone $this->goat1Location,
-                    'blueGoatStartLocation' => clone $this->goat2Location
                 ]
             );
             
@@ -79,12 +75,10 @@ class Battle
             );
 
             $newRound->redGoatActions = $goat1Actions;
-            $newRound->redGoatEndLocation = clone $this->goat1Location;
 
             # Handle red winning mid-round
             if ($this->goat2->health < 0) {
                 $newRound->blueGoatActions = [];
-                $newRound->blueGoatEndLocation = clone $this->goat2Location;
                 $this->battleTranscript[] = $newRound;
                 break;
             }
@@ -97,7 +91,6 @@ class Battle
             );
 
             $newRound->blueGoatActions = $goat2Actions;
-            $newRound->blueGoatEndLocation = clone $this->goat2Location;
             
             $this->battleTranscript[] = $newRound;
         }

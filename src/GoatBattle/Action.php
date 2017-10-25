@@ -14,10 +14,8 @@ class Action
         3 => 'RAM'
     ];
 
-
     public $measure = 0;
     public $type;
-    public $endLocation;
 
     public $startSituation;
     public $endSituation;
@@ -44,7 +42,6 @@ class Action
                 break;
             case "RAM":
                 $this->type = 3;
-                // $this->measure = $this->;
         }
     }
 
@@ -111,16 +108,16 @@ class Action
         ]);
 
         if ($this->isMove($this)) {
-            $this->endLocation = $this->moveGoat($thisGoatLocation, $otherGoatLocation);
+            $endLocation = $this->moveGoat($thisGoatLocation, $otherGoatLocation);
         }
         if ($this->isTurn($this)) {
-            $this->endLocation = $this->turnGoat($thisGoatLocation);
+            $endLocation = $this->turnGoat($thisGoatLocation);
         }
         if ($this->isRam($this)) {
-            $this->endLocation = $thisGoatLocation;
+            $endLocation = $thisGoatLocation;
             $this->ramGoat($thisGoat, $thisGoatLocation, $otherGoat, $otherGoatLocation);
         }
-        $thisGoatLocation = $this->endLocation;
+        $thisGoatLocation = $endLocation;
 
         $this->endSituation = new Situation([
             'redGoat' => ($thisGoat->color == 'RED') ? $thisGoat : $otherGoat,
@@ -129,7 +126,7 @@ class Action
             'blueGoatLocation' => ($thisGoat->color == 'BLUE') ? $thisGoatLocation : $otherGoatLocation
         ]);
         
-        return clone $this->endLocation;
+        return clone $endLocation;
     }
 
     /**
@@ -348,8 +345,6 @@ class Action
      */
     private function moveGoat(GoatLocation &$goatLocation, GoatLocation $otherGoatLocation)
     {
-        // $newLocation = clone $goatLocation;
-        // debug($this->measure);
         $this->measure = $this->trimMeasureIfBlocked($goatLocation, $otherGoatLocation);
         $n = $this->measure;
         
@@ -401,8 +396,6 @@ class Action
         }
         
         $goatLocation = $this->trimMoveToBounds($goatLocation);
-        // $goatLocation->x = $newLocation->x;
-        // $goatLocation->y = $newLocation->y;
         return clone $goatLocation;
     }
 

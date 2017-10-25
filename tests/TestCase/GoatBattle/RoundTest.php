@@ -48,7 +48,6 @@ class RoundTest extends TestCase
     public function constructTest()
     {
         $round = new Round($this->_info);
-        $this->assertEquals('Quicky', $round->redGoat->name);
-        $this->assertEquals('Stilly', $round->blueGoat->name);
+        $this->assertEquals(6, $round->number);
     }
 }
