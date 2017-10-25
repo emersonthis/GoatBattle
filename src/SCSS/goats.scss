@@ -42,13 +42,22 @@ body {
     margin-bottom: -1 * $goatWidth/2;
 
     &.isRamming {
-        path { fill: black!important; } //@TODO just for testing
+        .ramming { display: block; }
+        .standing { display: none; }
+    }
+
+    .ramming {
+        display: none;
+    }
+
+    .standing {
+
     }
 }
 
 .goat--red {
-    path { fill : $redColor; }
+    path, polygon { fill : $redColor; }
 }
 .goat--blue {
-    path { fill : $blueColor; }
+    path, polygon { fill : $blueColor; }
 }

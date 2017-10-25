@@ -38,7 +38,7 @@ $this->layout = false;
 <button id="gobtn" v-on:click="startBattle()">GO!</button>
 <?php //debug($battle); ?>
 </div><!-- container -->
-<script src="https://unpkg.com/vue"></script>
+<?= $this->Html->script('vue'); ?>
 <script>var battle = <?= json_encode($battle); ?>;</script>
 <?= $this->Html->script('battle'); ?>
 </body>
