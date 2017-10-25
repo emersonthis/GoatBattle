@@ -32,8 +32,8 @@ $this->layout = false;
     </div>
 </div>
 <div class="yard">
-    <goat class="goat goat--red" :x="redGoat.x" :y="redGoat.y" :direction="redGoat.direction"></goat>
-    <goat class="goat goat--blue" :x="blueGoat.x" :y="blueGoat.y" :direction="blueGoat.direction"></goat>
+    <goat class="goat goat--red" :x="redGoat.x" :y="redGoat.y" :direction="redGoat.direction" :is-ramming="redGoat.isRamming"></goat>
+    <goat class="goat goat--blue" :x="blueGoat.x" :y="blueGoat.y" :direction="blueGoat.direction" :is-ramming="blueGoat.isRamming"></goat>
 </div><!-- .yard -->
 <button id="gobtn" v-on:click="startBattle()">GO!</button>
 <?php //debug($battle); ?>

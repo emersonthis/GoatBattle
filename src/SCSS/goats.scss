@@ -40,6 +40,10 @@ body {
     position: absolute;
     margin-left: -1 * $goatWidth/2;
     margin-bottom: -1 * $goatWidth/2;
+
+    &.isRamming {
+        path { fill: black!important; } //@TODO just for testing
+    }
 }
 
 .goat--red {
