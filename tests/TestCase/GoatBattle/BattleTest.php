@@ -7,7 +7,7 @@ use App\GoatBattle\Battle;
 use App\GoatBattle\Goat;
 use App\GoatBattle\GoatLocation;
 use App\GoatBattle\Quicky;
-use App\GoatBattle\Stilly;
+use App\GoatBattle\Pokey;
 use App\Test\TestCase\GoatBattle\DoNothing;
 use App\Test\TestCase\GoatBattle\Faily1;
 use Cake\TestSuite\Fixture\PhpFixture;
@@ -43,10 +43,10 @@ class BattleTest extends TestCase
     public function constructTest()
     {
         $goatLocation1 = new GoatLocation();
-        $goat1 = new Stilly($goatLocation1);
+        $goat1 = new Pokey($goatLocation1);
 
         $goatLocation2 = new GoatLocation();
-        $goat2 = new Stilly($goatLocation2);
+        $goat2 = new Pokey($goatLocation2);
 
         $battle = new Battle($goat1, $goat2);
 
@@ -64,7 +64,7 @@ class BattleTest extends TestCase
     public function constructValidatesGoat()
     {
         $goatLocation1 = new GoatLocation();
-        $goat1 = new Stilly($goatLocation1);
+        $goat1 = new Pokey($goatLocation1);
 
         $goatLocation2 = new GoatLocation();
         $goat2 = new Faily1($goatLocation2);
@@ -86,8 +86,8 @@ class BattleTest extends TestCase
         $battle->go(); //we know these two goats will time out
         $this->assertEquals($battle->maxRounds, $battle->roundCount);
 
-        # We know that Stilly will start with a 0 turn, which should not change it's location
-        $goat1 = new Stilly();
+        # We know that  Pokey will start with a 0 turn, which should not change it's location
+        $goat1 = new Pokey();
         $goat1Location = new GoatLocation('RED');
         $goat2 = new Quicky();
         $goat2Location = new GoatLocation('BLUE');
@@ -109,10 +109,10 @@ class BattleTest extends TestCase
     public function testGameOn()
     {
         $goatLocation1 = new GoatLocation();
-        $goat1 = new Stilly($goatLocation1);
+        $goat1 = new Pokey($goatLocation1);
 
         $goatLocation2 = new GoatLocation();
-        $goat2 = new Stilly($goatLocation2);
+        $goat2 = new Pokey($goatLocation2);
 
         $battle = new Battle($goat1, $goat2);
 
@@ -136,10 +136,10 @@ class BattleTest extends TestCase
     public function testGetGoatActions()
     {
         $goatLocation1 = new GoatLocation('RED');
-        $goat1 = new Stilly($goatLocation1);
+        $goat1 = new Pokey($goatLocation1);
 
         $goatLocation2 = new GoatLocation('BLUE');
-        $goat2 = new Stilly($goatLocation2);
+        $goat2 = new Pokey($goatLocation2);
 
         $battle = new Battle($goat1, $goat2);
 
@@ -158,7 +158,7 @@ class BattleTest extends TestCase
     {
         $goat1 = new Quicky(); //speed = 10, toughness = 5
         $goat1Location = new GoatLocation('RED');
-        $goat2 = new Stilly();
+        $goat2 = new Pokey();
         $goat2Location = new GoatLocation('BLUE');
         $battle = new Battle($goat1, $goat2);
         
@@ -181,9 +181,9 @@ class BattleTest extends TestCase
     public function testTakeTurn()
     {
         $goat1Location = new GoatLocation('RED');
-        $goat1 = new Stilly($goat1Location); //speed = 4, toughness = 8
+        $goat1 = new Pokey($goat1Location); //speed = 4, toughness = 8
         $goat2Location = new GoatLocation('BLUE');
-        $goat2 = new Stilly($goat2Location);
+        $goat2 = new Pokey($goat2Location);
         $battle = new Battle($goat1, $goat2);
 
         $return = $battle->takeTurn(
@@ -214,9 +214,9 @@ class BattleTest extends TestCase
     public function testTrimTurn()
     {
         $goat1Location = new GoatLocation('RED');
-        $goat1 = new Stilly($goat1Location); //speed = 4, toughness = 8
+        $goat1 = new Pokey($goat1Location); //speed = 4, toughness = 8
         $goat2Location = new GoatLocation('BLUE');
-        $goat2 = new Stilly($goat2Location);
+        $goat2 = new Pokey($goat2Location);
         $battle = new Battle($goat1, $goat2);
 
         $action = $goat1->turn(8);
@@ -239,7 +239,7 @@ class BattleTest extends TestCase
     public function testTranscriptStartsWithFullHealth()
     {
         $goat1Location = new GoatLocation('RED');
-        $goat1 = new Stilly($goat1Location); //speed = 4, toughness = 8
+        $goat1 = new Pokey($goat1Location); //speed = 4, toughness = 8
         $goat1Health = $goat1->health;
         $goat2Location = new GoatLocation('BLUE');
         $goat2 = new Quicky($goat2Location);

@@ -4,7 +4,7 @@ namespace App\Controller;
 use App\Controller\AppController;
 use App\GoatBattle\Battle;
 use App\GoatBattle\Quicky;
-use App\GoatBattle\Stilly;
+use App\GoatBattle\Pokey;
 
 /**
  * Battle Controller
@@ -41,7 +41,7 @@ class BattlesController extends AppController
         // ]);
 
         
-        $battle = new Battle(new Stilly(), new Quicky());
+        $battle = new Battle(new Pokey(), new Quicky());
         $battle->go();
         $this->set('battle', $battle);
         // $this->set('_serialize', ['battle']);

@@ -6,7 +6,7 @@ use App\GoatBattle\Action;
 use App\GoatBattle\Goat;
 use App\GoatBattle\GoatLocation;
 use App\GoatBattle\Quicky;
-use App\GoatBattle\Stilly;
+use App\GoatBattle\Pokey;
 use App\Test\TestCase\GoatBattle\Faily1;
 use Cake\TestSuite\Fixture\PhpFixture;
 use Cake\TestSuite\TestCase;
@@ -41,7 +41,7 @@ class GoatTest extends TestCase
     public function validateAttributesTest()
     {
         $goatLocation = new GoatLocation();
-        $goat = new Stilly($goatLocation);
+        $goat = new Pokey($goatLocation);
         $result = $goat->validateAttributes();
         $this->assertTrue($result);
 
@@ -57,7 +57,7 @@ class GoatTest extends TestCase
     public function turnTest()
     {
         $goatLocation = new GoatLocation();
-        $goat = new Stilly($goatLocation);
+        $goat = new Pokey($goatLocation);
         $action = $goat->turn(5);
         $this->assertTrue($action instanceof \App\GoatBattle\Action);
         $this->assertEquals(5, $action->measure);
@@ -70,7 +70,7 @@ class GoatTest extends TestCase
     public function moveTest()
     {
         $goatLocation = new GoatLocation();
-        $goat = new Stilly($goatLocation);
+        $goat = new Pokey($goatLocation);
         $action = $goat->move(5);
         $this->assertTrue($action instanceof \App\GoatBattle\Action);
         $this->assertEquals(5, $action->measure);
@@ -86,7 +86,7 @@ class GoatTest extends TestCase
         $location->x = 0;
         $location->y = 0;
         $location->direction = 0;
-        $goat = new Stilly($location);
+        $goat = new Pokey($location);
 
         $action = $goat->face(0, 50, $location);
 
@@ -107,7 +107,7 @@ class GoatTest extends TestCase
         $location->x = -50;
         $location->y = 50;
         $location->direction = 315;
-        $goat = new Stilly($location);
+        $goat = new Pokey($location);
         $action = $goat->face(0, 0, $location);
         $this->assertEquals(0, $action->measure);
 
@@ -116,7 +116,7 @@ class GoatTest extends TestCase
         $location->x = 50;
         $location->y = -50;
         $location->direction = 135;
-        $goat = new Stilly($location);
+        $goat = new Pokey($location);
         $action = $goat->face(0, 0, $location);
         $this->assertEquals(0, $action->measure);
     }

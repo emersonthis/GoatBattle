@@ -6,7 +6,7 @@ use App\GoatBattle\Action;
 use App\GoatBattle\Goat;
 use App\GoatBattle\GoatLocation;
 use App\GoatBattle\Quicky;
-// use App\GoatBattle\Stilly;
+// use App\GoatBattle\ Pokey;
 // use App\Test\TestCase\GoatBattle\Faily;
 // use Cake\TestSuite\Fixture\PhpFixture;
 use Cake\TestSuite\TestCase;

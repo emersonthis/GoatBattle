@@ -3,12 +3,12 @@ namespace App\GoatBattle;
 
 use App\GoatBattle\Goat;
 
-class Stilly extends Goat
+class Pokey extends Goat
 {
     public $speed = 4;
     public $horns = 8;
     public $toughness = 8;
-    public $name = "Stilly";
+    public $name = "Pokey";
 
     /**
      */

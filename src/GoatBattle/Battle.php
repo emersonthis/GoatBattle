@@ -273,7 +273,7 @@ class Battle
     }
 
     /**
-     *
+     * @TODO does this even get used? It should live in Action
      */
     private function describeActionRound($actions)
     {

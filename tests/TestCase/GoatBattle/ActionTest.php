@@ -6,7 +6,7 @@ use App\GoatBattle\Action;
 use App\GoatBattle\Goat;
 use App\GoatBattle\GoatLocation;
 use App\GoatBattle\Quicky;
-use App\GoatBattle\Stilly;
+use App\GoatBattle\Pokey;
 use App\Test\TestCase\GoatBattle\Faily;
 use Cake\TestSuite\Fixture\PhpFixture;
 use Cake\TestSuite\TestCase;
@@ -52,9 +52,9 @@ class ActionTest extends TestCase
     public function testApply()
     {
         $redLocation = new GoatLocation('RED');
-        $redGoat = new Stilly($redLocation);
+        $redGoat = new Pokey($redLocation);
         $blueLocation = new GoatLocation('BLUE');
-        $blueGoat = new Stilly($blueLocation);
+        $blueGoat = new Pokey($blueLocation);
         
         $action = new Action('MOVE', 2);
         $endLocation = $action->apply($redGoat, $redLocation, $blueGoat, $blueLocation);
@@ -81,7 +81,7 @@ class ActionTest extends TestCase
         $redLocation = new GoatLocation('RED');
         $redGoat = new Quicky($redLocation);
         $blueLocation = new GoatLocation('BLUE');
-        $blueGoat = new Stilly($blueLocation);
+        $blueGoat = new Pokey($blueLocation);
         # no change
         $this->assertEquals($blueLocation->x, 50);
         $this->assertEquals($blueLocation->y, -50);
@@ -109,12 +109,12 @@ class ActionTest extends TestCase
         $redLocation->x = 50;
         $redLocation->y = -50;
         $redLocation->direction = 90;
-        $redGoat = new Stilly($redLocation);
+        $redGoat = new Pokey($redLocation);
         $blueLocation = new GoatLocation();
         $blueLocation->x = 50;
         $blueLocation->y = -49;
         $blueLocation->direction = 270;
-        $blueGoat = new Stilly($blueLocation);
+        $blueGoat = new Pokey($blueLocation);
         $action = new Action('MOVE', 2);
         $endLocation = $action->apply($redGoat, $redLocation, $blueGoat, $blueLocation);
         $this->assertEquals(-50, $endLocation->y);
@@ -127,12 +127,12 @@ class ActionTest extends TestCase
         $redLocation->x = 47;
         $redLocation->y = 47;
         $redLocation->direction = 45;
-        $redGoat = new Stilly($redLocation);
+        $redGoat = new Pokey($redLocation);
         $blueLocation = new GoatLocation();
         $blueLocation->x = 50;
         $blueLocation->y = 50;
         $blueLocation->direction = 270;
-        $blueGoat = new Stilly($blueLocation);
+        $blueGoat = new Pokey($blueLocation);
         $action = new Action('MOVE', 8);
         $endLocation = $action->apply($redGoat, $redLocation, $blueGoat, $blueLocation);
         $this->assertEquals(49, $endLocation->y);
@@ -142,12 +142,12 @@ class ActionTest extends TestCase
         $redLocation->x = 44;
         $redLocation->y = 50;
         $redLocation->direction = 0;
-        $redGoat = new Stilly($redLocation);
+        $redGoat = new Pokey($redLocation);
         $blueLocation = new GoatLocation();
         $blueLocation->x = 50;
         $blueLocation->y = 50;
         $blueLocation->direction = 270;
-        $blueGoat = new Stilly($blueLocation);
+        $blueGoat = new Pokey($blueLocation);
         $action = new Action('MOVE', 8);
         $action->apply($redGoat, $redLocation, $blueGoat, $blueLocation);
         // debug($redLocation);
@@ -160,12 +160,12 @@ class ActionTest extends TestCase
         $redLocation->x = 45;
         $redLocation->y = -45;
         $redLocation->direction = 315;
-        $redGoat = new Stilly($redLocation);
+        $redGoat = new Pokey($redLocation);
         $blueLocation = new GoatLocation();
         $blueLocation->x = 50;
         $blueLocation->y = -50;
         $blueLocation->direction = 270;
-        $blueGoat = new Stilly($blueLocation);
+        $blueGoat = new Pokey($blueLocation);
         $action = new Action('MOVE', 8);
         $endLocation = $action->apply($redGoat, $redLocation, $blueGoat, $blueLocation);
         $this->assertEquals(49, $endLocation->x);
@@ -177,12 +177,12 @@ class ActionTest extends TestCase
         $redLocation->x = -50;
         $redLocation->y = 50;
         $redLocation->direction = 270;
-        $redGoat = new Stilly($redLocation);
+        $redGoat = new Pokey($redLocation);
         $blueLocation = new GoatLocation();
         $blueLocation->x = -50;
         $blueLocation->y = 49;
         $blueLocation->direction = 270;
-        $blueGoat = new Stilly($blueLocation);
+        $blueGoat = new Pokey($blueLocation);
         $action = new Action('MOVE', 2);
         $endLocation = $action->apply($redGoat, $redLocation, $blueGoat, $blueLocation);
         $this->assertEquals(50, $endLocation->y);
@@ -192,12 +192,12 @@ class ActionTest extends TestCase
         $redLocation->x = -47;
         $redLocation->y = -47;
         $redLocation->direction = 225;
-        $redGoat = new Stilly($redLocation);
+        $redGoat = new Pokey($redLocation);
         $blueLocation = new GoatLocation();
         $blueLocation->x = -50;
         $blueLocation->y = -50;
         $blueLocation->direction = 270;
-        $blueGoat = new Stilly($blueLocation);
+        $blueGoat = new Pokey($blueLocation);
         $action = new Action('MOVE', 8);
         $endLocation = $action->apply($redGoat, $redLocation, $blueGoat, $blueLocation);
         $this->assertEquals(-49, $endLocation->y);
@@ -207,12 +207,12 @@ class ActionTest extends TestCase
         $redLocation->x = -45;
         $redLocation->y = 50;
         $redLocation->direction = 180;
-        $redGoat = new Stilly($redLocation);
+        $redGoat = new Pokey($redLocation);
         $blueLocation = new GoatLocation();
         $blueLocation->x = -50;
         $blueLocation->y = 50;
         $blueLocation->direction = 270;
-        $blueGoat = new Stilly($blueLocation);
+        $blueGoat = new Pokey($blueLocation);
         $action = new Action('MOVE', 8);
         $endLocation = $action->apply($redGoat, $redLocation, $blueGoat, $blueLocation);
         $this->assertEquals(-49, $endLocation->x);
@@ -222,17 +222,17 @@ class ActionTest extends TestCase
         $redLocation->x = -45;
         $redLocation->y = 45;
         $redLocation->direction = 135;
-        $redGoat = new Stilly($redLocation);
+        $redGoat = new Pokey($redLocation);
         $blueLocation = new GoatLocation();
         $blueLocation->x = -50;
         $blueLocation->y = 50;
         $blueLocation->direction = 270;
-        $blueGoat = new Stilly($blueLocation);
+        $blueGoat = new Pokey($blueLocation);
         $action = new Action('MOVE', 8);
         $endLocation = $action->apply($redGoat, $redLocation, $blueGoat, $blueLocation);
         $this->assertEquals(-49, $endLocation->x);
 
-        // Quicky vs Stilly experiment
+        // Quicky vs  Pokey experiment
         $quickyLocation = new GoatLocation();
         $quickyLocation->x = -2;
         $quickyLocation->y = 0;
@@ -242,7 +242,7 @@ class ActionTest extends TestCase
         $stillyLocation->x = 0;
         $stillyLocation->y = 0;
         $stillyLocation->direction = 0;
-        $stilly = new Stilly($stillyLocation);
+        $stilly = new Pokey($stillyLocation);
         $action = new Action('MOVE', 2);
         $endLocation = $action->apply($quicky, $quickyLocation, $stilly, $stillyLocation);
         $this->assertEquals(-1, $endLocation->x);
@@ -253,7 +253,7 @@ class ActionTest extends TestCase
     {
         # zero turn
         $redLocation = new GoatLocation('RED');
-        $redGoat = new Stilly($redLocation);
+        $redGoat = new Pokey($redLocation);
         $blueLocation = new GoatLocation('BLUE');
         $blueGoat = new Quicky($blueLocation);
         $action = new Action('TURN', 0);
@@ -268,7 +268,7 @@ class ActionTest extends TestCase
         $this->assertEquals(47, $secondEndLocation->y);
 
         $redLocation = new GoatLocation('RED');
-        $redGoat = new Stilly($redLocation);
+        $redGoat = new Pokey($redLocation);
         $blueLocation = new GoatLocation('BLUE');
         $blueGoat = new Quicky($blueLocation);
         $action = new Action('TURN', 1);
