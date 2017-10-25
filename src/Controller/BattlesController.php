@@ -2,9 +2,13 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+# List all goat classes here
 use App\GoatBattle\Battle;
-use App\GoatBattle\Quicky;
 use App\GoatBattle\Pokey;
+use App\GoatBattle\Quicky;
+// use Cake\Core\Exception\Exception;
+// use Cake\Error\FatalErrorException;
+use Cake\Network\Exception\BadRequestException;
 
 /**
  * Battle Controller
@@ -34,14 +38,28 @@ class BattlesController extends AppController
      * @return \Cake\Network\Response|null
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
-    public function view($id = null)
+    public function view($redGoatClass, $blueGoatClass)
     {
         // $battle = $this->Battle->get($id, [
         //     'contain' => []
         // ]);
-
+        $fullRedGoatClass = "App\\GoatBattle\\" . $redGoatClass;
+        $fullBlueGoatClass = "App\\GoatBattle\\" . $blueGoatClass;
         
-        $battle = new Battle(new Pokey(), new Quicky());
+        //@TODO These try/catches aren't working!
+        try {
+            $redGoat = new $fullRedGoatClass();
+        } catch (\Exception $e) {
+            throw new BadRequestException("Bad Goat class: {$redGoatClass}");
+        }
+
+        try {
+            $blueGoat = new $fullBlueGoatClass();
+        } catch (\Exception $e) {
+            throw new BadRequestException("Bad Goat class: {$blueGoatClass}");
+        }
+        
+        $battle = new Battle($redGoat, $blueGoat);
         $battle->go();
         $this->set('battle', $battle);
         // $this->set('_serialize', ['battle']);
