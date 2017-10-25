@@ -19,6 +19,9 @@ class Action
     public $type;
     public $endLocation;
 
+    public $startSituation;
+    public $endSituation;
+
     /**
      * Construct
      */
@@ -97,9 +100,16 @@ class Action
     public function apply(
         Goat $thisGoat,
         GoatLocation &$thisGoatLocation,
-        Goat $otherGoat,
+        Goat &$otherGoat,
         GoatLocation $otherGoatLocation
     ) {
+        $this->startSituation = new Situation([
+            'redGoat' => ($thisGoat->color == 'RED') ? $thisGoat : $otherGoat,
+            'blueGoat' => ($thisGoat->color == 'BLUE') ? $thisGoat : $otherGoat,
+            'redGoatLocation' => ($thisGoat->color == 'RED') ? $thisGoatLocation : $otherGoatLocation,
+            'blueGoatLocation' => ($thisGoat->color == 'BLUE') ? $thisGoatLocation : $otherGoatLocation
+        ]);
+
         if ($this->isMove($this)) {
             $this->endLocation = $this->moveGoat($thisGoatLocation, $otherGoatLocation);
         }
@@ -111,6 +121,14 @@ class Action
             $this->ramGoat($thisGoat, $thisGoatLocation, $otherGoat, $otherGoatLocation);
         }
         $thisGoatLocation = $this->endLocation;
+
+        $this->endSituation = new Situation([
+            'redGoat' => ($thisGoat->color == 'RED') ? $thisGoat : $otherGoat,
+            'blueGoat' => ($thisGoat->color == 'BLUE') ? $thisGoat : $otherGoat,
+            'redGoatLocation' => ($thisGoat->color == 'RED') ? $thisGoatLocation : $otherGoatLocation,
+            'blueGoatLocation' => ($thisGoat->color == 'BLUE') ? $thisGoatLocation : $otherGoatLocation
+        ]);
+        
         return clone $this->endLocation;
     }
 
@@ -124,7 +142,7 @@ class Action
     private function ramGoat(
         Goat $thisGoat,
         GoatLocation $thisGoatLocation,
-        Goat $otherGoat,
+        Goat &$otherGoat,
         GoatLocation $otherGoatLocation
     ) {
         if ($this->isOtherGoatRammable($thisGoatLocation, $otherGoatLocation)) {

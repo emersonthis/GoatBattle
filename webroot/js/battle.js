@@ -21,24 +21,24 @@ var app = new Vue({
         x: -50,
         y: 50,
         direction: 315,
-        // health: battle.goat1.health,
+        health: battle.goat1.toughness,
         name: battle.goat1.name
     },
     blueGoat: {
         x: 50,
         y: -50,
         direction: 135,
-        // health: battle.goat2.health,
+        health: battle.goat2.toughness,
         name: battle.goat2.name
     }
   },
   methods : {
-    goatHealth : function(redOrBlue) {
-        if (this.viewRound) {
-            return (redOrBlue == 'RED') ? battle.battleTranscript[this.viewRound - 1].redGoat.health : battle.battleTranscript[this.viewRound - 1].blueGoat.health;
-        }
-        return (redOrBlue == 'RED') ? battle.battleTranscript[0].redGoat.health : battle.battleTranscript[0].blueGoat.health;
-    },
+    // goatHealth : function(redOrBlue) {
+    //     if (this.viewRound) {
+    //         return (redOrBlue == 'RED') ? battle.battleTranscript[this.viewRound - 1].redGoat.health : battle.battleTranscript[this.viewRound - 1].blueGoat.health;
+    //     }
+    //     return (redOrBlue == 'RED') ? battle.battleTranscript[0].redGoat.health : battle.battleTranscript[0].blueGoat.health;
+    // },
     startBattle : function() {
         console.log('Start!');
 
@@ -52,14 +52,15 @@ var app = new Vue({
             //@TODO We also need to update the goats' health so that we can see the effects of a ram
             var doAction = function(action, that, redOrBlue) {
                 if (redOrBlue == 'RED') {
-                    app.redGoat.x = action.endLocation.x;
-                    app.redGoat.y = action.endLocation.y;
-                    app.redGoat.direction = action.endLocation.direction;
+                    app.redGoat.x = action.endSituation.redGoatLocation.x;
+                    app.redGoat.y = action.endSituation.redGoatLocation.y;
+                    app.redGoat.direction = action.endSituation.redGoatLocation.direction;
+                    app.blueGoat.health = action.endSituation.blueGoat.health;
                 } else {
-                    app.blueGoat.x = action.endLocation.x;
-                    app.blueGoat.y = action.endLocation.y;
-                    app.blueGoat.direction = action.endLocation.direction;
-                    // console.log('action.endLocation.x', action.endLocation.x);
+                    app.blueGoat.x = action.endSituation.blueGoatLocation.x;
+                    app.blueGoat.y = action.endSituation.blueGoatLocation.y;
+                    app.blueGoat.direction = action.endSituation.blueGoatLocation.direction;
+                    app.redGoat.health = action.endSituation.redGoat.health;
                 }
             };
 

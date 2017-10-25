@@ -20,7 +20,7 @@ $this->layout = false;
 <div class="header">
     <div class="header__goat header__goat--red">
         <strong class="header__goatname">{{battle.goat1.name}}</strong>
-        <div>({{redGoat.x}},{{redGoat.y}}) {{redGoat.direction}}&deg; &hearts;=<span>{{goatHealth('RED')}}</span></div>
+        <div>({{redGoat.x}},{{redGoat.y}}) {{redGoat.direction}}&deg; &hearts;=<span>{{redGoat.health}}</span></div>
     </div>
     <div class="header__middle">
         <div>Round {{viewRound}}</div>
@@ -28,7 +28,7 @@ $this->layout = false;
     </div>
     <div class="header__goat header__goat--blue">
         <strong class="header__goatname">{{battle.goat2.name}}</strong>
-        <div>({{blueGoat.x}},{{blueGoat.y}}) {{blueGoat.direction}}&deg; &hearts;=<span>{{goatHealth('BLUE')}}</span></div>
+        <div>({{blueGoat.x}},{{blueGoat.y}}) {{blueGoat.direction}}&deg; &hearts;=<span>{{blueGoat.health}}</span></div>
     </div>
 </div>
 <div class="yard">
