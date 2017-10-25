@@ -5,6 +5,24 @@ $yardColor : #F2FFEF;
 
 body {
     font-size: 18px;
+    font-family: monospace;
+}
+.header {
+    text-align:center;
+    display: flex;
+    align-items: bottom;
+}
+.header__goat {
+    flex-basis: 40%;
+}
+.header__goat--red {
+    .header__goatname { color: $redColor; }
+}
+.header__goat--blue {
+    .header__goatname { color: $blueColor; }
+}
+.header__middle {
+    flex-basis: 20%;
 }
 
 .yard {
@@ -13,7 +31,7 @@ body {
     /*border: 1px solid #999;*/
     position: relative;
     background-color: $yardColor;
-    margin: $goatWidth/2;
+    margin: $goatWidth/2 auto;
 }
 
 .goat {

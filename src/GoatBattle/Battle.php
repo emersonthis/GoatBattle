@@ -11,7 +11,7 @@ class Battle
     public $battleTranscript = [];
     public $roundCount = 0;
     public $maxRounds = 100;
-    private $outcomesMap = [
+    public $outcomesMap = [
         # we personalize 1 and 2 in __construct
         1 => 'Goat 1 wins!',
         2 => 'Goat 2 wins!',
@@ -80,6 +80,14 @@ class Battle
 
             $newRound->redGoatActions = $goat1Actions;
             $newRound->redGoatEndLocation = clone $this->goat1Location;
+
+            # Handle red winning mid-round
+            if ($this->goat2->health < 0) {
+                $newRound->blueGoatActions = [];
+                $newRound->blueGoatEndLocation = clone $this->goat2Location;
+                $this->battleTranscript[] = $newRound;
+                break;
+            }
             
             $goat2Actions = $this->takeTurn(
                 $this->goat2,
