@@ -3,7 +3,6 @@ namespace App\GoatBattle;
 
 use App\GoatBattle\Action;
 use App\GoatBattle\Goat;
-use APP\GoatBattle\Quicky;
 
 class Quicky extends Goat
 {
