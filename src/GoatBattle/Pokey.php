@@ -12,7 +12,7 @@ class Pokey extends Goat
 
     /**
      */
-    public function action(GoatLocation $myLocation, GoatLocation $opponentLocation)
+    public function action(Location $myLocation, Location $opponentLocation)
     {
         $actions = [];
         if (!$this->isAtCenter($myLocation)) {

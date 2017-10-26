@@ -10,9 +10,11 @@ class Fatty extends Goat
     private $toughness = 8;
     public $name = "Fatty";
 
-    public function action(GoatLocation $myLocation, GoatLocation $opponentLocation)
+    /**
+     *
+     */
+    public function action(Location $myLocation, Location $opponentLocation)
     {
         return [];
     }
-
 }

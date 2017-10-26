@@ -4,7 +4,7 @@ namespace App\Shell;
 use App\GoatBattle\Battle;
 use App\GoatBattle\Fatty;
 use App\GoatBattle\Goat;
-use App\GoatBattle\GoatLocation;
+use App\GoatBattle\Location;
 use App\GoatBattle\Quicky;
 use App\GoatBattle\Pokey;
 use Cake\Console\Shell;

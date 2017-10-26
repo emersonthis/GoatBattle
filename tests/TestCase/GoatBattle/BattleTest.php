@@ -5,9 +5,9 @@ namespace App\Test\TestCase\GoatBattle;
 use App\GoatBattle\Action;
 use App\GoatBattle\Battle;
 use App\GoatBattle\Goat;
-use App\GoatBattle\GoatLocation;
-use App\GoatBattle\Quicky;
+use App\GoatBattle\Location;
 use App\GoatBattle\Pokey;
+use App\GoatBattle\Quicky;
 use App\Test\TestCase\GoatBattle\DoNothing;
 use App\Test\TestCase\GoatBattle\Faily1;
 use Cake\TestSuite\Fixture\PhpFixture;
@@ -42,18 +42,18 @@ class BattleTest extends TestCase
      */
     public function constructTest()
     {
-        $goatLocation1 = new GoatLocation();
+        $goatLocation1 = new Location();
         $goat1 = new Pokey($goatLocation1);
 
-        $goatLocation2 = new GoatLocation();
+        $goatLocation2 = new Location();
         $goat2 = new Pokey($goatLocation2);
 
         $battle = new Battle($goat1, $goat2);
 
         $this->assertTrue($battle->goat1 instanceof Goat); //assertInstanceOf()
-        $this->assertTrue($battle->goat1Location instanceof GoatLocation);
+        $this->assertTrue($battle->goat1Location instanceof Location);
         $this->assertTrue($battle->goat2 instanceof Goat);
-        $this->assertTrue($battle->goat2Location instanceof GoatLocation);
+        $this->assertTrue($battle->goat2Location instanceof Location);
     }
 
     /**
@@ -63,10 +63,10 @@ class BattleTest extends TestCase
      */
     public function constructValidatesGoat()
     {
-        $goatLocation1 = new GoatLocation();
+        $goatLocation1 = new Location();
         $goat1 = new Pokey($goatLocation1);
 
-        $goatLocation2 = new GoatLocation();
+        $goatLocation2 = new Location();
         $goat2 = new Faily1($goatLocation2);
 
         $battle = new Battle($goat1, $goat2);
@@ -78,9 +78,9 @@ class BattleTest extends TestCase
      */
     public function testGo()
     {
-        $goatLocation1 = new GoatLocation();
+        $goatLocation1 = new Location();
         $goat1 = new DoNothing($goatLocation1);
-        $goatLocation2 = new GoatLocation();
+        $goatLocation2 = new Location();
         $goat2 = new DoNothing($goatLocation2);
         $battle = new Battle($goat1, $goat2);
         $battle->go(); //we know these two goats will time out
@@ -88,9 +88,9 @@ class BattleTest extends TestCase
 
         # We know that  Pokey will start with a 0 turn, which should not change it's location
         $goat1 = new Pokey();
-        $goat1Location = new GoatLocation('RED');
+        $goat1Location = new Location('RED');
         $goat2 = new Quicky();
-        $goat2Location = new GoatLocation('BLUE');
+        $goat2Location = new Location('BLUE');
         $battle = new Battle($goat1, $goat2);
         $goat1Actions = $battle->takeTurn(
             $goat1,
@@ -98,8 +98,8 @@ class BattleTest extends TestCase
             $goat2,
             $goat2Location
         );
-        $this->assertEquals(-50, $goat1Actions[0]->endSituation->redGoatLocation->x);
-        $this->assertEquals(50, $goat1Actions[0]->endSituation->redGoatLocation->y);
+        $this->assertEquals(-50, $goat1Actions[0]->endSituation->redLocation->x);
+        $this->assertEquals(50, $goat1Actions[0]->endSituation->redLocation->y);
     }
 
     /**
@@ -108,10 +108,10 @@ class BattleTest extends TestCase
      */
     public function testGameOn()
     {
-        $goatLocation1 = new GoatLocation();
+        $goatLocation1 = new Location();
         $goat1 = new Pokey($goatLocation1);
 
-        $goatLocation2 = new GoatLocation();
+        $goatLocation2 = new Location();
         $goat2 = new Pokey($goatLocation2);
 
         $battle = new Battle($goat1, $goat2);
@@ -135,10 +135,10 @@ class BattleTest extends TestCase
      */
     public function testGetGoatActions()
     {
-        $goatLocation1 = new GoatLocation('RED');
+        $goatLocation1 = new Location('RED');
         $goat1 = new Pokey($goatLocation1);
 
-        $goatLocation2 = new GoatLocation('BLUE');
+        $goatLocation2 = new Location('BLUE');
         $goat2 = new Pokey($goatLocation2);
 
         $battle = new Battle($goat1, $goat2);
@@ -157,9 +157,9 @@ class BattleTest extends TestCase
     public function testAthorizeActions()
     {
         $goat1 = new Quicky(); //speed = 10, toughness = 5
-        $goat1Location = new GoatLocation('RED');
+        $goat1Location = new Location('RED');
         $goat2 = new Pokey();
-        $goat2Location = new GoatLocation('BLUE');
+        $goat2Location = new Location('BLUE');
         $battle = new Battle($goat1, $goat2);
         
         $action1 = new Action('MOVE', 3);
@@ -180,9 +180,9 @@ class BattleTest extends TestCase
      */
     public function testTakeTurn()
     {
-        $goat1Location = new GoatLocation('RED');
+        $goat1Location = new Location('RED');
         $goat1 = new Pokey($goat1Location); //speed = 4, toughness = 8
-        $goat2Location = new GoatLocation('BLUE');
+        $goat2Location = new Location('BLUE');
         $goat2 = new Pokey($goat2Location);
         $battle = new Battle($goat1, $goat2);
 
@@ -213,9 +213,9 @@ class BattleTest extends TestCase
 
     public function testTrimTurn()
     {
-        $goat1Location = new GoatLocation('RED');
+        $goat1Location = new Location('RED');
         $goat1 = new Pokey($goat1Location); //speed = 4, toughness = 8
-        $goat2Location = new GoatLocation('BLUE');
+        $goat2Location = new Location('BLUE');
         $goat2 = new Pokey($goat2Location);
         $battle = new Battle($goat1, $goat2);
 
@@ -238,10 +238,10 @@ class BattleTest extends TestCase
 
     public function testTranscriptStartsWithFullHealth()
     {
-        $goat1Location = new GoatLocation('RED');
+        $goat1Location = new Location('RED');
         $goat1 = new Pokey($goat1Location); //speed = 4, toughness = 8
         $goat1Health = $goat1->health;
-        $goat2Location = new GoatLocation('BLUE');
+        $goat2Location = new Location('BLUE');
         $goat2 = new Quicky($goat2Location);
         $goat2Health = $goat2->health;
         $battle = new Battle($goat1, $goat2);

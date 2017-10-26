@@ -4,7 +4,7 @@ namespace App\Test\TestCase\GoatBattle;
 
 use App\GoatBattle\Action;
 use App\GoatBattle\Goat;
-use App\GoatBattle\GoatLocation;
+use App\GoatBattle\Location;
 use App\GoatBattle\Quicky;
 // use App\GoatBattle\ Pokey;
 // use App\Test\TestCase\GoatBattle\Faily;
@@ -24,8 +24,8 @@ class QuickyTest extends TestCase
 
     public function testAction()
     {
-        $location = new GoatLocation('RED');
-        $anotherLocation = new GoatLocation('BLUE');
+        $location = new Location('RED');
+        $anotherLocation = new Location('BLUE');
         $quicky = new Quicky($location);
         $actions = $quicky->action($location, $anotherLocation);
         
@@ -40,8 +40,8 @@ class QuickyTest extends TestCase
 
     // public function testTurnToFaceAndAdvance()
     // {
-    //     $location = new GoatLocation('RED');
-    //     $anotherLocation = new GoatLocation('BLUE');
+    //     $location = new Location('RED');
+    //     $anotherLocation = new Location('BLUE');
     //     $quicky = new Quicky($location);
     //     $actions = $quicky->turnToFaceAndAdvance($location, $anotherLocation);
 

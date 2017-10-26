@@ -4,19 +4,19 @@ namespace App\Test\TestCase\GoatBattle;
 
 use App\GoatBattle\Action;
 use App\GoatBattle\Goat;
-use App\GoatBattle\GoatLocation;
+use App\GoatBattle\Location;
 use App\GoatBattle\Quicky;
 // use App\GoatBattle\ Pokey;
 // use App\Test\TestCase\GoatBattle\Faily;
 // use Cake\TestSuite\Fixture\PhpFixture;
 use Cake\TestSuite\TestCase;
 
-class GoatLocationTest extends TestCase
+class LocationTest extends TestCase
 {
     public function testConstruct()
     {
-        $red = new GoatLocation('RED');
-        $blue = new GoatLocation('BLUE');
+        $red = new Location('RED');
+        $blue = new Location('BLUE');
 
         $this->assertEquals(-50, $red->x);
         $this->assertEquals(50, $red->y);
@@ -26,11 +26,11 @@ class GoatLocationTest extends TestCase
 
     public function testFacing()
     {
-        $l1 = new GoatLocation('RED');
+        $l1 = new Location('RED');
         $this->assertEquals($l1->facing(), 'Southeast');
-        $l2 = new GoatLocation('BLUE');
+        $l2 = new Location('BLUE');
         $this->assertEquals($l2->facing(), 'Northwest');
-        $l3 = new GoatLocation();
+        $l3 = new Location();
         $l3->direction = 45;
         $this->assertEquals($l3->facing(), 'Northeast');
         $l3->direction = 225;
@@ -39,7 +39,7 @@ class GoatLocationTest extends TestCase
 
     public function testDescribe()
     {
-        $loc = new GoatLocation();
+        $loc = new Location();
         $loc->x = -50;
         $loc->y = 41;
         $loc->direction = 180;

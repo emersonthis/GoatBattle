@@ -1,7 +1,7 @@
 <?php
 namespace App\GoatBattle;
 
-use App\GoatBattle\GoatLocation;
+use App\GoatBattle\Location;
 
 abstract class Goat
 {
@@ -21,7 +21,7 @@ abstract class Goat
         // $this->speed = $this->setSpeed();
         // $this->horns = $this->setHorns();
         // $this->toughness = $this->setToughness();
-        // $this->location = ($location) ? $location : new GoatLocation();
+        // $this->location = ($location) ? $location : new Location();
         $this->health = ($this->toughness) ? $this->toughness : 1;
     }
 
@@ -60,7 +60,7 @@ abstract class Goat
     /**
      *
      */
-    abstract public function action(GoatLocation $myLocation, GoatLocation $opponentLocation);
+    abstract public function action(Location $myLocation, Location $opponentLocation);
 
     /**
      *
@@ -96,7 +96,7 @@ abstract class Goat
     /**
      * Turn to
      * @param int $endDirection the direction to turn to
-     * @param GoatLocation $myLocation the current goat location
+     * @param Location $myLocation the current goat location
      * @return Action
      */
     public function turnTo($endDirection, $myLocation)
@@ -123,7 +123,7 @@ abstract class Goat
      * Face towards a coordinate
      * @param int $x the x coordinate to face
      * @param int $y the y coordinate to face
-     * @param GoatLocation $myLocation the current location of this goat
+     * @param Location $myLocation the current location of this goat
      * @return Action
      * Be careful... PHP's atan2 function works differently than the conventions use so far
      * In geometry the 3:00 is considered "0" and positive rotations are counter-clockwise
@@ -164,7 +164,7 @@ abstract class Goat
     /**
      *
      */
-    final protected function approach(GoatLocation $location)
+    final protected function approach(Location $location)
     {
     }
 

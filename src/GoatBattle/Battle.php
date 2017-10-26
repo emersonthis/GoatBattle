@@ -36,8 +36,8 @@ class Battle
         $this->outcomesMap[1] = "{$goat1->name} wins!";
         $this->outcomesMap[2] = "{$goat2->name} wins!";
 
-        $this->goat1Location = new GoatLocation('RED');
-        $this->goat2Location = new GoatLocation('BLUE');
+        $this->goat1Location = new Location('RED');
+        $this->goat2Location = new Location('BLUE');
 
         $this->goat1StartLocation = clone $this->goat1Location;
         $this->goat1->color = 'RED';
@@ -102,14 +102,14 @@ class Battle
      */
     public function takeTurn(
         Goat $thisGoat,
-        GoatLocation &$thisGoatLocation,
+        Location &$thisLocation,
         Goat $otherGoat,
-        GoatLocation $otherGoatLocation
+        Location $otherLocation
     ) {
-        $goatActions = $this->getGoatActions($thisGoat, clone $thisGoatLocation, $otherGoatLocation);
-        $realGoatActions = $this->authorizeActions($thisGoat, $goatActions, clone $thisGoatLocation, $otherGoatLocation);
+        $goatActions = $this->getGoatActions($thisGoat, clone $thisLocation, $otherLocation);
+        $realGoatActions = $this->authorizeActions($thisGoat, $goatActions, clone $thisLocation, $otherLocation);
         foreach ($realGoatActions as $realAction) {
-            $thisGoatLocation = $this->updateGoat($thisGoat, $thisGoatLocation, $otherGoat, $otherGoatLocation, $realAction);
+            $thisLocation = $this->updateGoat($thisGoat, $thisLocation, $otherGoat, $otherLocation, $realAction);
         }
         return $realGoatActions;
     }
@@ -117,7 +117,7 @@ class Battle
     /**
      *
      */
-    public function authorizeActions(Goat $goat, $goatActions, GoatLocation $goatLocation, GoatLocation $otherGoatLocation)
+    public function authorizeActions(Goat $goat, $goatActions, Location $goatLocation, Location $otherLocation)
     {
         $actions = [];
         $availableAction = $goat->speed;
@@ -212,10 +212,10 @@ class Battle
     /**
      *
      */
-    public function getGoatActions(Goat $goat, GoatLocation $thisGoatLocation, GoatLocation $opponentGoatLocation)
+    public function getGoatActions(Goat $goat, Location $thisLocation, Location $opponentLocation)
     {
-        $opponentGoatLocation = clone $opponentGoatLocation;
-        $roundActionsFromGoat = $goat->action($thisGoatLocation, $opponentGoatLocation);
+        $opponentLocation = clone $opponentLocation;
+        $roundActionsFromGoat = $goat->action($thisLocation, $opponentLocation);
         return $roundActionsFromGoat;
     }
 
@@ -224,12 +224,12 @@ class Battle
      */
     public function updateGoat(
         Goat $thisGoat,
-        GoatLocation &$thisGoatLocation,
+        Location &$thisLocation,
         Goat $otherGoat,
-        GoatLocation $otherGoatLocation,
+        Location $otherLocation,
         Action $action
     ) {
-        $newLocation = $action->apply($thisGoat, $thisGoatLocation, $otherGoat, $otherGoatLocation);
+        $newLocation = $action->apply($thisGoat, $thisLocation, $otherGoat, $otherLocation);
         return $newLocation;
     }
 

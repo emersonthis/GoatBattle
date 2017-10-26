@@ -89,41 +89,41 @@ class Action
     /**
      * Apply the action
      * @param Goat $thisGoat the goat doing the action
-     * @param GoatLocation $thisGoatLocation the location of this goat
+     * @param Location $thisLocation the location of this goat
      * @param Goat $otherGoat the other goat
-     * @param GoatLocation $otherGoatLocation the other goat's location
-     * @return GoatLocation
+     * @param Location $otherLocation the other goat's location
+     * @return Location
      */
     public function apply(
         Goat $thisGoat,
-        GoatLocation &$thisGoatLocation,
+        Location &$thisLocation,
         Goat &$otherGoat,
-        GoatLocation $otherGoatLocation
+        Location $otherLocation
     ) {
         $this->startSituation = new Situation([
             'redGoat' => ($thisGoat->color == 'RED') ? $thisGoat : $otherGoat,
             'blueGoat' => ($thisGoat->color == 'BLUE') ? $thisGoat : $otherGoat,
-            'redGoatLocation' => ($thisGoat->color == 'RED') ? $thisGoatLocation : $otherGoatLocation,
-            'blueGoatLocation' => ($thisGoat->color == 'BLUE') ? $thisGoatLocation : $otherGoatLocation
+            'redLocation' => ($thisGoat->color == 'RED') ? $thisLocation : $otherLocation,
+            'blueLocation' => ($thisGoat->color == 'BLUE') ? $thisLocation : $otherLocation
         ]);
 
         if ($this->isMove($this)) {
-            $endLocation = $this->moveGoat($thisGoatLocation, $otherGoatLocation);
+            $endLocation = $this->moveGoat($thisLocation, $otherLocation);
         }
         if ($this->isTurn($this)) {
-            $endLocation = $this->turnGoat($thisGoatLocation);
+            $endLocation = $this->turnGoat($thisLocation);
         }
         if ($this->isRam($this)) {
-            $endLocation = $thisGoatLocation;
-            $this->ramGoat($thisGoat, $thisGoatLocation, $otherGoat, $otherGoatLocation);
+            $endLocation = $thisLocation;
+            $this->ramGoat($thisGoat, $thisLocation, $otherGoat, $otherLocation);
         }
-        $thisGoatLocation = $endLocation;
+        $thisLocation = $endLocation;
 
         $this->endSituation = new Situation([
             'redGoat' => ($thisGoat->color == 'RED') ? $thisGoat : $otherGoat,
             'blueGoat' => ($thisGoat->color == 'BLUE') ? $thisGoat : $otherGoat,
-            'redGoatLocation' => ($thisGoat->color == 'RED') ? $thisGoatLocation : $otherGoatLocation,
-            'blueGoatLocation' => ($thisGoat->color == 'BLUE') ? $thisGoatLocation : $otherGoatLocation
+            'redLocation' => ($thisGoat->color == 'RED') ? $thisLocation : $otherLocation,
+            'blueLocation' => ($thisGoat->color == 'BLUE') ? $thisLocation : $otherLocation
         ]);
         
         return clone $endLocation;
@@ -132,57 +132,57 @@ class Action
     /**
      * Make a goat ram
      * @param Goat $thisGoat the goat doing the ramming
-     * @param GoatLocation $thisGoatLocation the location of the ramming goat
+     * @param Location $thisLocation the location of the ramming goat
      * @param Goat $otherGoat the goat being rammed
-     * @param GoatLocation $otherGoatLocation the location of the other goat
+     * @param Location $otherLocation the location of the other goat
      */
     private function ramGoat(
         Goat $thisGoat,
-        GoatLocation $thisGoatLocation,
+        Location $thisLocation,
         Goat &$otherGoat,
-        GoatLocation $otherGoatLocation
+        Location $otherLocation
     ) {
-        if ($this->isOtherGoatRammable($thisGoatLocation, $otherGoatLocation)) {
+        if ($this->isOtherGoatRammable($thisLocation, $otherLocation)) {
             $otherGoat->health -= $thisGoat->horns;
         }
     }
 
     /**
      * Return true or false if the other goat is in position for ramming
-     * @param GoatLocation $rammingGoatLocation the location of the ramming goat
-     * @param GoatLocation $otherGoatLocation the location of the goat to be rammed
+     * @param Location $rammingLocation the location of the ramming goat
+     * @param Location $otherLocation the location of the goat to be rammed
      * @return bool
      */
-    public static function isOtherGoatRammable($rammingGoatLocation, $otherGoatLocation)
+    public static function isOtherGoatRammable($rammingLocation, $otherLocation)
     {
-        switch ($rammingGoatLocation->direction) {
+        switch ($rammingLocation->direction) {
             //E
             case 0:
             case 360:
-                if ($rammingGoatLocation->x != ($otherGoatLocation->x - 1)) {
+                if ($rammingLocation->x != ($otherLocation->x - 1)) {
                     return false;
                 }
-                if ($rammingGoatLocation->y != $otherGoatLocation->y) {
+                if ($rammingLocation->y != $otherLocation->y) {
                     return false;
                 }
                 break;
 
             //NE
             case 45:
-                if ($rammingGoatLocation->x != ($otherGoatLocation->x - 1)) {
+                if ($rammingLocation->x != ($otherLocation->x - 1)) {
                     return false;
                 }
-                if ($rammingGoatLocation->y != ($otherGoatLocation->y - 1)) {
+                if ($rammingLocation->y != ($otherLocation->y - 1)) {
                     return false;
                 }
                 break;
 
             //N
             case 90:
-                if ($rammingGoatLocation->x != $otherGoatLocation->x) {
+                if ($rammingLocation->x != $otherLocation->x) {
                     return false;
                 }
-                if ($rammingGoatLocation->y != ($otherGoatLocation->y - 1)) {
+                if ($rammingLocation->y != ($otherLocation->y - 1)) {
                     return false;
                 }
                 break;
@@ -190,50 +190,50 @@ class Action
 
             // NW
             case 135:
-                if ($rammingGoatLocation->x != ($otherGoatLocation->x + 1)) {
+                if ($rammingLocation->x != ($otherLocation->x + 1)) {
                     return false;
                 }
-                if ($rammingGoatLocation->y != ($otherGoatLocation->y - 1)) {
+                if ($rammingLocation->y != ($otherLocation->y - 1)) {
                     return false;
                 }
                 break;
 
             //W
             case 180:
-                if ($rammingGoatLocation->x != ($otherGoatLocation->x + 1)) {
+                if ($rammingLocation->x != ($otherLocation->x + 1)) {
                     return false;
                 }
-                if ($rammingGoatLocation->y != ($otherGoatLocation->y)) {
+                if ($rammingLocation->y != ($otherLocation->y)) {
                     return false;
                 }
                 break;
 
             // SW
             case 225:
-                if ($rammingGoatLocation->x != ($otherGoatLocation->x + 1)) {
+                if ($rammingLocation->x != ($otherLocation->x + 1)) {
                     return false;
                 }
-                if ($rammingGoatLocation->y != ($otherGoatLocation->y + 1)) {
+                if ($rammingLocation->y != ($otherLocation->y + 1)) {
                     return false;
                 }
                 break;
 
             //S
             case 270:
-                if ($rammingGoatLocation->x != $otherGoatLocation->x) {
+                if ($rammingLocation->x != $otherLocation->x) {
                     return false;
                 }
-                if ($rammingGoatLocation->y != ($otherGoatLocation->y + 1)) {
+                if ($rammingLocation->y != ($otherLocation->y + 1)) {
                     return false;
                 }
                 break;
 
             // SE
             case 315:
-                if ($rammingGoatLocation->x != ($otherGoatLocation->x - 1)) {
+                if ($rammingLocation->x != ($otherLocation->x - 1)) {
                     return false;
                 }
-                if ($rammingGoatLocation->y != ($otherGoatLocation->y + 1)) {
+                if ($rammingLocation->y != ($otherLocation->y + 1)) {
                     return false;
                 }
                 break;
@@ -243,10 +243,10 @@ class Action
 
     /**
      * Turn the goat
-     * @param GoatLocation $goatLocation the location of the goat before turn
-     * @return GoatLocation the new location after turning
+     * @param Location $goatLocation the location of the goat before turn
+     * @return Location the new location after turning
      */
-    private function turnGoat(GoatLocation &$goatLocation)
+    private function turnGoat(Location &$goatLocation)
     {
         $oldDirection = $goatLocation->direction;
         $newDirection = 45 * $this->measure;
@@ -260,10 +260,10 @@ class Action
 
     /**
      * Trim the move location to stay in bounds
-     * @param GoatLocation $location after action
-     * @return GoatLocation
+     * @param Location $location after action
+     * @return Location
      */
-    private function trimMoveToBounds(GoatLocation $location)
+    private function trimMoveToBounds(Location $location)
     {
         if ($location->y > 50) {
             $location->y = 50;
@@ -282,11 +282,11 @@ class Action
 
     /**
      * Trim the move location to not pass thru other goat
-     * @param GoatLocation $location after action
-     * @param GoatLocation $otherLocation of other goat
+     * @param Location $location after action
+     * @param Location $otherLocation of other goat
      * @return measure
      */
-    private function trimMeasureIfBlocked(GoatLocation $location, GoatLocation $otherLocation)
+    private function trimMeasureIfBlocked(Location $location, Location $otherLocation)
     {
         $yDifference = $otherLocation->y - $location->y;
         $xDifference = $otherLocation->x - $location->x;
@@ -339,13 +339,13 @@ class Action
 
     /**
      * Move the goat
-     * @param GoatLocation $goatLocation the location of this goat
-     * @param GoatLocation $otherGoatLocation the location of the other goat
-     * @return GoatLocation the ending location after the move
+     * @param Location $goatLocation the location of this goat
+     * @param Location $otherLocation the location of the other goat
+     * @return Location the ending location after the move
      */
-    private function moveGoat(GoatLocation &$goatLocation, GoatLocation $otherGoatLocation)
+    private function moveGoat(Location &$goatLocation, Location $otherLocation)
     {
-        $this->measure = $this->trimMeasureIfBlocked($goatLocation, $otherGoatLocation);
+        $this->measure = $this->trimMeasureIfBlocked($goatLocation, $otherLocation);
         $n = $this->measure;
         
         switch ($goatLocation->direction) {

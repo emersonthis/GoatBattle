@@ -4,7 +4,7 @@ namespace App\Test\TestCase\GoatBattle;
 
 use App\GoatBattle\Action;
 use App\GoatBattle\Goat;
-use App\GoatBattle\GoatLocation;
+use App\GoatBattle\Location;
 use App\GoatBattle\Quicky;
 use App\GoatBattle\Pokey;
 use App\Test\TestCase\GoatBattle\Faily1;
@@ -40,7 +40,7 @@ class GoatTest extends TestCase
      */
     public function validateAttributesTest()
     {
-        $goatLocation = new GoatLocation();
+        $goatLocation = new Location();
         $goat = new Pokey($goatLocation);
         $result = $goat->validateAttributes();
         $this->assertTrue($result);
@@ -56,7 +56,7 @@ class GoatTest extends TestCase
      */
     public function turnTest()
     {
-        $goatLocation = new GoatLocation();
+        $goatLocation = new Location();
         $goat = new Pokey($goatLocation);
         $action = $goat->turn(5);
         $this->assertTrue($action instanceof \App\GoatBattle\Action);
@@ -69,7 +69,7 @@ class GoatTest extends TestCase
      */
     public function moveTest()
     {
-        $goatLocation = new GoatLocation();
+        $goatLocation = new Location();
         $goat = new Pokey($goatLocation);
         $action = $goat->move(5);
         $this->assertTrue($action instanceof \App\GoatBattle\Action);
@@ -82,7 +82,7 @@ class GoatTest extends TestCase
      */
     public function testFace()
     {
-        $location = new GoatLocation();
+        $location = new Location();
         $location->x = 0;
         $location->y = 0;
         $location->direction = 0;
@@ -103,7 +103,7 @@ class GoatTest extends TestCase
         $this->assertEquals(4, abs($action->measure));
 
         //RED CORNER NOT WORKING
-        $location = new GoatLocation();
+        $location = new Location();
         $location->x = -50;
         $location->y = 50;
         $location->direction = 315;
@@ -112,7 +112,7 @@ class GoatTest extends TestCase
         $this->assertEquals(0, $action->measure);
 
         //BLUE CORNER NOT WORKING
-        $location = new GoatLocation();
+        $location = new Location();
         $location->x = 50;
         $location->y = -50;
         $location->direction = 135;
@@ -123,7 +123,7 @@ class GoatTest extends TestCase
 
     public function testTurnTo()
     {
-        $location = new GoatLocation('BLUE');
+        $location = new Location('BLUE');
         $quicky = new Quicky($location);
         $action = $quicky->turnTo(0, $location);
         $this->assertInstanceOf(Action::class, $action);

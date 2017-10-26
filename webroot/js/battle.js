@@ -73,14 +73,14 @@ var app = new Vue({
                 }
 
                 if (redOrBlue == 'RED') {
-                    app.redGoat.x = action.endSituation.redGoatLocation.x;
-                    app.redGoat.y = action.endSituation.redGoatLocation.y;
-                    app.redGoat.direction = action.endSituation.redGoatLocation.direction;
+                    app.redGoat.x = action.endSituation.redLocation.x;
+                    app.redGoat.y = action.endSituation.redLocation.y;
+                    app.redGoat.direction = action.endSituation.redLocation.direction;
                     app.blueGoat.health = action.endSituation.blueGoat.health;
                 } else {
-                    app.blueGoat.x = action.endSituation.blueGoatLocation.x;
-                    app.blueGoat.y = action.endSituation.blueGoatLocation.y;
-                    app.blueGoat.direction = action.endSituation.blueGoatLocation.direction;
+                    app.blueGoat.x = action.endSituation.blueLocation.x;
+                    app.blueGoat.y = action.endSituation.blueLocation.y;
+                    app.blueGoat.direction = action.endSituation.blueLocation.direction;
                     app.redGoat.health = action.endSituation.redGoat.health;
                 }
             };

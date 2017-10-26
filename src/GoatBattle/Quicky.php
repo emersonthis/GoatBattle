@@ -16,7 +16,7 @@ class Quicky extends Goat
     /**
      *
      */
-    public function action(GoatLocation $myLocation, GoatLocation $opponentLocation)
+    public function action(Location $myLocation, Location $opponentLocation)
     {
         $actions1 = $this->turnToFaceAndAdvance($myLocation, $opponentLocation);
         $actions1[] = $this->ram();
@@ -26,7 +26,7 @@ class Quicky extends Goat
     /**
      *
      */
-    public function turnToFaceAndAdvance(GoatLocation $myLocation, GoatLocation $opponentLocation)
+    public function turnToFaceAndAdvance(Location $myLocation, Location $opponentLocation)
     {
         $north = false;
         $east = false;

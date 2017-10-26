@@ -6,8 +6,8 @@ class Situation
 {
     public $redGoat;
     public $blueGoat;
-    public $redGoatLocation;
-    public $blueGoatLocation;
+    public $redLocation;
+    public $blueLocation;
 
     /**
      */
@@ -16,7 +16,7 @@ class Situation
         //@TODO Throw error if anythign missing
         $this->redGoat = clone $data['redGoat'];
         $this->blueGoat = clone $data['blueGoat'];
-        $this->redGoatLocation = clone $data['redGoatLocation'];
-        $this->blueGoatLocation = clone $data['blueGoatLocation'];
+        $this->redLocation = clone $data['redLocation'];
+        $this->blueLocation = clone $data['blueLocation'];
     }
 }

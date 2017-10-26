@@ -2,7 +2,7 @@
 
 namespace App\GoatBattle;
 
-class GoatLocation
+class Location
 {
     public $direction;
     public $x;
