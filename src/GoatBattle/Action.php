@@ -1,6 +1,6 @@
 <?php
 
-namespace App\GoatBattle;
+namespace GoatBattle;
 
 class Action
 {

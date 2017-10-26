@@ -46,6 +46,10 @@ class ComposerStaticInite526de0732fd393bc2450d1f5fac20f1
         array (
             'Migrations\\' => 11,
         ),
+        'G' => 
+        array (
+            'GoatBattle\\' => 11,
+        ),
         'D' => 
         array (
             'DebugKit\\Test\\Fixture\\' => 22,
@@ -122,6 +126,10 @@ class ComposerStaticInite526de0732fd393bc2450d1f5fac20f1
         'Migrations\\' => 
         array (
             0 => __DIR__ . '/..' . '/cakephp/migrations/src',
+        ),
+        'GoatBattle\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/src/GoatBattle',
         ),
         'DebugKit\\Test\\Fixture\\' => 
         array (

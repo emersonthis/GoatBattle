@@ -1,8 +1,8 @@
 <?php
-namespace App\GoatBattle;
+namespace GoatBattle;
 
-use App\GoatBattle\Action;
-use App\GoatBattle\Goat;
+use GoatBattle\Action;
+use GoatBattle\Goat;
 
 class Quicky extends Goat
 {

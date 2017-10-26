@@ -7,7 +7,7 @@ This is a game. It's very much still under development...
 ## The Rules
 
 ### How to design your own competive \GoatBattle\Goat
-1. Your goat class must extend \App\GoatBattle\Goat
+1. Your goat class must extend \GoatBattle\Goat
 1. Your define three attributes which cannot add up to more than 20
   - Speed : determines how much you can do each turn
   - Horns : determines how damage your ram() inflicts

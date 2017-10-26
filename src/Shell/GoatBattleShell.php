@@ -1,12 +1,12 @@
 <?php
 namespace App\Shell;
 
-use App\GoatBattle\Battle;
-use App\GoatBattle\Fatty;
-use App\GoatBattle\Goat;
-use App\GoatBattle\Location;
-use App\GoatBattle\Quicky;
-use App\GoatBattle\Pokey;
+use GoatBattle\Battle;
+use GoatBattle\Fatty;
+use GoatBattle\Goat;
+use GoatBattle\Location;
+use GoatBattle\Quicky;
+use GoatBattle\Pokey;
 use Cake\Console\Shell;
 
 /**

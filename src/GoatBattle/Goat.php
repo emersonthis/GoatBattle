@@ -1,7 +1,7 @@
 <?php
-namespace App\GoatBattle;
+namespace GoatBattle;
 
-use App\GoatBattle\Location;
+use GoatBattle\Location;
 
 abstract class Goat
 {

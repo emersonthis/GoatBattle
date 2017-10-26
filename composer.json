@@ -23,7 +23,8 @@
     },
     "autoload": {
         "psr-4": {
-            "App\\": "src"
+            "App\\": "src",
+            "GoatBattle\\": "src/GoatBattle"
         }
     },
     "autoload-dev": {

@@ -3,9 +3,9 @@ namespace App\Controller;
 
 use App\Controller\AppController;
 # List all goat classes here
-use App\GoatBattle\Battle;
-use App\GoatBattle\Pokey;
-use App\GoatBattle\Quicky;
+use GoatBattle\Battle;
+use GoatBattle\Pokey;
+use GoatBattle\Quicky;
 // use Cake\Core\Exception\Exception;
 // use Cake\Error\FatalErrorException;
 use Cake\Network\Exception\BadRequestException;
@@ -43,8 +43,8 @@ class BattlesController extends AppController
         // $battle = $this->Battle->get($id, [
         //     'contain' => []
         // ]);
-        $fullRedGoatClass = "App\\GoatBattle\\" . $redGoatClass;
-        $fullBlueGoatClass = "App\\GoatBattle\\" . $blueGoatClass;
+        $fullRedGoatClass = "GoatBattle\\" . $redGoatClass;
+        $fullBlueGoatClass = "GoatBattle\\" . $blueGoatClass;
         
         //@TODO These try/catches aren't working!
         try {

@@ -2,11 +2,11 @@
 
 namespace App\Test\TestCase\GoatBattle;
 
-use App\GoatBattle\Action;
-use App\GoatBattle\Goat;
-use App\GoatBattle\Location;
-use App\GoatBattle\Quicky;
-use App\GoatBattle\Pokey;
+use GoatBattle\Action;
+use GoatBattle\Goat;
+use GoatBattle\Location;
+use GoatBattle\Quicky;
+use GoatBattle\Pokey;
 use App\Test\TestCase\GoatBattle\Faily1;
 use Cake\TestSuite\Fixture\PhpFixture;
 use Cake\TestSuite\TestCase;
@@ -59,7 +59,7 @@ class GoatTest extends TestCase
         $goatLocation = new Location();
         $goat = new Pokey($goatLocation);
         $action = $goat->turn(5);
-        $this->assertTrue($action instanceof \App\GoatBattle\Action);
+        $this->assertTrue($action instanceof \GoatBattle\Action);
         $this->assertEquals(5, $action->measure);
     }
 
@@ -72,7 +72,7 @@ class GoatTest extends TestCase
         $goatLocation = new Location();
         $goat = new Pokey($goatLocation);
         $action = $goat->move(5);
-        $this->assertTrue($action instanceof \App\GoatBattle\Action);
+        $this->assertTrue($action instanceof \GoatBattle\Action);
         $this->assertEquals(5, $action->measure);
     }
 

@@ -2,12 +2,12 @@
 
 namespace App\Test\TestCase\GoatBattle;
 
-use App\GoatBattle\Action;
-use App\GoatBattle\Battle;
-use App\GoatBattle\Goat;
-use App\GoatBattle\Location;
-use App\GoatBattle\Pokey;
-use App\GoatBattle\Quicky;
+use GoatBattle\Action;
+use GoatBattle\Battle;
+use GoatBattle\Goat;
+use GoatBattle\Location;
+use GoatBattle\Pokey;
+use GoatBattle\Quicky;
 use App\Test\TestCase\GoatBattle\DoNothing;
 use App\Test\TestCase\GoatBattle\Faily1;
 use Cake\TestSuite\Fixture\PhpFixture;

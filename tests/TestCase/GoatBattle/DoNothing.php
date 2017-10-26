@@ -1,8 +1,8 @@
 <?php
 namespace App\Test\TestCase\GoatBattle;
 
-use App\GoatBattle\Goat;
-use App\GoatBattle\Location;
+use GoatBattle\Goat;
+use GoatBattle\Location;
 
 class DoNothing extends Goat
 {

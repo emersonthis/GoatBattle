@@ -1,7 +1,7 @@
 <?php
-namespace App\GoatBattle;
+namespace GoatBattle;
 
-use App\GoatBattle\Goat;
+use GoatBattle\Goat;
 
 class Fatty extends Goat
 {

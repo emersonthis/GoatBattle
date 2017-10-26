@@ -1,5 +1,5 @@
 <?php
-namespace App\GoatBattle;
+namespace GoatBattle;
 
 use Cake\Log\Log;
 

@@ -2,11 +2,11 @@
 
 namespace App\Test\TestCase\GoatBattle;
 
-use App\GoatBattle\Action;
-use App\GoatBattle\Goat;
-use App\GoatBattle\Location;
-use App\GoatBattle\Quicky;
-use App\GoatBattle\Situation;
+use GoatBattle\Action;
+use GoatBattle\Goat;
+use GoatBattle\Location;
+use GoatBattle\Quicky;
+use GoatBattle\Situation;
 use Cake\TestSuite\TestCase;
 
 class SituationTest extends TestCase
