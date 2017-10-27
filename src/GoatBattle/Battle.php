@@ -19,11 +19,13 @@ class Battle
         4 => 'Both goats loose. Tie!'
     ];
     public $outcome = false;
-    public $goat1Location;
+    public $goat1Location; # do we even need to store this property?
     public $goat2Location;
 
-    public $goat1StartLocation;
+    public $goat1StartLocation; # do we even need to store this property?
     public $goat2StartLocation;
+
+    public $currentSituation;
 
     /**
      *
@@ -33,6 +35,7 @@ class Battle
         $this->goat1 = $goat1;
         $this->goat2 = $goat2;
 
+        # customize the outcome text with goat names
         $this->outcomesMap[1] = "{$goat1->name} wins!";
         $this->outcomesMap[2] = "{$goat2->name} wins!";
 
@@ -51,6 +54,13 @@ class Battle
         if (!$this->goat2->validateAttributes()) {
             throw new \Exception("Goat2 invalid atts");
         }
+
+        $this->currentSituation = new Situation([
+            'redGoat' => $this->goat1,
+            'blueGoat' => $this->goat2,
+            'redLocation' => new Location('RED'),
+            'blueLocation' => new Location('BLUE')
+        ]);
     }
 
     /**
@@ -67,12 +77,7 @@ class Battle
                 ]
             );
             
-            $goat1Actions = $this->takeTurn(
-                $this->goat1,
-                $this->goat1Location,
-                $this->goat2,
-                $this->goat2Location
-            );
+            $goat1Actions = $this->takeTurn($this->goat1, $this->currentSituation);
 
             $newRound->redGoatActions = $goat1Actions;
 
@@ -83,12 +88,7 @@ class Battle
                 break;
             }
             
-            $goat2Actions = $this->takeTurn(
-                $this->goat2,
-                $this->goat2Location,
-                $this->goat1,
-                $this->goat1Location
-            );
+            $goat2Actions = $this->takeTurn($this->goat2, $this->currentSituation);
 
             $newRound->blueGoatActions = $goat2Actions;
             
@@ -100,16 +100,12 @@ class Battle
     /**
      *
      */
-    public function takeTurn(
-        Goat $thisGoat,
-        Location &$thisLocation,
-        Goat $otherGoat,
-        Location $otherLocation
-    ) {
-        $goatActions = $this->getGoatActions($thisGoat, clone $thisLocation, $otherLocation);
-        $realGoatActions = $this->authorizeActions($thisGoat, $goatActions, clone $thisLocation, $otherLocation);
+    public function takeTurn(Goat $thisGoat, Situation $situation)
+    {
+        $goatActions = $this->getGoatActions($thisGoat, $situation);
+        $realGoatActions = $this->authorizeActions($thisGoat, $goatActions);
         foreach ($realGoatActions as $realAction) {
-            $thisLocation = $this->updateGoat($thisGoat, $thisLocation, $otherGoat, $otherLocation, $realAction);
+            $this->currentSituation = $this->updateGoat($thisGoat, $realAction, $situation);
         }
         return $realGoatActions;
     }
@@ -117,7 +113,19 @@ class Battle
     /**
      *
      */
-    public function authorizeActions(Goat $goat, $goatActions, Location $goatLocation, Location $otherLocation)
+    public function updateGoat(
+        Goat $thisGoat,
+        Action $action,
+        Situation $situation
+    ) {
+        $newSituation = $action->apply($thisGoat, $situation);
+        return $newSituation;
+    }
+
+    /**
+     *
+     */
+    public function authorizeActions(Goat $goat, $goatActions)
     {
         $actions = [];
         $availableAction = $goat->speed;
@@ -182,12 +190,12 @@ class Battle
      */
     private function determineOutcome()
     {
-        if ($this->goat1->ok() && !$this->goat2->ok()) {
+        if ($this->currentSituation->redGoat->ok() && !$this->currentSituation->blueGoat->ok()) {
             $this->winner = $this->goat1;
             $this->outcome = 1;
         }
 
-        if ($this->goat2->ok() && !$this->goat1->ok()) {
+        if (!$this->currentSituation->redGoat->ok() && $this->currentSituation->blueGoat->ok()) {
             $this->winner = $this->goat2;
             $this->outcome = 2;
         }
@@ -196,7 +204,7 @@ class Battle
             $this->outcome = 3;
         }
 
-        if (!$this->goat2->ok() && !$this->goat1->ok()) {
+        if (!$this->currentSituation->redGoat->ok() && !$this->currentSituation->blueGoat->ok()) {
             $this->outcome = 4;
         }
     }
@@ -212,25 +220,11 @@ class Battle
     /**
      *
      */
-    public function getGoatActions(Goat $goat, Location $thisLocation, Location $opponentLocation)
+    public function getGoatActions(Goat $goat, Situation $situation)
     {
-        $opponentLocation = clone $opponentLocation;
-        $roundActionsFromGoat = $goat->action($thisLocation, $opponentLocation);
+        // $opponentLocation = clone $opponentLocation;
+        $roundActionsFromGoat = $goat->action($situation);
         return $roundActionsFromGoat;
-    }
-
-    /**
-     *
-     */
-    public function updateGoat(
-        Goat $thisGoat,
-        Location &$thisLocation,
-        Goat $otherGoat,
-        Location $otherLocation,
-        Action $action
-    ) {
-        $newLocation = $action->apply($thisGoat, $thisLocation, $otherGoat, $otherLocation);
-        return $newLocation;
     }
 
     /**
@@ -241,7 +235,7 @@ class Battle
         if ($this->roundCount >= $this->maxRounds) {
             return false;
         }
-        return ($this->goat1->ok() && $this->goat2->ok());
+        return ($this->currentSituation->redGoat->ok() && $this->currentSituation->blueGoat->ok());
     }
 
     /**

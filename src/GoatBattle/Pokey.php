@@ -12,8 +12,10 @@ class Pokey extends Goat
 
     /**
      */
-    public function action(Location $myLocation, Location $opponentLocation)
+    public function action(Situation $situation)
     {
+        $myLocation = ($this->color == 'RED') ? $situation->redLocation : $situation->blueLocation;
+        $opponentLocation = ($this->color == 'BLUE') ? $situation->redLocation : $situation->blueLocation;
         $actions = [];
         if (!$this->isAtCenter($myLocation)) {
             $actions[] = $this->face(0, 0, $myLocation);

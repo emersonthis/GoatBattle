@@ -96,16 +96,13 @@ class Action
      */
     public function apply(
         Goat $thisGoat,
-        Location &$thisLocation,
-        Goat &$otherGoat,
-        Location $otherLocation
+        Situation $situation
     ) {
-        $this->startSituation = new Situation([
-            'redGoat' => ($thisGoat->color == 'RED') ? $thisGoat : $otherGoat,
-            'blueGoat' => ($thisGoat->color == 'BLUE') ? $thisGoat : $otherGoat,
-            'redLocation' => ($thisGoat->color == 'RED') ? $thisLocation : $otherLocation,
-            'blueLocation' => ($thisGoat->color == 'BLUE') ? $thisLocation : $otherLocation
-        ]);
+        $this->startSituation = clone $situation;
+
+        $thisLocation = ($thisGoat->color == 'RED') ? $situation->redLocation : $situation->blueLocation;
+        $otherLocation = ($thisGoat->color == 'BLUE') ? $situation->redLocation : $situation->blueLocation;
+        $otherGoat = ($thisGoat->color == 'RED') ? $situation->blueGoat : $situation->redGoat;
 
         if ($this->isMove($this)) {
             $endLocation = $this->moveGoat($thisLocation, $otherLocation);
@@ -126,7 +123,8 @@ class Action
             'blueLocation' => ($thisGoat->color == 'BLUE') ? $thisLocation : $otherLocation
         ]);
         
-        return clone $endLocation;
+        // return clone $endLocation;
+        return $this->endSituation;
     }
 
     /**

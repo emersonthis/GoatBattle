@@ -60,7 +60,7 @@ abstract class Goat
     /**
      *
      */
-    abstract public function action(Location $myLocation, Location $opponentLocation);
+    abstract public function action(Situation $situation);
 
     /**
      *

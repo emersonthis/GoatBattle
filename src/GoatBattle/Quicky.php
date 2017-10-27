@@ -15,8 +15,11 @@ class Quicky extends Goat
     /**
      *
      */
-    public function action(Location $myLocation, Location $opponentLocation)
+    public function action(Situation $situation)
     {
+        $myLocation = ($this->color == 'RED') ? $situation->redLocation : $situation->blueLocation;
+        $opponentLocation = ($this->color == 'BLUE') ? $situation->redLocation : $situation->blueLocation;
+
         $actions1 = $this->turnToFaceAndAdvance($myLocation, $opponentLocation);
         $actions1[] = $this->ram();
         return $actions1; // + $actions2 + [$action3];
