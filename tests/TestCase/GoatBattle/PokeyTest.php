@@ -6,6 +6,7 @@ use GoatBattle\Action;
 use GoatBattle\Goat;
 use GoatBattle\Location;
 use GoatBattle\Pokey;
+use GoatBattle\Situation;
 use App\Test\TestCase\GoatBattle\Faily;
 use Cake\TestSuite\Fixture\PhpFixture;
 use Cake\TestSuite\TestCase;
@@ -16,8 +17,16 @@ class PokeyTest extends TestCase
     {
         $location = new Location('BLUE');
         $anotherLocation = new Location('RED');
-        $stilly = new Pokey($location);
-        $actions = $stilly->action($location, $anotherLocation);
+        $otherGoat = new Pokey();
+
+        $situation = new Situation([
+            'blueGoat' => $this,
+            'blueLocation' => $location,
+            'redGoat' => $otherGoat,
+            'redLocation' => $anotherLocation
+        ]);
+        $stilly = new Pokey();
+        $actions = $stilly->action($situation);
         $this->assertInstanceOf(Action::class, $actions[0]);
         $this->assertInstanceOf(Action::class, $actions[1]);
     }

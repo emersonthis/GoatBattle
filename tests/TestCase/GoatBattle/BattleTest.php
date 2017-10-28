@@ -2,19 +2,22 @@
 
 namespace App\Test\TestCase\GoatBattle;
 
+use App\Test\TestCase\GoatBattle\DoNothing;
+use App\Test\TestCase\GoatBattle\Faily1;
+use Cake\TestSuite\Fixture\PhpFixture;
+use Cake\TestSuite\TestCase;
 use GoatBattle\Action;
 use GoatBattle\Battle;
 use GoatBattle\Goat;
 use GoatBattle\Location;
 use GoatBattle\Pokey;
 use GoatBattle\Quicky;
-use App\Test\TestCase\GoatBattle\DoNothing;
-use App\Test\TestCase\GoatBattle\Faily1;
-use Cake\TestSuite\Fixture\PhpFixture;
-use Cake\TestSuite\TestCase;
+use GoatBattle\Situation;
 
 class BattleTest extends TestCase
 {
+
+    public $startSituation;
 
     /**
      * Runs before each test.
@@ -24,6 +27,13 @@ class BattleTest extends TestCase
     public function setUp()
     {
         parent::setUp();
+
+        $this->startSituation = new Situation([
+            'redGoat' => new Pokey(),
+            'redLocation' => new Location('RED'),
+            'blueGoat' => new Pokey(),
+            'blueLocation' => new Location('BLUE')
+        ]);
     }
 
     /**
@@ -34,6 +44,7 @@ class BattleTest extends TestCase
     public function tearDown()
     {
         parent::tearDown();
+        unset($this->startSituation);
     }
 
     /**
@@ -92,11 +103,16 @@ class BattleTest extends TestCase
         $goat2 = new Quicky();
         $goat2Location = new Location('BLUE');
         $battle = new Battle($goat1, $goat2);
+
+        $situation = new Situation([
+            'redGoat' => $goat1,
+            'blueGoat' => $goat2,
+            'redLocation' => $goat1Location,
+            'blueLocation' => $goat2Location
+        ]);
         $goat1Actions = $battle->takeTurn(
             $goat1,
-            $goat1Location,
-            $goat2,
-            $goat2Location
+            $situation
         );
         $this->assertEquals(-50, $goat1Actions[0]->endSituation->redLocation->x);
         $this->assertEquals(50, $goat1Actions[0]->endSituation->redLocation->y);
@@ -110,11 +126,17 @@ class BattleTest extends TestCase
     {
         $goatLocation1 = new Location();
         $goat1 = new Pokey($goatLocation1);
-
         $goatLocation2 = new Location();
         $goat2 = new Pokey($goatLocation2);
 
         $battle = new Battle($goat1, $goat2);
+
+        $battle->currentSituation = new Situation([
+            'redGoat' => $goat1,
+            'blueGoat' => $goat2,
+            'redLocation' => $goatLocation1,
+            'blueLocation' => $goatLocation2
+        ]);
 
         $this->assertTrue($battle->gameOn());
 
@@ -124,7 +146,7 @@ class BattleTest extends TestCase
         $battle->roundCount = $battle->maxRounds - 1;
         $this->assertTrue($battle->gameOn());
 
-        $goat2->health = 0;
+        $battle->currentSituation->blueGoat->health = 0;
 
         $this->assertFalse($battle->gameOn());
     }
@@ -135,21 +157,14 @@ class BattleTest extends TestCase
      */
     public function testGetGoatActions()
     {
-        $goatLocation1 = new Location('RED');
-        $goat1 = new Pokey($goatLocation1);
-
-        $goatLocation2 = new Location('BLUE');
-        $goat2 = new Pokey($goatLocation2);
-
+        $goat1 = new Pokey();
+        $goat2 = new Pokey();
         $battle = new Battle($goat1, $goat2);
-
-        $actions = $battle->getGoatActions($battle->goat1, $goatLocation1, $goatLocation2);
-
+        $actions = $battle->getGoatActions($battle->goat1, $this->startSituation);
         $this->assertTrue(is_array($actions));
         $this->assertInstanceOf(Action::class, $actions[0]);
 
-        $actions = $battle->getGoatActions($battle->goat2, $goatLocation2, $goatLocation1);
-
+        $actions = $battle->getGoatActions($battle->goat2, $this->startSituation);
         $this->assertTrue(is_array($actions));
         $this->assertInstanceOf(Action::class, $actions[0]);
     }
@@ -160,12 +175,19 @@ class BattleTest extends TestCase
         $goat1Location = new Location('RED');
         $goat2 = new Pokey();
         $goat2Location = new Location('BLUE');
+        $situation = new Situation([
+            'redGoat' => $goat1,
+            'blueGoat' => $goat2,
+            'redLocation' => $goat1Location,
+            'blueLocation' => $goat2Location
+        ]);
         $battle = new Battle($goat1, $goat2);
+        $battle->currentSituation = $situation;
         
         $action1 = new Action('MOVE', 3);
         $action2 = new Action('TURN', 15);
         $goatActions = [$action1, $action2];
-        $realActions = $battle->authorizeActions($goat1, $goatActions, $goat1Location, $goat2Location);
+        $realActions = $battle->authorizeActions($goat1, $goatActions);
 
         $this->assertInstanceOf(Action::class, $realActions[0]);
         $this->assertEquals(3, $realActions[0]->measure);
@@ -180,35 +202,12 @@ class BattleTest extends TestCase
      */
     public function testTakeTurn()
     {
-        $goat1Location = new Location('RED');
-        $goat1 = new Pokey($goat1Location); //speed = 4, toughness = 8
-        $goat2Location = new Location('BLUE');
-        $goat2 = new Pokey($goat2Location);
+        $goat1 = new Pokey(); //speed = 4, toughness = 8
+        $goat2 = new Pokey();
         $battle = new Battle($goat1, $goat2);
-
-        $return = $battle->takeTurn(
-            $battle->goat1,
-            $battle->goat1Location,
-            $battle->goat2,
-            $battle->goat2Location
-        );
-
+        $return = $battle->takeTurn($battle->goat1, $this->startSituation);
         $this->assertTrue(is_array($return));
         $this->assertInstanceOf(Action::class, $return[0]);
-        $this->assertEquals(-49, $battle->goat1Location->x);
-        $this->assertEquals(49, $battle->goat1Location->y);
-
-        $return = $battle->takeTurn(
-            $battle->goat2,
-            $battle->goat2Location,
-            $battle->goat1,
-            $battle->goat1Location
-        );
-
-        $this->assertTrue(is_array($return));
-        $this->assertInstanceOf(Action::class, $return[0]);
-        $this->assertEquals(49, $battle->goat2Location->x);
-        $this->assertEquals(-49, $battle->goat2Location->y);
     }
 
     public function testTrimTurn()

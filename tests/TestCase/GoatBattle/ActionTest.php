@@ -2,17 +2,20 @@
 
 namespace App\Test\TestCase\GoatBattle;
 
-use GoatBattle\Action;
-use GoatBattle\Goat;
-use GoatBattle\Location;
-use GoatBattle\Quicky;
-use GoatBattle\Pokey;
 use App\Test\TestCase\GoatBattle\Faily;
 use Cake\TestSuite\Fixture\PhpFixture;
 use Cake\TestSuite\TestCase;
+use GoatBattle\Action;
+use GoatBattle\Goat;
+use GoatBattle\Location;
+use GoatBattle\Pokey;
+use GoatBattle\Quicky;
+use GoatBattle\Situation;
 
 class ActionTest extends TestCase
 {
+
+    public $situationA; #red in center. blue in bluecorner
 
     /**
      * Runs before each test.
@@ -22,6 +25,20 @@ class ActionTest extends TestCase
     public function setUp()
     {
         parent::setUp();
+        $redGoat = new Pokey();
+        $redGoat->color = 'RED';
+        $blueGoat = new Quicky();
+        $blueGoat->color = 'BLUE';
+        $redLocation = new Location('RED');
+        $redLocation->x = 0;
+        $redLocation->y = 0;
+        $blueLocation = new Location('BLUE');
+        $this->situationA = new Situation([
+            'redGoat' => $redGoat,
+            'blueGoat' => $blueGoat,
+            'redLocation' => $redLocation,
+            'blueLocation' => $blueLocation
+        ]);
     }
 
     /**
@@ -32,6 +49,7 @@ class ActionTest extends TestCase
     public function tearDown()
     {
         parent::tearDown();
+        unset($this->situationA);
     }
 
     /**
@@ -52,201 +70,146 @@ class ActionTest extends TestCase
     public function testApply()
     {
         $redLocation = new Location('RED');
-        $redGoat = new Pokey($redLocation);
+        $redGoat = new Pokey();
+        $redGoat->color = 'RED';
         $blueLocation = new Location('BLUE');
-        $blueGoat = new Pokey($blueLocation);
+        $blueGoat = new Pokey();
+        $blueGoat->color = 'BLUE';
+
+        $situation1 = new Situation([
+            'redGoat' => $redGoat,
+            'blueGoat' => $blueGoat,
+            'redLocation' => $redLocation,
+            'blueLocation' => $blueLocation
+        ]);
         
         $action = new Action('MOVE', 2);
-        $endLocation = $action->apply($redGoat, $redLocation, $blueGoat, $blueLocation);
+        $situation2 = $action->apply($redGoat, $situation1);
 
-        $this->assertInstanceOf(Location::class, $endLocation);
-        $this->assertEquals(48, $endLocation->y);
-        $this->assertEquals(-48, $endLocation->x);
-        $this->assertEquals(315, $endLocation->direction);
+        $this->assertInstanceOf(Situation::class, $situation2);
+        $this->assertEquals(48, $situation2->redLocation->y);
+        $this->assertEquals(-48, $situation2->redLocation->x);
+        $this->assertEquals(315, $situation2->redLocation->direction);
         # no change
-        $this->assertEquals($blueLocation->x, 50);
-        $this->assertEquals($blueLocation->y, -50);
+        $this->assertEquals($situation2->blueLocation->x, 50);
+        $this->assertEquals($situation2->blueLocation->y, -50);
 
         $action = new Action('TURN', 1);
-        $endLocation = $action->apply($redGoat, $endLocation, $blueGoat, $blueLocation);
+        $situation3 = $action->apply($redGoat, $situation2);
 
-        $this->assertInstanceOf(Location::class, $endLocation);
-        $this->assertEquals(48, $endLocation->y);
-        $this->assertEquals(-48, $endLocation->x);
-        $this->assertEquals(360, $endLocation->direction);
+        $this->assertInstanceOf(Situation::class, $situation3);
+        $this->assertEquals(48, $situation3->redLocation->y);
+        $this->assertEquals(-48, $situation3->redLocation->x);
+        $this->assertEquals(360, $situation3->redLocation->direction);
         # no change
-        $this->assertEquals($blueLocation->x, 50);
-        $this->assertEquals($blueLocation->y, -50);
-
-        $redLocation = new Location('RED');
-        $redGoat = new Quicky($redLocation);
-        $blueLocation = new Location('BLUE');
-        $blueGoat = new Pokey($blueLocation);
-        # no change
-        $this->assertEquals($blueLocation->x, 50);
-        $this->assertEquals($blueLocation->y, -50);
+        $this->assertEquals($situation3->blueLocation->x, 50);
+        $this->assertEquals($situation3->blueLocation->y, -50);
 
         $action1 = $redGoat->turn(1);
-        $endLocation1 = $action1->apply($redGoat, $redLocation, $blueGoat, $blueLocation);
-        $this->assertEquals(360, $endLocation1->direction);
-        $this->assertEquals(-50, $endLocation1->x);
-        $this->assertEquals(50, $endLocation1->y);
+        $situation4 = $action1->apply($redGoat, $situation1);
+
+        $this->assertEquals(360, $situation4->redLocation->direction);
+        $this->assertEquals(-48, $situation4->redLocation->x);
+        $this->assertEquals(48, $situation4->redLocation->y);
         # no change
-        $this->assertEquals($blueLocation->x, 50);
-        $this->assertEquals($blueLocation->y, -50);
+        $this->assertEquals($situation4->blueLocation->x, 50);
+        $this->assertEquals($situation4->blueLocation->y, -50);
 
         $action2 = $redGoat->move(9);
-        $endLocation2 = $action2->apply($redGoat, $endLocation1, $blueGoat, $blueLocation);
-        $this->assertEquals(360, $endLocation2->direction);
-        $this->assertEquals(-41, $endLocation2->x);
-        $this->assertEquals(50, $endLocation2->y);
+        $situation5 = $action2->apply($redGoat, $situation4);
+        $this->assertEquals(360, $situation5->redLocation->direction);
+        $this->assertEquals(-39, $situation5->redLocation->x);
+        $this->assertEquals(48, $situation5->redLocation->y);
         # no change
-        $this->assertEquals($blueLocation->x, 50);
-        $this->assertEquals($blueLocation->y, -50);
+        $this->assertEquals($situation5->blueLocation->x, 50);
+        $this->assertEquals($situation5->blueLocation->y, -50);
 
         // Test for "ghosting northward"
-        $redLocation = new Location();
-        $redLocation->x = 50;
-        $redLocation->y = -50;
-        $redLocation->direction = 90;
-        $redGoat = new Pokey($redLocation);
-        $blueLocation = new Location();
-        $blueLocation->x = 50;
-        $blueLocation->y = -49;
-        $blueLocation->direction = 270;
-        $blueGoat = new Pokey($blueLocation);
-        $action = new Action('MOVE', 2);
-        $endLocation = $action->apply($redGoat, $redLocation, $blueGoat, $blueLocation);
-        $this->assertEquals(-50, $endLocation->y);
+        $nSituation = clone $this->situationA;
+        $nSituation->redLocation->direction = 90;
+        $nSituation->blueLocation->x = 0;
+        $nSituation->blueLocation->y = 4;
+        $action = new Action('MOVE', 5);
+        $situation7 = $action->apply($redGoat, $nSituation);
+        $this->assertEquals(3, $situation7->redLocation->y);
+        $this->assertEquals(0, $situation7->redLocation->x);
         # no change
-        $this->assertEquals($blueLocation->x, 50);
-        $this->assertEquals($blueLocation->y, -49);
+        $this->assertEquals($nSituation->blueLocation->x, $situation7->blueLocation->x);
+        $this->assertEquals($nSituation->blueLocation->y, $situation7->blueLocation->y);
 
         // Test for "ghosting" northeast
-        $redLocation = new Location();
-        $redLocation->x = 47;
-        $redLocation->y = 47;
-        $redLocation->direction = 45;
-        $redGoat = new Pokey($redLocation);
-        $blueLocation = new Location();
-        $blueLocation->x = 50;
-        $blueLocation->y = 50;
-        $blueLocation->direction = 270;
-        $blueGoat = new Pokey($blueLocation);
+        $neSituation = clone $this->situationA;
+        $neSituation->redLocation->direction = 45;
+        $neSituation->blueLocation->x = 5;
+        $neSituation->blueLocation->y = 5;
         $action = new Action('MOVE', 8);
-        $endLocation = $action->apply($redGoat, $redLocation, $blueGoat, $blueLocation);
-        $this->assertEquals(49, $endLocation->y);
+        $afterNeSituation = $action->apply($redGoat, $neSituation);
+        $this->assertEquals(4, $afterNeSituation->redLocation->y);
+        $this->assertEquals(4, $afterNeSituation->redLocation->x);
 
         // Test for "ghosting" east
-        $redLocation = new Location();
-        $redLocation->x = 44;
-        $redLocation->y = 50;
-        $redLocation->direction = 0;
-        $redGoat = new Pokey($redLocation);
-        $blueLocation = new Location();
-        $blueLocation->x = 50;
-        $blueLocation->y = 50;
-        $blueLocation->direction = 270;
-        $blueGoat = new Pokey($blueLocation);
+        $eastSituation = clone $this->situationA;
+        $eastSituation->redLocation->direction = 0;
+        $eastSituation->blueLocation->x = 1;
+        $eastSituation->blueLocation->y = 0;
         $action = new Action('MOVE', 8);
-        $action->apply($redGoat, $redLocation, $blueGoat, $blueLocation);
-        // debug($redLocation);
-        // debug($action->endLocation);
-        // debug($action);
-        $this->assertEquals(49, $redLocation->x);
+        $afterEastSituation = $action->apply($redGoat, $eastSituation);
+        $this->assertEquals(0, $afterEastSituation->redLocation->x);
 
         // Test for "ghosting" southeast
-        $redLocation = new Location();
-        $redLocation->x = 45;
-        $redLocation->y = -45;
-        $redLocation->direction = 315;
-        $redGoat = new Pokey($redLocation);
-        $blueLocation = new Location();
-        $blueLocation->x = 50;
-        $blueLocation->y = -50;
-        $blueLocation->direction = 270;
-        $blueGoat = new Pokey($blueLocation);
+        $southeastSituation = clone $this->situationA;
+        $southeastSituation->redLocation->direction = 315;
+        $southeastSituation->blueLocation->x = 5;
+        $southeastSituation->blueLocation->y = -5;
         $action = new Action('MOVE', 8);
-        $endLocation = $action->apply($redGoat, $redLocation, $blueGoat, $blueLocation);
-        $this->assertEquals(49, $endLocation->x);
-        $this->assertEquals(-49, $endLocation->y);
+        $redGoat = new Quicky();
+        $redGoat->color = 'RED';
+        $afterSoutheastSituation = $action->apply($redGoat, $southeastSituation);
+        $this->assertEquals(4, $afterSoutheastSituation->redLocation->x); //8
+        $this->assertEquals(-4, $afterSoutheastSituation->redLocation->y);
 
+        // // Test for "ghosting southward"
+        $southSituation = clone $this->situationA;
+        $southSituation->redLocation->direction = 270;
+        $southSituation->blueLocation->x = 0;
+        $southSituation->blueLocation->y = -5;
+        $action = new Action('MOVE', 5);
+        $redGoat = new Quicky();
+        $redGoat->color = 'RED';
+        $afterSouthSituation = $action->apply($redGoat, $southSituation);
+        $this->assertEquals(0, $afterSouthSituation->redLocation->x);
+        $this->assertEquals(-4, $afterSouthSituation->redLocation->y);
 
-        // Test for "ghosting southward"
-        $redLocation = new Location();
-        $redLocation->x = -50;
-        $redLocation->y = 50;
-        $redLocation->direction = 270;
-        $redGoat = new Pokey($redLocation);
-        $blueLocation = new Location();
-        $blueLocation->x = -50;
-        $blueLocation->y = 49;
-        $blueLocation->direction = 270;
-        $blueGoat = new Pokey($blueLocation);
-        $action = new Action('MOVE', 2);
-        $endLocation = $action->apply($redGoat, $redLocation, $blueGoat, $blueLocation);
-        $this->assertEquals(50, $endLocation->y);
-
-        // Test for "ghosting" southwest
-        $redLocation = new Location();
-        $redLocation->x = -47;
-        $redLocation->y = -47;
-        $redLocation->direction = 225;
-        $redGoat = new Pokey($redLocation);
-        $blueLocation = new Location();
-        $blueLocation->x = -50;
-        $blueLocation->y = -50;
-        $blueLocation->direction = 270;
-        $blueGoat = new Pokey($blueLocation);
+        // // Test for "ghosting" southwest
+        $situationSouthwest = clone $this->situationA;
+        $situationSouthwest->redLocation->direction = 225;
+        $situationSouthwest->blueLocation->x = -3;
+        $situationSouthwest->blueLocation->y = -3;
         $action = new Action('MOVE', 8);
-        $endLocation = $action->apply($redGoat, $redLocation, $blueGoat, $blueLocation);
-        $this->assertEquals(-49, $endLocation->y);
+        $afterSituationSouthwest = $action->apply($redGoat, $situationSouthwest);
+        $this->assertEquals(-2, $afterSituationSouthwest->redLocation->y);
+        $this->assertEquals(-2, $afterSituationSouthwest->redLocation->x);
 
         // Test for "ghosting" west
-        $redLocation = new Location();
-        $redLocation->x = -45;
-        $redLocation->y = 50;
-        $redLocation->direction = 180;
-        $redGoat = new Pokey($redLocation);
-        $blueLocation = new Location();
-        $blueLocation->x = -50;
-        $blueLocation->y = 50;
-        $blueLocation->direction = 270;
-        $blueGoat = new Pokey($blueLocation);
+        $westSituation = clone $this->situationA;
+        $westSituation->blueLocation->x = -4;
+        $westSituation->blueLocation->y = 0;
+        $westSituation->redLocation->direction = 180;
         $action = new Action('MOVE', 8);
-        $endLocation = $action->apply($redGoat, $redLocation, $blueGoat, $blueLocation);
-        $this->assertEquals(-49, $endLocation->x);
+        $redGoat = new Quicky();
+        $redGoat->color = 'RED';
+        $afterWestSituation = $action->apply($redGoat, $westSituation);
+        $this->assertEquals(-3, $afterWestSituation->redLocation->x);
 
-        // Test for "ghosting" northwest
-        $redLocation = new Location();
-        $redLocation->x = -45;
-        $redLocation->y = 45;
-        $redLocation->direction = 135;
-        $redGoat = new Pokey($redLocation);
-        $blueLocation = new Location();
-        $blueLocation->x = -50;
-        $blueLocation->y = 50;
-        $blueLocation->direction = 270;
-        $blueGoat = new Pokey($blueLocation);
+        // // Test for "ghosting" northwest
+        $nwSituation = clone $this->situationA;
+        $nwSituation->redLocation->direction = 135;
+        $nwSituation->blueLocation->x = -4;
+        $nwSituation->blueLocation->y = 4;
         $action = new Action('MOVE', 8);
-        $endLocation = $action->apply($redGoat, $redLocation, $blueGoat, $blueLocation);
-        $this->assertEquals(-49, $endLocation->x);
-
-        // Quicky vs  Pokey experiment
-        $quickyLocation = new Location();
-        $quickyLocation->x = -2;
-        $quickyLocation->y = 0;
-        $quickyLocation->direction = 360;
-        $quicky = new Quicky($quickyLocation);
-        $stillyLocation = new Location();
-        $stillyLocation->x = 0;
-        $stillyLocation->y = 0;
-        $stillyLocation->direction = 0;
-        $stilly = new Pokey($stillyLocation);
-        $action = new Action('MOVE', 2);
-        $endLocation = $action->apply($quicky, $quickyLocation, $stilly, $stillyLocation);
-        $this->assertEquals(-1, $endLocation->x);
-        $this->assertEquals(-1, $quickyLocation->x);
+        $afterNwSituation = $action->apply($redGoat, $nwSituation);
+        $this->assertEquals(-3, $afterNwSituation->redLocation->x);
+        $this->assertEquals(3, $afterNwSituation->redLocation->y);
     }
 
     public function testTurn()
@@ -254,26 +217,23 @@ class ActionTest extends TestCase
         # zero turn
         $redLocation = new Location('RED');
         $redGoat = new Pokey($redLocation);
+        $redGoat->color = 'RED';
         $blueLocation = new Location('BLUE');
         $blueGoat = new Quicky($blueLocation);
+        $blueGoat->color = 'BLUE';
+        $situation1 = new Situation([
+            'redGoat' => $redGoat,
+            'blueGoat' => $blueGoat,
+            'redLocation' => $redLocation,
+            'blueLocation' => $blueLocation
+        ]);
         $action = new Action('TURN', 0);
-        $endLocation = $action->apply($redGoat, $redLocation, $blueGoat, $blueLocation);
-        $this->assertEquals(315, $endLocation->direction);
+        $situationB = $action->apply($redGoat, $situation1);
+        $this->assertEquals(315, $situationB->redLocation->direction);
 
-        # move 3... not sure why this is in here
-        $secondAction = new Action('MOVE', 3);
-        $secondEndLocation = $secondAction->apply($redGoat, $redLocation, $blueGoat, $blueLocation);
-        $this->assertEquals(315, $secondEndLocation->direction);
-        $this->assertEquals(-47, $secondEndLocation->x);
-        $this->assertEquals(47, $secondEndLocation->y);
-
-        $redLocation = new Location('RED');
-        $redGoat = new Pokey($redLocation);
-        $blueLocation = new Location('BLUE');
-        $blueGoat = new Quicky($blueLocation);
         $action = new Action('TURN', 1);
-        $endLocation = $action->apply($blueGoat, $blueLocation, $redGoat, $redLocation);
-        $this->assertEquals(180, $endLocation->direction);
+        $situationC = $action->apply($blueGoat, $situationB);
+        $this->assertEquals(180, $situationC->blueLocation->direction);
     }
 
     public function testRamGoat()
@@ -283,74 +243,85 @@ class ActionTest extends TestCase
         $redLocation->x = 45;
         $redLocation->y = 45;
         $redLocation->direction = 0;
-        $redGoat = new Quicky($redLocation);
+        $redGoat = new Quicky();
+        $redGoat->color = 'RED';
         $blueLocation = new Location();
         $blueLocation->x = 46;
         $blueLocation->y = 45;
         $blueLocation->direction = 270;
-        $blueGoat = new Quicky($blueLocation);
+        $blueGoat = new Quicky();
+        $blueGoat->color = 'BLUE';
+
+        $situationA = new Situation([
+            'redGoat' => $redGoat,
+            'blueGoat' => $blueGoat,
+            'blueLocation' => $blueLocation,
+            'redLocation' => $redLocation
+        ]);
         $action = new Action('RAM');
-        $endLocation = $action->apply($redGoat, $redLocation, $blueGoat, $blueLocation);
-        $this->assertEquals(45, $endLocation->x);
-        $this->assertEquals(45, $endLocation->y);
-        $this->assertEquals(0, $blueGoat->health);
+        $situationB = $action->apply($redGoat, $situationA);
+        $this->assertEquals(45, $situationB->redLocation->x);
+        $this->assertEquals(45, $situationB->redLocation->y);
+        $this->assertEquals(0, $situationB->blueGoat->health);
 
-        // SE
-        $redLocation->direction = 315;
-        $blueLocation->x = 46;
-        $blueLocation->y = 44;
-        $blueGoat = new Quicky($blueLocation);
-        $endLocation = $action->apply($redGoat, $redLocation, $blueGoat, $blueLocation);
-        $this->assertEquals(0, $blueGoat->health);
+        //@TODO FINISH UPDATING THESE TO PASS Situation s to action()
 
-        // S
-        $redLocation->direction = 270;
-        $blueLocation->x = 45;
-        $blueLocation->y = 44;
-        $blueGoat = new Quicky($blueLocation);
-        $endLocation = $action->apply($redGoat, $redLocation, $blueGoat, $blueLocation);
-        $this->assertEquals(0, $blueGoat->health);
+        // // SE
+        // $redLocation->direction = 315;
+        // $blueLocation->x = 46;
+        // $blueLocation->y = 44;
+        // $blueGoat = new Quicky($blueLocation);
+        // $endLocation = $action->apply($redGoat, $redLocation, $blueGoat, $blueLocation);
+        // $this->assertEquals(0, $blueGoat->health);
 
-        // SW
-        $redLocation->direction = 225;
-        $blueLocation->x = 44;
-        $blueLocation->y = 44;
-        $blueGoat = new Quicky($blueLocation);
-        $endLocation = $action->apply($redGoat, $redLocation, $blueGoat, $blueLocation);
-        $this->assertEquals(0, $blueGoat->health);
+        // // S
+        // $redLocation->direction = 270;
+        // $blueLocation->x = 45;
+        // $blueLocation->y = 44;
+        // $blueGoat = new Quicky($blueLocation);
+        // $endLocation = $action->apply($redGoat, $redLocation, $blueGoat, $blueLocation);
+        // $this->assertEquals(0, $blueGoat->health);
 
-        // W
-        $redLocation->direction = 180;
-        $blueLocation->x = 44;
-        $blueLocation->y = 45;
-        $blueGoat = new Quicky($blueLocation);
-        $endLocation = $action->apply($redGoat, $redLocation, $blueGoat, $blueLocation);
-        $this->assertEquals(0, $blueGoat->health);
+        // // SW
+        // $redLocation->direction = 225;
+        // $blueLocation->x = 44;
+        // $blueLocation->y = 44;
+        // $blueGoat = new Quicky($blueLocation);
+        // $endLocation = $action->apply($redGoat, $redLocation, $blueGoat, $blueLocation);
+        // $this->assertEquals(0, $blueGoat->health);
 
-        // NW
-        $redLocation->direction = 135;
-        $blueLocation->x = 44;
-        $blueLocation->y = 46;
-        $blueGoat = new Quicky($blueLocation);
-        $endLocation = $action->apply($redGoat, $redLocation, $blueGoat, $blueLocation);
-        $this->assertEquals(0, $blueGoat->health);
+        // // W
+        // $redLocation->direction = 180;
+        // $blueLocation->x = 44;
+        // $blueLocation->y = 45;
+        // $blueGoat = new Quicky($blueLocation);
+        // $endLocation = $action->apply($redGoat, $redLocation, $blueGoat, $blueLocation);
+        // $this->assertEquals(0, $blueGoat->health);
 
-        // N
-        $redLocation->direction = 90;
-        $blueLocation->x = 45;
-        $blueLocation->y = 46;
-        $blueGoat = new Quicky($blueLocation);
-        $endLocation = $action->apply($redGoat, $redLocation, $blueGoat, $blueLocation);
-        $this->assertEquals(0, $blueGoat->health);
+        // // NW
+        // $redLocation->direction = 135;
+        // $blueLocation->x = 44;
+        // $blueLocation->y = 46;
+        // $blueGoat = new Quicky($blueLocation);
+        // $endLocation = $action->apply($redGoat, $redLocation, $blueGoat, $blueLocation);
+        // $this->assertEquals(0, $blueGoat->health);
 
-        // NE
-        $redLocation->direction = 45;
-        $blueLocation->x = 46;
-        $blueLocation->y = 46;
-        $blueGoat->toughness = 6;
-        $blueGoat->health = 6;
-        $endLocation = $action->apply($redGoat, $redLocation, $blueGoat, $blueLocation);
-        $this->assertEquals(1, $blueGoat->health);
+        // // N
+        // $redLocation->direction = 90;
+        // $blueLocation->x = 45;
+        // $blueLocation->y = 46;
+        // $blueGoat = new Quicky($blueLocation);
+        // $endLocation = $action->apply($redGoat, $redLocation, $blueGoat, $blueLocation);
+        // $this->assertEquals(0, $blueGoat->health);
+
+        // // NE
+        // $redLocation->direction = 45;
+        // $blueLocation->x = 46;
+        // $blueLocation->y = 46;
+        // $blueGoat->toughness = 6;
+        // $blueGoat->health = 6;
+        // $endLocation = $action->apply($redGoat, $redLocation, $blueGoat, $blueLocation);
+        // $this->assertEquals(1, $blueGoat->health);
     }
 
     public function testValidateDirection()

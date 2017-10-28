@@ -98,6 +98,10 @@ class Action
         Goat $thisGoat,
         Situation $situation
     ) {
+        if (!$thisGoat->color) {
+            throw new \Exception('Color not set in Action::apply()');
+        }
+
         $this->startSituation = clone $situation;
 
         $thisLocation = ($thisGoat->color == 'RED') ? $situation->redLocation : $situation->blueLocation;
@@ -286,8 +290,8 @@ class Action
      */
     private function trimMeasureIfBlocked(Location $location, Location $otherLocation)
     {
-        $yDifference = $otherLocation->y - $location->y;
-        $xDifference = $otherLocation->x - $location->x;
+        $yDifference = abs($otherLocation->y - $location->y);
+        $xDifference = abs($otherLocation->x - $location->x);
         $sameX = $location->x == $otherLocation->x;
         $sameY = $location->y == $otherLocation->y;
         $measure = $this->measure;
@@ -308,7 +312,7 @@ class Action
         }
 
         //SE
-        if (($location->direction == 315) && ($xDifference == ($yDifference * -1)) && ($xDifference <= $this->measure)) {
+        if (($location->direction == 315) && ($xDifference == $yDifference) && ($otherLocation->y < $location->y) && ($otherLocation->x > $location->x) && ($xDifference <= $this->measure)) {
             $measure = $xDifference - 1;
         }
 
@@ -318,7 +322,7 @@ class Action
         }
 
         //SW                                                                        could be $yDifference
-        if (($location->direction == 225) && ($xDifference == $yDifference) && (abs($xDifference) <= $this->measure)) {
+        if (($location->direction == 225) && ($xDifference == $yDifference) && ($xDifference <= $this->measure)) {
             $measure = abs($xDifference) - 1;
         }
 
@@ -328,7 +332,7 @@ class Action
         }
 
         //NW                                                                        could be $yDifference
-        if (($location->direction == 135) && ($yDifference == ($xDifference * -1)) && ($yDifference <= $this->measure)) {
+        if (($location->direction == 135) && ($yDifference == $xDifference) && ($location->x > $otherLocation->x) && ($location->y < $otherLocation->y) && ($yDifference <= $this->measure)) {
             $measure = abs($xDifference) - 1;
         }
 

@@ -3,6 +3,7 @@ namespace App\Test\TestCase\GoatBattle;
 
 use GoatBattle\Goat;
 use GoatBattle\Location;
+use GoatBattle\Situation;
 
 class DoNothing extends Goat
 {
@@ -11,7 +12,7 @@ class DoNothing extends Goat
     public $horns = 2;
     public $toughness = 2;
 
-    public function action(Location $myLocation, Location $opponentLocation)
+    public function action(Situation $situation)
     {
         $actions = [];
         return $actions;

@@ -2,14 +2,12 @@
 
 namespace App\Test\TestCase\GoatBattle;
 
+use Cake\TestSuite\TestCase;
 use GoatBattle\Action;
 use GoatBattle\Goat;
 use GoatBattle\Location;
 use GoatBattle\Quicky;
-// use GoatBattle\ Pokey;
-// use App\Test\TestCase\GoatBattle\Faily;
-// use Cake\TestSuite\Fixture\PhpFixture;
-use Cake\TestSuite\TestCase;
+use GoatBattle\Situation;
 
 class QuickyTest extends TestCase
 {
@@ -26,10 +24,18 @@ class QuickyTest extends TestCase
     {
         $location = new Location('RED');
         $anotherLocation = new Location('BLUE');
-        $quicky = new Quicky($location);
-        $actions = $quicky->action($location, $anotherLocation);
+        $quicky = new Quicky();
+        $quicky->color = 'RED';
+        $doNothing = new DoNothing();
+        $doNothing->color = 'BLUE';
+        $situation = new Situation([
+            'redGoat' => $quicky,
+            'redLocation' => $location,
+            'blueGoat' => new $doNothing,
+            'blueLocation' => new Location('BLUE')
+        ]);
+        $actions = $quicky->action($situation);
         
-        // $this->assertEquals(2, count($actions));
         $this->assertInstanceOf(Action::class, $actions[0]);
         $this->assertTrue($actions[0]->isTurn());
         $this->assertEquals($actions[0]->measure, -1);
