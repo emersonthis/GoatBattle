@@ -8,10 +8,12 @@ use Cake\TestSuite\Fixture\PhpFixture;
 use Cake\TestSuite\TestCase;
 use GoatBattle\Action;
 use GoatBattle\Battle;
+use GoatBattle\Bruzy;
 use GoatBattle\Goat;
 use GoatBattle\Location;
 use GoatBattle\Pokey;
 use GoatBattle\Quicky;
+use GoatBattle\Round;
 use GoatBattle\Situation;
 
 class BattleTest extends TestCase
@@ -29,9 +31,9 @@ class BattleTest extends TestCase
         parent::setUp();
 
         $this->startSituation = new Situation([
-            'redGoat' => new Pokey(),
+            'redGoat' => new Pokey('RED'),
             'redLocation' => new Location('RED'),
-            'blueGoat' => new Pokey(),
+            'blueGoat' => new Pokey('BLUE'),
             'blueLocation' => new Location('BLUE')
         ]);
     }
@@ -248,5 +250,84 @@ class BattleTest extends TestCase
 
         $this->assertEquals($goat1Health, $battle->battleTranscript[0]->redGoatActions[0]->startSituation->redGoat->health);
         $this->assertEquals($goat2Health, $battle->battleTranscript[0]->redGoatActions[0]->startSituation->blueGoat->health);
+    }
+
+    public function testQuickyBruzy1()
+    {
+        $redGoat = new Quicky('RED');
+        $blueGoat = new Bruzy('BLUE');
+        // $redLocation = new Location(['x' => -50, 'y' => 50, 'direction' => 270]);
+        // $blueLocation = new Location(['x' => 50, 'y' => -50, 'direction' => 135]);
+        $redLocation = new Location('RED');
+        $blueLocation = new Location('BLUE');
+
+        $startSituation = new Situation([
+            'redGoat' => $redGoat,
+            'blueGoat' => $blueGoat,
+            'redLocation' => $redLocation,
+            'blueLocation' => $blueLocation
+        ]);
+        $action1 = new Action('TURN', -1);
+        $action2 = new Action('MOVE', 9);
+        $endSituation1 = $action1->apply($redGoat, $startSituation);
+        $endSituation2 = $action2->apply($redGoat, $endSituation1);
+        $this->assertEquals(-50, $endSituation2->redLocation->x);
+        $this->assertEquals(41, $endSituation2->redLocation->y);
+    }
+
+    public function testQuickyBruzy2()
+    {
+        $battle = new Battle(new Quicky(), new Bruzy());
+        $battle->roundCount++;
+        $newRound = new Round(
+            [
+                'number' => $battle->roundCount,
+            ]
+        );
+
+        $goat1Actions = $battle->takeTurn($battle->goat1, $battle->currentSituation);
+        $newRound->redGoatActions = $goat1Actions;
+        $this->assertEquals(-50, end($goat1Actions)->endSituation->redLocation->x);
+        $this->assertEquals(41, end($goat1Actions)->endSituation->redLocation->y);
+
+        # with this removed the transcripts are correct
+        $goat2Actions = $battle->takeTurn($battle->goat2, $battle->currentSituation);
+        $newRound->blueGoatActions = $goat2Actions;
+
+        $this->assertEquals(-50, end($goat1Actions)->endSituation->redLocation->x);
+        $this->assertEquals(41, end($goat1Actions)->endSituation->redLocation->y);
+        $this->assertEquals(-50, $battle->currentSituation->redLocation->x);
+        $this->assertEquals(41, $battle->currentSituation->redLocation->y);
+
+        $battle->battleTranscript[] = $newRound;
+
+        $this->assertEquals(-50, end($battle->battleTranscript[0]->redGoatActions)->endSituation->redLocation->x);
+        $this->assertEquals(41, end($battle->battleTranscript[0]->redGoatActions)->endSituation->redLocation->y);
+    }
+
+    // # FOUND IT!!
+    // public function testQuickyBruzy3()
+    // {
+    //     $battle = new Battle(new Quicky(), new Bruzy());
+    //     $battle->go();
+    //     $this->assertEquals(-50, end($battle->battleTranscript[0]->redGoatActions)->endSituation->redLocation->x);
+    //     $this->assertEquals(41, end($battle->battleTranscript[0]->redGoatActions)->endSituation->redLocation->y);
+    // }
+
+    public function testHealthIncreasingBug()
+    {
+        # in the 10th round the red goat has health = 3
+        $battle = new Battle(new Quicky(), new Bruzy());
+        $battle->roundCount = 10;
+        $battle->currentSituation = new Situation([
+            'redGoat' => new Quicky('RED'),
+            'blueGoat' => new Bruzy('BLUE'),
+            'redLocation' => new Location(['x' => -50, 'y' => -49, 'direction' => 270]),
+            'blueLocation' => new Location(['x' => -50, 'y' => -46, 'direction' => 315])
+        ]);
+        $battle->currentSituation->redGoat->health = 3;
+
+        $goat1Actions = $battle->takeTurn($battle->currentSituation->redGoat, $battle->currentSituation);
+        $this->assertEquals(3, $battle->currentSituation->redGoat->health);
     }
 }

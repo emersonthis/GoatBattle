@@ -29,7 +29,17 @@ class Location
                 $this->y = -50;
                 break;
 
+            case null:
+                break;
+
             default:
+                if (is_array($pos)) {
+                    $this->x = $pos['x'];
+                    $this->y = $pos['y'];
+                    $this->direction = $pos['direction'];
+                } else {
+                    throw new \Exception('Invalid location parameter');
+                }
         }
     }
 

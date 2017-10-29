@@ -6,6 +6,7 @@ use App\Test\TestCase\GoatBattle\Faily;
 use Cake\TestSuite\Fixture\PhpFixture;
 use Cake\TestSuite\TestCase;
 use GoatBattle\Action;
+use GoatBattle\Bruzy;
 use GoatBattle\Goat;
 use GoatBattle\Location;
 use GoatBattle\Pokey;
@@ -337,5 +338,21 @@ class ActionTest extends TestCase
 
         $true = Action::validateDirection(360);
         $this->assertTrue($true);
+    }
+
+    public function testMove()
+    {
+        $situation1 = new Situation([
+            'redGoat' => new Quicky('RED'),
+            'blueGoat' => new Bruzy('BLUE'),
+            'redLocation' => new Location(['x' => -50, 'y' => -49, 'direction' => 270]),
+            'blueLocation' => new Location(['x' => -50, 'y' => -50, 'direction' => 135])
+        ]);
+
+        $action = new Action('MOVE', 4);
+        $situation2 = $action->apply($situation1->blueGoat, $situation1);
+
+        $this->assertEquals(-50, $situation2->blueLocation->x);
+        $this->assertEquals(-50, $situation2->blueLocation->y);
     }
 }

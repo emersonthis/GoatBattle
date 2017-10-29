@@ -15,7 +15,7 @@ abstract class Goat
     /**
      *
      */
-    final public function __construct()
+    final public function __construct($color = null)
     {
         // $this->name = $this->setName();
         // $this->speed = $this->setSpeed();
@@ -23,6 +23,9 @@ abstract class Goat
         // $this->toughness = $this->setToughness();
         // $this->location = ($location) ? $location : new Location();
         $this->health = ($this->toughness) ? $this->toughness : 1;
+        if ($color == 'RED' || $color == 'BLUE') {
+            $this->color = $color;
+        }
     }
 
     /**
@@ -67,7 +70,7 @@ abstract class Goat
      */
     final public function validateAttributes()
     {
-        if ($this->speed > 10 || $this->horns > 10 || $this->toughness > 10) {
+        if ($this->speed < 1 || $this->horns < 1 || $this->toughness < 1) {
             return false;
         }
         if ($this->speed + $this->horns + $this->toughness > 20) {

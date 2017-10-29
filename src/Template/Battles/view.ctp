@@ -36,7 +36,7 @@ $this->layout = false;
     <goat class="goat goat--blue" :x="blueGoat.x" :y="blueGoat.y" :direction="blueGoat.direction" :is-ramming="blueGoat.isRamming"></goat>
 </div><!-- .yard -->
 <button id="gobtn" v-on:click="startBattle()">GO!</button>
-<?php //debug($battle); ?>
+<?php debug($battle); ?>
 </div><!-- container -->
 <?= $this->Html->script('vue'); ?>
 <script>var battle = <?= json_encode($battle); ?>;</script>

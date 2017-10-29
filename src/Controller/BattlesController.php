@@ -4,6 +4,7 @@ namespace App\Controller;
 use App\Controller\AppController;
 # List all goat classes here
 use GoatBattle\Battle;
+use GoatBattle\Bruzy;
 use GoatBattle\Pokey;
 use GoatBattle\Quicky;
 // use Cake\Core\Exception\Exception;

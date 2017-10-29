@@ -77,18 +77,18 @@ class Battle
                 ]
             );
             
-            $goat1Actions = $this->takeTurn($this->goat1, $this->currentSituation);
+            $goat1Actions = $this->takeTurn($this->currentSituation->redGoat, $this->currentSituation);
 
             $newRound->redGoatActions = $goat1Actions;
 
             # Handle red winning mid-round
-            if ($this->goat2->health < 0) {
+            if ($this->currentSituation->blueGoat->health < 1) {
                 $newRound->blueGoatActions = [];
                 $this->battleTranscript[] = $newRound;
                 break;
             }
-            
-            $goat2Actions = $this->takeTurn($this->goat2, $this->currentSituation);
+            // has $this->currentSituation been update?
+            $goat2Actions = $this->takeTurn($this->currentSituation->blueGoat, $this->currentSituation);
 
             $newRound->blueGoatActions = $goat2Actions;
             
@@ -102,10 +102,10 @@ class Battle
      */
     public function takeTurn(Goat $thisGoat, Situation $situation)
     {
-        $goatActions = $this->getGoatActions($thisGoat, $situation);
+        $goatActions = $this->getGoatActions($thisGoat, clone $situation);
         $realGoatActions = $this->authorizeActions($thisGoat, $goatActions);
         foreach ($realGoatActions as $realAction) {
-            $this->currentSituation = $this->updateGoat($thisGoat, $realAction, $situation);
+            $this->currentSituation = clone $this->updateGoat($thisGoat, $realAction, $situation);
         }
         return $realGoatActions;
     }

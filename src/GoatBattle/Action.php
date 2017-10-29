@@ -20,6 +20,8 @@ class Action
     public $startSituation;
     public $endSituation;
 
+    public $goatColor;
+
     /**
      * Construct
      */
@@ -102,6 +104,8 @@ class Action
             throw new \Exception('Color not set in Action::apply()');
         }
 
+        $this->goatColor = $thisGoat->color;
+
         $this->startSituation = clone $situation;
 
         $thisLocation = ($thisGoat->color == 'RED') ? $situation->redLocation : $situation->blueLocation;
@@ -145,6 +149,7 @@ class Action
         Location $otherLocation
     ) {
         if ($this->isOtherGoatRammable($thisLocation, $otherLocation)) {
+            //@TODO This is where to adjust for defensive horns
             $otherGoat->health -= $thisGoat->horns;
         }
     }
@@ -265,6 +270,7 @@ class Action
      * @param Location $location after action
      * @return Location
      */
+    //@TODO These don't prevent moving diagonally "up" an edge etc
     private function trimMoveToBounds(Location $location)
     {
         if ($location->y > 50) {
