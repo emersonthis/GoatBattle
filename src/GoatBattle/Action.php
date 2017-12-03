@@ -266,29 +266,6 @@ class Action
     }
 
     /**
-     * Trim the move location to stay in bounds
-     * @param Location $location after action
-     * @return Location
-     */
-    //@TODO These don't prevent moving diagonally "up" an edge etc
-    private function trimMoveToBounds(Location $location)
-    {
-        if ($location->y > 50) {
-            $location->y = 50;
-        }
-        if ($location->x > 50) {
-            $location->x = 50;
-        }
-        if ($location->y < -50) {
-            $location->y = -50;
-        }
-        if ($location->x < -50) {
-            $location->x = -50;
-        }
-        return $location;
-    }
-
-    /**
      * Trim the move location to not pass thru other goat
      * @param Location $location after action
      * @param Location $otherLocation of other goat
@@ -346,6 +323,76 @@ class Action
     }
 
     /**
+     * Trim the move location to not go out of bounds
+     * @param Location $location after action
+     * @return measure
+     */
+    private function trimMeasureToBounds(Location $location)
+    {
+
+        if ($this->measure === 0) {
+            return 0;
+        }
+
+        $newMeasure = 0;
+
+        while ($newMeasure <= $this->measure) {
+
+            switch ($location->direction) {
+                case 0:
+                case 360:
+                    $location->x++;
+                    break;
+
+                case 45:
+                    $location->x++;
+                    $location->y++;
+                    break;
+                
+                case 90:
+                    $location->y++;
+                    break;
+                
+                case 135:
+                    $location->x--;
+                    $location->y++;
+                    break;
+                
+                case 180:
+                    $location->x--;
+                    break;
+                
+                case 225:
+                    $location->x--;
+                    $location->y--;
+                    break;
+                
+                case 270:
+                    $location->y--;
+                    break;
+                
+                case 315:
+                    $location->x++;
+                    $location->y--;
+                    break;
+            }
+
+            if (
+                ($location->x > $location::MAX_X) || 
+                ($location->x < $location::MIN_X) ||
+                ($location->y > $location::MAX_Y) ||
+                ($location->y < $location::MIN_Y)
+            ) {
+                return $newMeasure;
+            }
+
+            $newMeasure++;
+        }
+
+        return $this->measure;
+    }
+
+    /**
      * Move the goat
      * @param Location $goatLocation the location of this goat
      * @param Location $otherLocation the location of the other goat
@@ -354,8 +401,9 @@ class Action
     private function moveGoat(Location &$goatLocation, Location $otherLocation)
     {
         $this->measure = $this->trimMeasureIfBlocked($goatLocation, $otherLocation);
+        $this->measure = $this->trimMeasureToBounds(clone $goatLocation);
         $n = $this->measure;
-        
+
         switch ($goatLocation->direction) {
             case 360:
             case 0:
@@ -402,8 +450,7 @@ class Action
                 $goatLocation->y -= $n;
                 break;
         }
-        
-        $goatLocation = $this->trimMoveToBounds($goatLocation);
+
         return clone $goatLocation;
     }
 
