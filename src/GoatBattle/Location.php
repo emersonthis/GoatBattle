@@ -8,10 +8,10 @@ class Location
     public $x;
     public $y;
 
-    const MIN_X = -50;
-    const MAX_X = 50;
-    const MIN_Y = -50;
-    const MAX_Y = 50;
+    const MIN_X = -25;
+    const MAX_X = 25;
+    const MIN_Y = -25;
+    const MAX_Y = 25;
 
     /**
      */
@@ -20,13 +20,13 @@ class Location
         switch ($pos) {
             case 'RED':
                 $this->direction = 315; //SE
-                $this->x = -50;
-                $this->y = 50;
+                $this->x = self::MIN_X;
+                $this->y = self::MAX_Y;
                 break;
             case 'BLUE':
                 $this->direction = 135; //NW
-                $this->x = 50;
-                $this->y = -50;
+                $this->x = self::MAX_X;
+                $this->y = self::MIN_Y;
                 break;
 
             case null:

@@ -88,42 +88,42 @@ class ActionTest extends TestCase
         $situation2 = $action->apply($redGoat, $situation1);
 
         $this->assertInstanceOf(Situation::class, $situation2);
-        $this->assertEquals(48, $situation2->redLocation->y);
-        $this->assertEquals(-48, $situation2->redLocation->x);
+        $this->assertEquals($redLocation->y-2, $situation2->redLocation->y);
+        $this->assertEquals($redLocation->x+2, $situation2->redLocation->x);
         $this->assertEquals(315, $situation2->redLocation->direction);
         # no change
-        $this->assertEquals($situation2->blueLocation->x, 50);
-        $this->assertEquals($situation2->blueLocation->y, -50);
+        $this->assertEquals($situation2->blueLocation->x, $blueLocation->x);
+        $this->assertEquals($situation2->blueLocation->y, $blueLocation->y);
 
         $action = new Action('TURN', 1);
         $situation3 = $action->apply($redGoat, $situation2);
 
         $this->assertInstanceOf(Situation::class, $situation3);
-        $this->assertEquals(48, $situation3->redLocation->y);
-        $this->assertEquals(-48, $situation3->redLocation->x);
+        $this->assertEquals($redLocation->y-2, $situation3->redLocation->y);
+        $this->assertEquals($redLocation->x+2, $situation3->redLocation->x);
         $this->assertEquals(360, $situation3->redLocation->direction);
         # no change
-        $this->assertEquals($situation3->blueLocation->x, 50);
-        $this->assertEquals($situation3->blueLocation->y, -50);
+        $this->assertEquals($situation3->blueLocation->x, $blueLocation->x);
+        $this->assertEquals($situation3->blueLocation->y, $blueLocation->y);
 
         $action1 = $redGoat->turn(1);
         $situation4 = $action1->apply($redGoat, $situation1);
 
         $this->assertEquals(360, $situation4->redLocation->direction);
-        $this->assertEquals(-48, $situation4->redLocation->x);
-        $this->assertEquals(48, $situation4->redLocation->y);
+        $this->assertEquals($redLocation->x+2, $situation4->redLocation->x);
+        $this->assertEquals($redLocation->y-2, $situation4->redLocation->y);
         # no change
-        $this->assertEquals($situation4->blueLocation->x, 50);
-        $this->assertEquals($situation4->blueLocation->y, -50);
+        $this->assertEquals($situation4->blueLocation->x, $blueLocation->x);
+        $this->assertEquals($situation4->blueLocation->y, $blueLocation->y);
 
         $action2 = $redGoat->move(9);
         $situation5 = $action2->apply($redGoat, $situation4);
         $this->assertEquals(360, $situation5->redLocation->direction);
-        $this->assertEquals(-39, $situation5->redLocation->x);
-        $this->assertEquals(48, $situation5->redLocation->y);
+        $this->assertEquals($redLocation->x+11, $situation5->redLocation->x);
+        $this->assertEquals($redLocation->y-2, $situation5->redLocation->y);
         # no change
-        $this->assertEquals($situation5->blueLocation->x, 50);
-        $this->assertEquals($situation5->blueLocation->y, -50);
+        $this->assertEquals($situation5->blueLocation->x, $blueLocation->x);
+        $this->assertEquals($situation5->blueLocation->y, $blueLocation->y);
 
         // Test for "ghosting northward"
         $nSituation = clone $this->situationA;

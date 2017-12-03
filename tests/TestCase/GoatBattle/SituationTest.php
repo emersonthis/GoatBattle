@@ -29,7 +29,7 @@ class SituationTest extends TestCase
         # make sure references are "detached"
         $redLocation->x = 0;
         $redLocation->y = 0;
-        $this->assertEquals(-50, $situation->redLocation->x);
+        $this->assertEquals($redLocation::MIN_X, $situation->redLocation->x);
         $redGoat->health = 0;
         $this->assertEquals($initialHealth, $situation->redGoat->health);
     }
@@ -42,10 +42,11 @@ class SituationTest extends TestCase
             'redLocation' => new Location('RED'),
             'blueLocation' => new Location('BLUE')
         ]);
+        $Location = new Location();
         $situationClone = clone $situation;
         $situationClone->redLocation->x = 50;
         $situationClone->redLocation->y = 48;
-        $this->assertEquals(-50, $situation->redLocation->x);
-        $this->assertEquals(50, $situation->redLocation->y);
+        $this->assertEquals($Location::MIN_X, $situation->redLocation->x);
+        $this->assertEquals($Location::MAX_Y, $situation->redLocation->y);
     }
 }

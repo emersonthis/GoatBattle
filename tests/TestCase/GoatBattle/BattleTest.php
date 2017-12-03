@@ -116,8 +116,8 @@ class BattleTest extends TestCase
             $goat1,
             $situation
         );
-        $this->assertEquals(-50, $goat1Actions[0]->endSituation->redLocation->x);
-        $this->assertEquals(50, $goat1Actions[0]->endSituation->redLocation->y);
+        $this->assertEquals($goat1Location::MIN_X, $goat1Actions[0]->endSituation->redLocation->x);
+        $this->assertEquals($goat1Location::MAX_Y, $goat1Actions[0]->endSituation->redLocation->y);
     }
 
     /**
@@ -271,8 +271,8 @@ class BattleTest extends TestCase
         $action2 = new Action('MOVE', 9);
         $endSituation1 = $action1->apply($redGoat, $startSituation);
         $endSituation2 = $action2->apply($redGoat, $endSituation1);
-        $this->assertEquals(-50, $endSituation2->redLocation->x);
-        $this->assertEquals(41, $endSituation2->redLocation->y);
+        $this->assertEquals($redLocation::MIN_X, $endSituation2->redLocation->x);
+        $this->assertEquals($redLocation::MAX_Y - 9, $endSituation2->redLocation->y);
     }
 
     public function testQuickyBruzy2()
@@ -285,24 +285,26 @@ class BattleTest extends TestCase
             ]
         );
 
+        $Location = new Location();
+
         $goat1Actions = $battle->takeTurn($battle->goat1, $battle->currentSituation);
         $newRound->redGoatActions = $goat1Actions;
-        $this->assertEquals(-50, end($goat1Actions)->endSituation->redLocation->x);
-        $this->assertEquals(41, end($goat1Actions)->endSituation->redLocation->y);
+        $this->assertEquals($Location::MIN_X, end($goat1Actions)->endSituation->redLocation->x);
+        $this->assertEquals($Location::MAX_Y - 9, end($goat1Actions)->endSituation->redLocation->y);
 
         # with this removed the transcripts are correct
         $goat2Actions = $battle->takeTurn($battle->goat2, $battle->currentSituation);
         $newRound->blueGoatActions = $goat2Actions;
 
-        $this->assertEquals(-50, end($goat1Actions)->endSituation->redLocation->x);
-        $this->assertEquals(41, end($goat1Actions)->endSituation->redLocation->y);
-        $this->assertEquals(-50, $battle->currentSituation->redLocation->x);
-        $this->assertEquals(41, $battle->currentSituation->redLocation->y);
+        $this->assertEquals($Location::MIN_X, end($goat1Actions)->endSituation->redLocation->x);
+        $this->assertEquals($Location::MAX_Y - 9, end($goat1Actions)->endSituation->redLocation->y);
+        $this->assertEquals($Location::MIN_X, $battle->currentSituation->redLocation->x);
+        $this->assertEquals($Location::MAX_Y - 9, $battle->currentSituation->redLocation->y);
 
         $battle->battleTranscript[] = $newRound;
 
-        $this->assertEquals(-50, end($battle->battleTranscript[0]->redGoatActions)->endSituation->redLocation->x);
-        $this->assertEquals(41, end($battle->battleTranscript[0]->redGoatActions)->endSituation->redLocation->y);
+        $this->assertEquals($Location::MIN_X, end($battle->battleTranscript[0]->redGoatActions)->endSituation->redLocation->x);
+        $this->assertEquals($Location::MAX_Y - 9, end($battle->battleTranscript[0]->redGoatActions)->endSituation->redLocation->y);
     }
 
     // # FOUND IT!!

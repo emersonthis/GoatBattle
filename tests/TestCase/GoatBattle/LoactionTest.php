@@ -18,10 +18,10 @@ class LocationTest extends TestCase
         $red = new Location('RED');
         $blue = new Location('BLUE');
 
-        $this->assertEquals(-50, $red->x);
-        $this->assertEquals(50, $red->y);
-        $this->assertEquals(50, $blue->x);
-        $this->assertEquals(-50, $blue->y);
+        $this->assertEquals($red::MIN_X, $red->x);
+        $this->assertEquals($red::MAX_Y, $red->y);
+        $this->assertEquals($blue::MAX_X, $blue->x);
+        $this->assertEquals($blue::MIN_Y, $blue->y);
     }
 
     public function testFacing()

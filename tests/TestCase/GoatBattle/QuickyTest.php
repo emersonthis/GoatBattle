@@ -41,7 +41,7 @@ class QuickyTest extends TestCase
         $this->assertEquals($actions[0]->measure, -1);
         $this->assertInstanceOf(Action::class, $actions[1]);
         $this->assertTrue($actions[1]->isMove());
-        $this->assertEquals($actions[1]->measure, 100);
+        $this->assertEquals($actions[1]->measure, $location::MAX_X*2);
     }
 
     // public function testTurnToFaceAndAdvance()
