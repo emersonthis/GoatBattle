@@ -36,4 +36,4 @@ composer install
 ```
 
 You should now be able to run: `bin/cake server`
-And visit: http://localhost:8765/
+And visit: http://localhost:8765/battles/view/Quicky/Pokey (substitute the names of the goats)
