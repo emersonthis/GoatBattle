@@ -3,8 +3,8 @@ Vue.component('goat', {
   props: ['x','y','direction', 'isRamming'],
   methods : {
     makeStyle : function() {
-        var x = (this.x + 50);
-        var y = (this.y + 50);
+        var x = (this.x + 25)*2;
+        var y = (this.y + 25)*2;
         var flip = (this.direction > 90 == this.direction < 270) ? ' scaleY(-1)' : '';        
         return "left:"+x+"%;bottom:"+y+"%;transform:rotate(-"+this.direction+"deg)"+flip+";";
     }
@@ -23,16 +23,16 @@ var app = new Vue({
     viewRound: 0,
     actionDuration: 200,
     redGoat: {
-        x: -50,
-        y: 50,
+        x: -25,
+        y: 25,
         direction: 315,
         health: battle.goat1.toughness,
         name: battle.goat1.name,
         isRamming : false
     },
     blueGoat: {
-        x: 50,
-        y: -50,
+        x: 25,
+        y: -25,
         direction: 135,
         health: battle.goat2.toughness,
         name: battle.goat2.name,
