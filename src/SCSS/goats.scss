@@ -3,6 +3,8 @@ $redColor : #F00;
 $blueColor : #00F;
 $yardColor : #F2FFEF;
 
+$transitionDuration : .3s;
+
 body {
     font-size: 18px;
     font-family: monospace;
@@ -40,6 +42,8 @@ body {
     position: absolute;
     margin-left: -1 * $goatWidth/2;
     margin-bottom: -1 * $goatWidth/2;
+
+    transition: bottom $transitionDuration, left $transitionDuration, transform $transitionDuration;
 
     &.isRamming {
         .ramming { display: block; }
