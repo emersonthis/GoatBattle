@@ -1,15 +1,15 @@
 <?php
 /**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  * @since         1.2.0
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 namespace Cake\TestSuite;
 
@@ -24,26 +24,26 @@ use Cake\TestSuite\Constraint\EventFired;
 use Cake\TestSuite\Constraint\EventFiredWith;
 use Cake\Utility\Inflector;
 use Exception;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase as BaseTestCase;
 
 /**
  * Cake TestCase class
  */
-abstract class TestCase extends PHPUnit_Framework_TestCase
+abstract class TestCase extends BaseTestCase
 {
 
     /**
      * The class responsible for managing the creation, loading and removing of fixtures
      *
-     * @var \Cake\TestSuite\Fixture\FixtureManager
+     * @var \Cake\TestSuite\Fixture\FixtureManager|null
      */
-    public $fixtureManager = null;
+    public $fixtureManager;
 
     /**
      * By default, all fixtures attached to this class will be truncated and reloaded after each test.
      * Set this to false to handle manually
      *
-     * @var array
+     * @var bool
      */
     public $autoFixtures = true;
 
@@ -98,7 +98,7 @@ abstract class TestCase extends PHPUnit_Framework_TestCase
     {
         parent::setUp();
 
-        if (empty($this->_configure)) {
+        if (!$this->_configure) {
             $this->_configure = Configure::read();
         }
         if (class_exists('Cake\Routing\Router', false)) {
@@ -116,10 +116,11 @@ abstract class TestCase extends PHPUnit_Framework_TestCase
     public function tearDown()
     {
         parent::tearDown();
-        if (!empty($this->_configure)) {
+        if ($this->_configure) {
             Configure::clear();
             Configure::write($this->_configure);
         }
+        TableRegistry::clear();
     }
 
     /**
@@ -133,7 +134,7 @@ abstract class TestCase extends PHPUnit_Framework_TestCase
      */
     public function loadFixtures()
     {
-        if (empty($this->fixtureManager)) {
+        if ($this->fixtureManager === null) {
             throw new Exception('No fixture manager to load the test fixture');
         }
         $args = func_get_args();
@@ -323,7 +324,7 @@ abstract class TestCase extends PHPUnit_Framework_TestCase
             'assertTags() is deprecated, use assertHtml() instead.',
             E_USER_DEPRECATED
         );
-        static::assertHtml($expected, $string, $fullDebug);
+        $this->assertHtml($expected, $string, $fullDebug);
     }
 
     /**
@@ -400,7 +401,7 @@ abstract class TestCase extends PHPUnit_Framework_TestCase
                     }
                     $regex[] = [
                         sprintf('%sClose %s tag', $prefix[0], substr($tags, strlen($match[0]))),
-                        sprintf('%s<[\s]*\/[\s]*%s[\s]*>[\n\r]*', $prefix[1], substr($tags, strlen($match[0]))),
+                        sprintf('%s\s*<[\s]*\/[\s]*%s[\s]*>[\n\r]*', $prefix[1], substr($tags, strlen($match[0]))),
                         $i,
                     ];
                     continue;
@@ -409,7 +410,7 @@ abstract class TestCase extends PHPUnit_Framework_TestCase
                     $tags = $matches[1];
                     $type = 'Regex matches';
                 } else {
-                    $tags = preg_quote($tags, '/');
+                    $tags = '\s*' . preg_quote($tags, '/');
                     $type = 'Text equals';
                 }
                 $regex[] = [
@@ -484,6 +485,7 @@ abstract class TestCase extends PHPUnit_Framework_TestCase
             }
 
             list($description, $expressions, $itemNum) = $assertion;
+            $expression = null;
             foreach ((array)$expressions as $expression) {
                 $expression = sprintf('/^%s/s', $expression);
                 if (preg_match($expression, $string, $match)) {
@@ -515,7 +517,7 @@ abstract class TestCase extends PHPUnit_Framework_TestCase
      * @param string $string The HTML string to check.
      * @param bool $fullDebug Whether or not more verbose output should be used.
      * @param array|string $regex Full regexp from `assertHtml`
-     * @return string
+     * @return string|bool
      */
     protected function _assertAttributes($assertions, $string, $fullDebug = false, $regex = '')
     {
@@ -523,6 +525,7 @@ abstract class TestCase extends PHPUnit_Framework_TestCase
         $explains = $assertions['explains'];
         do {
             $matches = false;
+            $j = null;
             foreach ($asserts as $j => $assert) {
                 if (preg_match(sprintf('/^%s/s', $assert), $string, $match)) {
                     $matches = true;
@@ -571,7 +574,7 @@ abstract class TestCase extends PHPUnit_Framework_TestCase
     {
         $upper = $result + $margin;
         $lower = $result - $margin;
-        static::assertTrue((($expected <= $upper) && ($expected >= $lower)), $message);
+        static::assertTrue(($expected <= $upper) && ($expected >= $lower), $message);
     }
 
     /**
@@ -587,7 +590,7 @@ abstract class TestCase extends PHPUnit_Framework_TestCase
     {
         $upper = $result + $margin;
         $lower = $result - $margin;
-        static::assertTrue((($expected > $upper) || ($expected < $lower)), $message);
+        static::assertTrue(($expected > $upper) || ($expected < $lower), $message);
     }
 
     /**
@@ -664,12 +667,24 @@ abstract class TestCase extends PHPUnit_Framework_TestCase
             }
         }
 
-        if (stripos($mock->table(), 'mock') === 0) {
-            $mock->table(Inflector::tableize($baseClass));
+        if (stripos($mock->getTable(), 'mock') === 0) {
+            $mock->setTable(Inflector::tableize($baseClass));
         }
 
         TableRegistry::set($baseClass, $mock);
+        TableRegistry::set($alias, $mock);
 
         return $mock;
+    }
+
+    /**
+     * Set the app namespace
+     *
+     * @param string $appNamespace The app namespace, defaults to "TestApp".
+     * @return void
+     */
+    public static function setAppNamespace($appNamespace = 'TestApp')
+    {
+        Configure::write('App.namespace', $appNamespace);
     }
 }

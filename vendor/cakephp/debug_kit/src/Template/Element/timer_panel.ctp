@@ -11,6 +11,13 @@
  * @since         DebugKit 0.1
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
+
+/**
+ * @var \DebugKit\View\AjaxView $this
+ * @var float $requestTime
+ * @var int $peakMemory
+ * @var array $memory
+ */
 ?>
 <section>
     <h3><?= __d('debug_kit', 'Memory') ?></h3>

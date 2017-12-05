@@ -1,16 +1,16 @@
 <?php
 /**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
  * @since         3.0.0
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 namespace Cake\Shell\Task;
 
@@ -28,7 +28,7 @@ class LoadTask extends Shell
      *
      * @var string
      */
-    public $bootstrap = null;
+    public $bootstrap;
 
     /**
      * Execution method always used for tasks.
@@ -38,11 +38,16 @@ class LoadTask extends Shell
      */
     public function main($plugin = null)
     {
-        $this->bootstrap = ROOT . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'bootstrap.php';
+        $filename = 'bootstrap';
+        if ($this->params['cli']) {
+            $filename .= '_cli';
+        }
 
-        if (empty($plugin)) {
-            $this->err('<error>You must provide a plugin name in CamelCase format.</error>');
-            $this->err('To load an "Example" plugin, run <info>`cake plugin load Example`</info>.');
+        $this->bootstrap = ROOT . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . $filename . '.php';
+
+        if (!$plugin) {
+            $this->err('You must provide a plugin name in CamelCase format.');
+            $this->err('To load an "Example" plugin, run `cake plugin load Example`.');
 
             return false;
         }
@@ -109,8 +114,13 @@ class LoadTask extends Shell
                     'default' => false,
                 ])
                 ->addOption('autoload', [
-                    'help' => 'Will autoload the plugin using CakePHP. ' .
+                    'help' => 'Will autoload the plugin using CakePHP.' .
                         'Set to true if you are not using composer to autoload your plugin.',
+                    'boolean' => true,
+                    'default' => false,
+                ])
+                ->addOption('cli', [
+                    'help' => 'Use the bootstrap_cli file.',
                     'boolean' => true,
                     'default' => false,
                 ])

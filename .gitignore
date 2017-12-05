@@ -11,3 +11,4 @@ wp-content/uploads/*
 node_modules
 *.log
 config/app.php
+/vendor

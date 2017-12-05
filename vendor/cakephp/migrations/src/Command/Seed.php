@@ -21,9 +21,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 class Seed extends SeedRun
 {
 
-    use ConfigurationTrait {
+    use CommandTrait {
         execute as parentExecute;
     }
+    use ConfigurationTrait;
     use EventDispatcherTrait;
 
     /**
@@ -34,7 +35,12 @@ class Seed extends SeedRun
         $this->setName('seed')
             ->setDescription('Seed the database with data')
             ->setHelp('runs all available migrations, optionally up to a specific version')
-            ->addOption('--seed', null, InputOption::VALUE_REQUIRED, 'What is the name of the seeder?')
+            ->addOption(
+                '--seed',
+                null,
+                InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
+                'What is the name of the seeder?'
+            )
             ->addOption('--plugin', '-p', InputOption::VALUE_REQUIRED, 'The plugin containing the migrations')
             ->addOption('--connection', '-c', InputOption::VALUE_REQUIRED, 'The datasource connection to use')
             ->addOption('--source', '-s', InputOption::VALUE_REQUIRED, 'The folder where migrations are in');
@@ -53,6 +59,11 @@ class Seed extends SeedRun
         $event = $this->dispatchEvent('Migration.beforeSeed');
         if ($event->isStopped()) {
             return $event->result;
+        }
+
+        $seed = $input->getOption('seed');
+        if (!empty($seed) && !is_array($seed)) {
+            $input->setOption('seed', [$seed]);
         }
 
         $this->setInput($input);

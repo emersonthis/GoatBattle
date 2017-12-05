@@ -74,11 +74,30 @@ use Cake\Utility\Security;
  * idea to create multiple configuration files, and separate the configuration
  * that changes from configuration that does not. This makes deployment simpler.
  */
+
+
+# Load the default app configuration.
 try {
     Configure::config('default', new PhpConfig());
     Configure::load('app', 'default', false);
 } catch (\Exception $e) {
-    exit($e->getMessage() . "\n");
+    die($e->getMessage() . "\n");
+}
+
+# Create a hint that can be safely shown during production error states.
+$errorHint = 'A configuration or environmental error exists. ';
+$errorHint .= 'Details have been written to the error log.';
+
+# Require an explicit environment and corresponding configuration file.
+try {
+    $environment = getenv('APP_ENV');
+    Configure::load("app-$environment", 'default', false);
+} catch (\Exception $e) {
+    $errorMessage = $e->getMessage() . "\n";
+    $errorMessage .= 'The APP_ENV environmental variable is not set ';
+    $errorMessage .= 'or the corresponding configuration file is missing.';
+    fwrite(fopen('php://stderr', 'w'), $errorMessage);
+    exit(1);
 }
 
 /*
@@ -223,3 +242,5 @@ if (Configure::read('debug')) {
 }
 
 Plugin::load('Migrations');
+
+Plugin::load('CakeDC/Users', ['routes' => true, 'bootstrap' => true]);

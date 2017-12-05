@@ -1,16 +1,16 @@
 <?php
 /**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
  * @since         1.2.0
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 namespace Cake\Cache;
 
@@ -47,7 +47,7 @@ use RuntimeException;
  * There are 5 built-in caching engines:
  *
  * - `FileEngine` - Uses simple files to store content. Poor performance, but good for
- *    storing large objects, or things that are not IO sensitive.  Well suited to development
+ *    storing large objects, or things that are not IO sensitive. Well suited to development
  *    as it is an easy cache to inspect and manually flush.
  * - `ApcEngine` - Uses the APC object cache, one of the fastest caching engines.
  * - `MemcacheEngine` - Uses the PECL::Memcache extension and Memcached for storage.
@@ -100,16 +100,9 @@ class Cache
     protected static $_groups = [];
 
     /**
-     * Whether to reset the settings with the next call to Cache::set();
-     *
-     * @var array
-     */
-    protected static $_reset = false;
-
-    /**
      * Cache Registry used for creating and using cache adapters.
      *
-     * @var \Cake\Cache\CacheRegistry
+     * @var \Cake\Core\ObjectRegistry
      */
     protected static $_registry;
 
@@ -126,7 +119,7 @@ class Cache
             static::$_registry = $registry;
         }
 
-        if (empty(static::$_registry)) {
+        if (!static::$_registry) {
             static::$_registry = new CacheRegistry();
         }
 
@@ -154,7 +147,7 @@ class Cache
         $registry->load($name, $config);
 
         if ($config['className'] instanceof CacheEngine) {
-            $config = $config['className']->config();
+            $config = $config['className']->getConfig();
         }
 
         if (!empty($config['groups'])) {

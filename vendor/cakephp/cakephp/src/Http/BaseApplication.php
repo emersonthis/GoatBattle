@@ -1,16 +1,16 @@
 <?php
 /**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
  * @since         3.3.0
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 namespace Cake\Http;
 
@@ -64,7 +64,7 @@ abstract class BaseApplication
     /**
      * Invoke the application.
      *
-     * - Convert the PSR request/response into CakePHP equivalents.
+     * - Convert the PSR response into CakePHP equivalents.
      * - Create the controller that will handle this request.
      * - Invoke the controller.
      *
@@ -75,15 +75,7 @@ abstract class BaseApplication
      */
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response, $next)
     {
-        // Convert the request/response to CakePHP equivalents.
-        $cakeRequest = RequestTransformer::toCake($request);
-        $cakeResponse = ResponseTransformer::toCake($response);
-
-        // Dispatch the request/response to CakePHP
-        $cakeResponse = $this->getDispatcher()->dispatch($cakeRequest, $cakeResponse);
-
-        // Convert the response back into a PSR7 object.
-        return ResponseTransformer::toPsr($cakeResponse);
+        return $this->getDispatcher()->dispatch($request, $response);
     }
 
     /**

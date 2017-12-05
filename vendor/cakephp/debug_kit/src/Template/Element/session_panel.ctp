@@ -11,5 +11,10 @@
  * @since         DebugKit 1.1
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
+
+/**
+ * @var \DebugKit\View\AjaxView $this
+ * @var array $content
+ */
 ?>
 <?= $this->Toolbar->makeNeatArray($content);

@@ -1,15 +1,15 @@
 <?php
 /**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
  * @since         3.0.0
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 namespace Cake\Http\Client\Auth;
 
@@ -19,13 +19,13 @@ use Cake\Utility\Security;
 use RuntimeException;
 
 /**
- * Oauth 1 authentication strategy for Cake\Network\Http\Client
+ * Oauth 1 authentication strategy for Cake\Http\Client
  *
  * This object does not handle getting Oauth access tokens from the service
  * provider. It only handles make client requests *after* you have obtained the Oauth
  * tokens.
  *
- * Generally not directly constructed, but instead used by Cake\Network\Http\Client
+ * Generally not directly constructed, but instead used by Cake\Http\Client
  * when $options['auth']['type'] is 'oauth'
  */
 class Oauth
@@ -34,9 +34,9 @@ class Oauth
     /**
      * Add headers for Oauth authorization.
      *
-     * @param \Cake\Network\Http\Request $request The request object.
+     * @param \Cake\Http\Client\Request $request The request object.
      * @param array $credentials Authentication credentials.
-     * @return \Cake\Network\Http\Request The updated request.
+     * @return \Cake\Http\Client\Request The updated request.
      * @throws \Cake\Core\Exception\Exception On invalid signature types.
      */
     public function authentication(Request $request, array $credentials)
@@ -94,7 +94,7 @@ class Oauth
      * You should only ever use PLAINTEXT when dealing with SSL
      * services.
      *
-     * @param \Cake\Network\Http\Request $request The request object.
+     * @param \Cake\Http\Client\Request $request The request object.
      * @param array $credentials Authentication credentials.
      * @return string Authorization header.
      */
@@ -123,7 +123,7 @@ class Oauth
      *
      * This method is suitable for plain HTTP or HTTPS.
      *
-     * @param \Cake\Network\Http\Request $request The request object.
+     * @param \Cake\Http\Client\Request $request The request object.
      * @param array $credentials Authentication credentials.
      * @return string
      */
@@ -160,7 +160,7 @@ class Oauth
      *
      * This method is suitable for plain HTTP or HTTPS.
      *
-     * @param \Cake\Network\Http\Request $request The request object.
+     * @param \Cake\Http\Client\Request $request The request object.
      * @param array $credentials Authentication credentials.
      * @return string
      *
@@ -231,7 +231,7 @@ class Oauth
      * - The request URL (without querystring) is normalized.
      * - The HTTP method, URL and request parameters are concatenated and returned.
      *
-     * @param \Cake\Network\Http\Request $request The request object.
+     * @param \Cake\Http\Client\Request $request The request object.
      * @param array $oauthValues Oauth values.
      * @return string
      */
@@ -252,21 +252,12 @@ class Oauth
      *
      * Section 9.1.2. of the Oauth spec
      *
-     * @param Psr\Http\Message\UriInterface $uri Uri object to build a normalized version of.
+     * @param \Psr\Http\Message\UriInterface $uri Uri object to build a normalized version of.
      * @return string Normalized URL
      */
     protected function _normalizedUrl($uri)
     {
-        $scheme = $uri->getScheme();
-        $defaultPorts = [
-            'http' => 80,
-            'https' => 443
-        ];
-        $port = $uri->getPort();
-        if ($port && $port != $defaultPorts[$scheme]) {
-            $parts['host'] .= ':' . $port;
-        }
-        $out = $scheme . '://';
+        $out = $uri->getScheme() . '://';
         $out .= strtolower($uri->getHost());
         $out .= $uri->getPath();
 
@@ -281,7 +272,7 @@ class Oauth
      * - URL encode keys + values.
      * - Sort keys & values by byte value.
      *
-     * @param \Cake\Network\Http\Request $request The request object.
+     * @param \Cake\Http\Client\Request $request The request object.
      * @param array $oauthValues Oauth values.
      * @return string sorted and normalized values
      */
@@ -300,21 +291,47 @@ class Oauth
         }
 
         $args = array_merge($queryArgs, $oauthValues, $post);
-        uksort($args, 'strcmp');
+        $pairs = $this->_normalizeData($args);
+        $data = [];
+        foreach ($pairs as $pair) {
+            $data[] = implode('=', $pair);
+        }
+        sort($data, SORT_STRING);
 
-        $pairs = [];
-        foreach ($args as $k => $val) {
-            if (is_array($val)) {
-                sort($val, SORT_STRING);
-                foreach ($val as $nestedVal) {
-                    $pairs[] = "$k=$nestedVal";
+        return implode('&', $data);
+    }
+
+    /**
+     * Recursively convert request data into the normalized form.
+     *
+     * @param array $args The arguments to normalize.
+     * @param string $path The current path being converted.
+     * @see https://tools.ietf.org/html/rfc5849#section-3.4.1.3.2
+     * @return array
+     */
+    protected function _normalizeData($args, $path = '')
+    {
+        $data = [];
+        foreach ($args as $key => $value) {
+            if ($path) {
+                // Fold string keys with [].
+                // Numeric keys result in a=b&a=c. While this isn't
+                // standard behavior in PHP, it is common in other platforms.
+                if (!is_numeric($key)) {
+                    $key = "{$path}[{$key}]";
+                } else {
+                    $key = $path;
                 }
+            }
+            if (is_array($value)) {
+                uksort($value, 'strcmp');
+                $data = array_merge($data, $this->_normalizeData($value, $key));
             } else {
-                $pairs[] = "$k=$val";
+                $data[] = [$key, $value];
             }
         }
 
-        return implode('&', $pairs);
+        return $data;
     }
 
     /**
@@ -350,3 +367,6 @@ class Oauth
         );
     }
 }
+
+// @deprecated Add backwards compat alias.
+class_alias('Cake\Http\Client\Auth\Oauth', 'Cake\Network\Http\Auth\Oauth');

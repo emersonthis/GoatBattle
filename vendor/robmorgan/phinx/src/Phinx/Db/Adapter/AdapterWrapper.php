@@ -33,6 +33,7 @@ use Phinx\Db\Table\Column;
 use Phinx\Db\Table\Index;
 use Phinx\Db\Table\ForeignKey;
 use Phinx\Migration\MigrationInterface;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -111,6 +112,23 @@ abstract class AdapterWrapper implements AdapterInterface, WrapperInterface
     /**
      * {@inheritdoc}
      */
+    public function setInput(InputInterface $input)
+    {
+        $this->adapter->setInput($input);
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getInput()
+    {
+        return $this->adapter->getInput();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function setOutput(OutputInterface $output)
     {
         $this->adapter->setOutput($output);
@@ -130,7 +148,7 @@ abstract class AdapterWrapper implements AdapterInterface, WrapperInterface
      */
     public function connect()
     {
-        return $this->getAdapter()->connect();
+        $this->getAdapter()->connect();
     }
 
     /**
@@ -138,7 +156,7 @@ abstract class AdapterWrapper implements AdapterInterface, WrapperInterface
      */
     public function disconnect()
     {
-        return $this->getAdapter()->disconnect();
+        $this->getAdapter()->disconnect();
     }
 
     /**
@@ -162,7 +180,7 @@ abstract class AdapterWrapper implements AdapterInterface, WrapperInterface
      */
     public function insert(Table $table, $row)
     {
-        return $this->getAdapter()->insert($table, $row);
+        $this->getAdapter()->insert($table, $row);
     }
 
     /**
@@ -207,6 +225,23 @@ abstract class AdapterWrapper implements AdapterInterface, WrapperInterface
     }
 
     /**
+     * @inheritDoc
+     */
+    public function toggleBreakpoint(MigrationInterface $migration)
+    {
+        $this->getAdapter()->toggleBreakpoint($migration);
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function resetAllBreakpoints()
+    {
+        return $this->getAdapter()->resetAllBreakpoints();
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function hasSchemaTable()
@@ -219,7 +254,7 @@ abstract class AdapterWrapper implements AdapterInterface, WrapperInterface
      */
     public function createSchemaTable()
     {
-        return $this->getAdapter()->createSchemaTable();
+        $this->getAdapter()->createSchemaTable();
     }
 
     /**
@@ -251,7 +286,7 @@ abstract class AdapterWrapper implements AdapterInterface, WrapperInterface
      */
     public function beginTransaction()
     {
-        return $this->getAdapter()->beginTransaction();
+        $this->getAdapter()->beginTransaction();
     }
 
     /**
@@ -259,7 +294,7 @@ abstract class AdapterWrapper implements AdapterInterface, WrapperInterface
      */
     public function commitTransaction()
     {
-        return $this->getAdapter()->commitTransaction();
+        $this->getAdapter()->commitTransaction();
     }
 
     /**
@@ -267,7 +302,7 @@ abstract class AdapterWrapper implements AdapterInterface, WrapperInterface
      */
     public function rollbackTransaction()
     {
-        return $this->getAdapter()->rollbackTransaction();
+        $this->getAdapter()->rollbackTransaction();
     }
 
     /**
@@ -299,7 +334,7 @@ abstract class AdapterWrapper implements AdapterInterface, WrapperInterface
      */
     public function createTable(Table $table)
     {
-        return $this->getAdapter()->createTable($table);
+        $this->getAdapter()->createTable($table);
     }
 
     /**
@@ -307,7 +342,7 @@ abstract class AdapterWrapper implements AdapterInterface, WrapperInterface
      */
     public function renameTable($tableName, $newTableName)
     {
-        return $this->getAdapter()->renameTable($tableName, $newTableName);
+        $this->getAdapter()->renameTable($tableName, $newTableName);
     }
 
     /**
@@ -315,7 +350,7 @@ abstract class AdapterWrapper implements AdapterInterface, WrapperInterface
      */
     public function dropTable($tableName)
     {
-        return $this->getAdapter()->dropTable($tableName);
+        $this->getAdapter()->dropTable($tableName);
     }
 
     /**
@@ -339,7 +374,7 @@ abstract class AdapterWrapper implements AdapterInterface, WrapperInterface
      */
     public function addColumn(Table $table, Column $column)
     {
-        return $this->getAdapter()->addColumn($table, $column);
+        $this->getAdapter()->addColumn($table, $column);
     }
 
     /**
@@ -347,7 +382,7 @@ abstract class AdapterWrapper implements AdapterInterface, WrapperInterface
      */
     public function renameColumn($tableName, $columnName, $newColumnName)
     {
-        return $this->getAdapter()->renameColumn($tableName, $columnName, $newColumnName);
+        $this->getAdapter()->renameColumn($tableName, $columnName, $newColumnName);
     }
 
     /**
@@ -363,7 +398,7 @@ abstract class AdapterWrapper implements AdapterInterface, WrapperInterface
      */
     public function dropColumn($tableName, $columnName)
     {
-        return $this->getAdapter()->dropColumn($tableName, $columnName);
+        $this->getAdapter()->dropColumn($tableName, $columnName);
     }
 
     /**
@@ -387,15 +422,15 @@ abstract class AdapterWrapper implements AdapterInterface, WrapperInterface
      */
     public function addIndex(Table $table, Index $index)
     {
-        return $this->getAdapter()->addIndex($table, $index);
+        $this->getAdapter()->addIndex($table, $index);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function dropIndex($tableName, $columns, $options = array())
+    public function dropIndex($tableName, $columns)
     {
-        return $this->getAdapter()->dropIndex($tableName, $columns, $options);
+        $this->getAdapter()->dropIndex($tableName, $columns);
     }
 
     /**
@@ -403,7 +438,7 @@ abstract class AdapterWrapper implements AdapterInterface, WrapperInterface
      */
     public function dropIndexByName($tableName, $indexName)
     {
-        return $this->getAdapter()->dropIndexByName($tableName, $indexName);
+        $this->getAdapter()->dropIndexByName($tableName, $indexName);
     }
 
     /**
@@ -419,7 +454,7 @@ abstract class AdapterWrapper implements AdapterInterface, WrapperInterface
      */
     public function addForeignKey(Table $table, ForeignKey $foreignKey)
     {
-        return $this->getAdapter()->addForeignKey($table, $foreignKey);
+        $this->getAdapter()->addForeignKey($table, $foreignKey);
     }
 
     /**
@@ -427,7 +462,7 @@ abstract class AdapterWrapper implements AdapterInterface, WrapperInterface
      */
     public function dropForeignKey($tableName, $columns, $constraint = null)
     {
-        return $this->getAdapter()->dropForeignKey($tableName, $columns, $constraint);
+        $this->getAdapter()->dropForeignKey($tableName, $columns, $constraint);
     }
 
     /**
@@ -443,7 +478,7 @@ abstract class AdapterWrapper implements AdapterInterface, WrapperInterface
      */
     public function createDatabase($name, $options = array())
     {
-        return $this->getAdapter()->createDatabase($name, $options);
+        $this->getAdapter()->createDatabase($name, $options);
     }
 
     /**
@@ -451,7 +486,7 @@ abstract class AdapterWrapper implements AdapterInterface, WrapperInterface
      */
     public function hasDatabase($name)
     {
-        return $this->getAdapter()->hasDatabase($name);
+        $this->getAdapter()->hasDatabase($name);
     }
 
     /**
@@ -459,6 +494,14 @@ abstract class AdapterWrapper implements AdapterInterface, WrapperInterface
      */
     public function dropDatabase($name)
     {
-        return $this->getAdapter()->dropDatabase($name);
+        $this->getAdapter()->dropDatabase($name);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function castToBool($value)
+    {
+        return $this->getAdapter()->castToBool($value);
     }
 }

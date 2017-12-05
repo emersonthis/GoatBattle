@@ -1,16 +1,16 @@
 <?php
 /**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
  * @since         3.0.0
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 namespace Cake\Database;
 
@@ -37,7 +37,7 @@ class Type implements TypeInterface
         'boolean' => 'Cake\Database\Type\BoolType',
         'date' => 'Cake\Database\Type\DateType',
         'datetime' => 'Cake\Database\Type\DateTimeType',
-        'decimal' => 'Cake\Database\Type\FloatType',
+        'decimal' => 'Cake\Database\Type\DecimalType',
         'float' => 'Cake\Database\Type\FloatType',
         'integer' => 'Cake\Database\Type\IntegerType',
         'json' => 'Cake\Database\Type\JsonType',
@@ -76,7 +76,7 @@ class Type implements TypeInterface
      *
      * @var string
      */
-    protected $_name = null;
+    protected $_name;
 
     /**
      * Constructor
@@ -257,7 +257,7 @@ class Type implements TypeInterface
     public static function boolval($value)
     {
         if (is_string($value) && !is_numeric($value)) {
-            return strtolower($value) === 'true' ? true : false;
+            return strtolower($value) === 'true';
         }
 
         return !empty($value);
@@ -269,7 +269,7 @@ class Type implements TypeInterface
      * Will convert values into strings
      *
      * @param mixed $value The value to convert to a string.
-     * @return bool
+     * @return string
      * @deprecated 3.1.8 This method is now unused.
      */
     public static function strval($value)

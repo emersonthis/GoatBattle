@@ -1,15 +1,15 @@
 <?php
 /**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
  * @since         3.0.0
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 namespace Cake\Http\Client;
 
@@ -151,6 +151,7 @@ class Response extends Message implements ResponseInterface
         }
         $stream = new Stream('php://memory', 'wb+');
         $stream->write($body);
+        $stream->rewind();
         $this->stream = $stream;
     }
 
@@ -195,7 +196,7 @@ class Response extends Message implements ResponseInterface
             if (substr($value, 0, 5) === 'HTTP/') {
                 preg_match('/HTTP\/([\d.]+) ([0-9]+)(.*)/i', $value, $matches);
                 $this->protocol = $matches[1];
-                $this->code = $matches[2];
+                $this->code = (int)$matches[2];
                 $this->reasonPhrase = trim($matches[3]);
                 continue;
             }
@@ -228,9 +229,9 @@ class Response extends Message implements ResponseInterface
         $value = rtrim($value, ';');
         $nestedSemi = '";"';
         if (strpos($value, $nestedSemi) !== false) {
-            $value = str_replace($nestedSemi, "{__cookie_replace__}", $value);
+            $value = str_replace($nestedSemi, '{__cookie_replace__}', $value);
             $parts = explode(';', $value);
-            $parts = str_replace("{__cookie_replace__}", $nestedSemi, $parts);
+            $parts = str_replace('{__cookie_replace__}', $nestedSemi, $parts);
         } else {
             $parts = preg_split('/\;[ \t]*/', $value);
         }
@@ -319,7 +320,7 @@ class Response extends Message implements ResponseInterface
      *
      * @param int $code The status code to set.
      * @param string $reasonPhrase The status reason phrase.
-     * @return self A copy of the current object with an updated status code.
+     * @return $this A copy of the current object with an updated status code.
      */
     public function withStatus($code, $reasonPhrase = '')
     {
@@ -501,11 +502,11 @@ class Response extends Message implements ResponseInterface
     /**
      * Get the response body as JSON decoded data.
      *
-     * @return mixed
+     * @return array|null
      */
     protected function _getJson()
     {
-        if (!empty($this->_json)) {
+        if ($this->_json) {
             return $this->_json;
         }
 
@@ -519,7 +520,7 @@ class Response extends Message implements ResponseInterface
      */
     protected function _getXml()
     {
-        if (!empty($this->_xml)) {
+        if ($this->_xml) {
             return $this->_xml;
         }
         libxml_use_internal_errors();
@@ -560,7 +561,6 @@ class Response extends Message implements ResponseInterface
         return $this->stream->getContents();
     }
 
-
     /**
      * Read values as properties.
      *
@@ -598,6 +598,9 @@ class Response extends Message implements ResponseInterface
             return $val !== null;
         }
 
-        return isset($this->$key);
+        return isset($this->{$key});
     }
 }
+
+// @deprecated Add backwards compat alias.
+class_alias('Cake\Http\Client\Response', 'Cake\Network\Http\Response');

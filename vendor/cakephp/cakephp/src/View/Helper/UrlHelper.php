@@ -1,16 +1,16 @@
 <?php
 /**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
  * @since         3.0.0
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 namespace Cake\View\Helper;
 
@@ -21,7 +21,7 @@ use Cake\Utility\Inflector;
 use Cake\View\Helper;
 
 /**
- * UrlHelper class for generating urls.
+ * UrlHelper class for generating URLs.
  */
 class UrlHelper extends Helper
 {
@@ -29,15 +29,35 @@ class UrlHelper extends Helper
     /**
      * Returns a URL based on provided parameters.
      *
-     * @param string|array|null $url Either a relative string url like `/products/view/23` or
+     * ### Options:
+     *
+     * - `escape`: If false, the URL will be returned unescaped, do only use if it is manually
+     *    escaped afterwards before being displayed.
+     * - `fullBase`: If true, the full base URL will be prepended to the result
+     *
+     * @param string|array|null $url Either a relative string URL like `/products/view/23` or
      *    an array of URL parameters. Using an array for URLs will allow you to leverage
      *    the reverse routing features of CakePHP.
-     * @param bool $full If true, the full base URL will be prepended to the result
+     * @param array|bool $options Array of options; bool `full` for BC reasons.
      * @return string Full translated URL with base path.
      */
-    public function build($url = null, $full = false)
+    public function build($url = null, $options = false)
     {
-        return h(Router::url($url, $full));
+        $defaults = [
+            'fullBase' => false,
+            'escape' => true,
+        ];
+        if (!is_array($options)) {
+            $options = ['fullBase' => $options];
+        }
+        $options += $defaults;
+
+        $url = Router::url($url, $options['fullBase']);
+        if ($options['escape']) {
+            $url = h($url);
+        }
+
+        return $url;
     }
 
     /**
@@ -183,7 +203,7 @@ class UrlHelper extends Helper
         $timestampEnabled = $stamp === 'force' || ($stamp === true && Configure::read('debug'));
         if ($timestampEnabled && strpos($path, '?') === false) {
             $filepath = preg_replace(
-                '/^' . preg_quote($this->request->webroot, '/') . '/',
+                '/^' . preg_quote($this->request->getAttribute('webroot'), '/') . '/',
                 '',
                 urldecode($path)
             );
@@ -217,7 +237,7 @@ class UrlHelper extends Helper
     {
         $asset = explode('?', $file);
         $asset[1] = isset($asset[1]) ? '?' . $asset[1] : null;
-        $webPath = $this->request->webroot . $asset[0];
+        $webPath = $this->request->getAttribute('webroot') . $asset[0];
         $file = $asset[0];
 
         if (!empty($this->theme)) {
@@ -229,12 +249,12 @@ class UrlHelper extends Helper
             }
 
             if (file_exists(Configure::read('App.wwwRoot') . $theme . $file)) {
-                $webPath = $this->request->webroot . $theme . $asset[0];
+                $webPath = $this->request->getAttribute('webroot') . $theme . $asset[0];
             } else {
                 $themePath = Plugin::path($this->theme);
                 $path = $themePath . 'webroot/' . $file;
                 if (file_exists($path)) {
-                    $webPath = $this->request->webroot . $theme . $asset[0];
+                    $webPath = $this->request->getAttribute('webroot') . $theme . $asset[0];
                 }
             }
         }

@@ -35,5 +35,11 @@ If Composer is installed globally, run
 composer install
 ```
 
+#### Environment variables
+
+* APP_ENV
+* SENDGRID_API_KEY
+* DATABASE_URL (not needed locally)
+
 You should now be able to run: `$ bin/cake server`
 And visit: http://localhost:8765/battles/view/Quicky/Pokey (substitute the names of the goats)

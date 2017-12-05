@@ -1,23 +1,23 @@
 <?php
 /**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
  * @since         2.2.0
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 namespace Cake\Routing\Filter;
 
 use Cake\Core\Plugin;
 use Cake\Event\Event;
-use Cake\Network\Request;
-use Cake\Network\Response;
+use Cake\Http\Response;
+use Cake\Http\ServerRequest;
 use Cake\Routing\DispatcherFilter;
 use Cake\Utility\Inflector;
 
@@ -61,12 +61,13 @@ class AssetFilter extends DispatcherFilter
      * Checks if a requested asset exists and sends it to the browser
      *
      * @param \Cake\Event\Event $event Event containing the request and response object
-     * @return \Cake\Network\Response|null If the client is requesting a recognized asset, null otherwise
+     * @return \Cake\Http\Response|null If the client is requesting a recognized asset, null otherwise
      * @throws \Cake\Network\Exception\NotFoundException When asset not found
      */
     public function beforeDispatch(Event $event)
     {
-        $request = $event->data['request'];
+        /* @var \Cake\Http\ServerRequest $request */
+        $request = $event->getData('request');
 
         $url = urldecode($request->url);
         if (strpos($url, '..') !== false || strpos($url, '.') === false) {
@@ -77,7 +78,8 @@ class AssetFilter extends DispatcherFilter
         if ($assetFile === null || !file_exists($assetFile)) {
             return null;
         }
-        $response = $event->data['response'];
+        /* @var \Cake\Http\Response $response */
+        $response = $event->getData('response');
         $event->stopPropagation();
 
         $response->modified(filemtime($assetFile));
@@ -120,13 +122,13 @@ class AssetFilter extends DispatcherFilter
     /**
      * Sends an asset file to the client
      *
-     * @param \Cake\Network\Request $request The request object to use.
-     * @param \Cake\Network\Response $response The response object to use.
+     * @param \Cake\Http\ServerRequest $request The request object to use.
+     * @param \Cake\Http\Response $response The response object to use.
      * @param string $assetFile Path to the asset file in the file system
      * @param string $ext The extension of the file to determine its mime type
-     * @return \Cake\Network\Response The updated response.
+     * @return \Cake\Http\Response The updated response.
      */
-    protected function _deliverAsset(Request $request, Response $response, $assetFile, $ext)
+    protected function _deliverAsset(ServerRequest $request, Response $response, $assetFile, $ext)
     {
         $compressionEnabled = $response->compress();
         if ($response->type($ext) === $ext) {

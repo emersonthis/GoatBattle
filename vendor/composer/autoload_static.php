@@ -31,13 +31,20 @@ class ComposerStaticInite526de0732fd393bc2450d1f5fac20f1
             'Symfony\\Polyfill\\Mbstring\\' => 26,
             'Symfony\\Component\\Yaml\\' => 23,
             'Symfony\\Component\\VarDumper\\' => 28,
+            'Symfony\\Component\\Process\\' => 26,
+            'Symfony\\Component\\Finder\\' => 25,
             'Symfony\\Component\\Filesystem\\' => 29,
+            'Symfony\\Component\\Debug\\' => 24,
             'Symfony\\Component\\Console\\' => 26,
             'Symfony\\Component\\Config\\' => 25,
+            'Seld\\PharUtils\\' => 15,
+            'Seld\\JsonLint\\' => 14,
+            'Seld\\CliPrompt\\' => 15,
         ),
         'P' => 
         array (
             'Psy\\' => 4,
+            'Psr\\Log\\' => 8,
             'Psr\\Http\\Message\\' => 17,
             'PhpParser\\' => 10,
             'Phinx\\' => 6,
@@ -45,6 +52,10 @@ class ComposerStaticInite526de0732fd393bc2450d1f5fac20f1
         'M' => 
         array (
             'Migrations\\' => 11,
+        ),
+        'J' => 
+        array (
+            'JsonSchema\\' => 11,
         ),
         'G' => 
         array (
@@ -57,10 +68,16 @@ class ComposerStaticInite526de0732fd393bc2450d1f5fac20f1
         ),
         'C' => 
         array (
+            'Composer\\Spdx\\' => 14,
+            'Composer\\Semver\\' => 16,
+            'Composer\\CaBundle\\' => 18,
+            'Composer\\' => 9,
             'Cake\\Test\\' => 10,
             'Cake\\Composer\\' => 14,
             'Cake\\Chronos\\' => 13,
             'Cake\\' => 5,
+            'CakeDC\\Users\\' => 13,
+            'CakeDC\\Auth\\' => 12,
         ),
         'B' => 
         array (
@@ -68,7 +85,7 @@ class ComposerStaticInite526de0732fd393bc2450d1f5fac20f1
         ),
         'A' => 
         array (
-            'Aura\\Intl\\_Config\\' => 18,
+            'Aura\\Intl\\' => 10,
             'App\\Test\\' => 9,
             'App\\' => 4,
         ),
@@ -95,9 +112,21 @@ class ComposerStaticInite526de0732fd393bc2450d1f5fac20f1
         array (
             0 => __DIR__ . '/..' . '/symfony/var-dumper',
         ),
+        'Symfony\\Component\\Process\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/process',
+        ),
+        'Symfony\\Component\\Finder\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/finder',
+        ),
         'Symfony\\Component\\Filesystem\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/filesystem',
+        ),
+        'Symfony\\Component\\Debug\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/debug',
         ),
         'Symfony\\Component\\Console\\' => 
         array (
@@ -107,9 +136,25 @@ class ComposerStaticInite526de0732fd393bc2450d1f5fac20f1
         array (
             0 => __DIR__ . '/..' . '/symfony/config',
         ),
+        'Seld\\PharUtils\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/seld/phar-utils/src',
+        ),
+        'Seld\\JsonLint\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/seld/jsonlint/src/Seld/JsonLint',
+        ),
+        'Seld\\CliPrompt\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/seld/cli-prompt/src',
+        ),
         'Psy\\' => 
         array (
             0 => __DIR__ . '/..' . '/psy/psysh/src/Psy',
+        ),
+        'Psr\\Log\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/log/Psr/Log',
         ),
         'Psr\\Http\\Message\\' => 
         array (
@@ -127,6 +172,10 @@ class ComposerStaticInite526de0732fd393bc2450d1f5fac20f1
         array (
             0 => __DIR__ . '/..' . '/cakephp/migrations/src',
         ),
+        'JsonSchema\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/justinrainbow/json-schema/src/JsonSchema',
+        ),
         'GoatBattle\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src/GoatBattle',
@@ -138,6 +187,22 @@ class ComposerStaticInite526de0732fd393bc2450d1f5fac20f1
         'DebugKit\\' => 
         array (
             0 => __DIR__ . '/..' . '/cakephp/debug_kit/src',
+        ),
+        'Composer\\Spdx\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/composer/spdx-licenses/src',
+        ),
+        'Composer\\Semver\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/composer/semver/src',
+        ),
+        'Composer\\CaBundle\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/composer/ca-bundle/src',
+        ),
+        'Composer\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/composer/composer/src/Composer',
         ),
         'Cake\\Test\\' => 
         array (
@@ -155,13 +220,21 @@ class ComposerStaticInite526de0732fd393bc2450d1f5fac20f1
         array (
             0 => __DIR__ . '/..' . '/cakephp/cakephp/src',
         ),
+        'CakeDC\\Users\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/cakedc/users/src',
+        ),
+        'CakeDC\\Auth\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/cakedc/auth/src',
+        ),
         'Bake\\' => 
         array (
             0 => __DIR__ . '/..' . '/cakephp/bake/src',
         ),
-        'Aura\\Intl\\_Config\\' => 
+        'Aura\\Intl\\' => 
         array (
-            0 => __DIR__ . '/..' . '/aura/intl/config',
+            0 => __DIR__ . '/..' . '/aura/intl/src',
         ),
         'App\\Test\\' => 
         array (
@@ -174,13 +247,6 @@ class ComposerStaticInite526de0732fd393bc2450d1f5fac20f1
     );
 
     public static $prefixesPsr0 = array (
-        'P' => 
-        array (
-            'Psr\\Log\\' => 
-            array (
-                0 => __DIR__ . '/..' . '/psr/log',
-            ),
-        ),
         'J' => 
         array (
             'JakubOnderka\\PhpConsoleHighlighter' => 
@@ -197,17 +263,6 @@ class ComposerStaticInite526de0732fd393bc2450d1f5fac20f1
             'Detection' => 
             array (
                 0 => __DIR__ . '/..' . '/mobiledetect/mobiledetectlib/namespaced',
-            ),
-        ),
-        'A' => 
-        array (
-            'Aura\\Intl' => 
-            array (
-                0 => __DIR__ . '/..' . '/aura/intl/src',
-            ),
-            'Aura\\Composer\\' => 
-            array (
-                0 => __DIR__ . '/..' . '/aura/installer-default/src',
             ),
         ),
     );

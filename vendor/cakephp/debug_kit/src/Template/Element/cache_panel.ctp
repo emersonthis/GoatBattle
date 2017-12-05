@@ -11,6 +11,11 @@
  * @since         DebugKit 0.1
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
+
+/**
+ * @var \DebugKit\View\AjaxView $this
+ * @var array $metrics
+ */
 ?>
 <?php if (empty($metrics)): ?>
     <p class="info"><?= __d('debug_kit', 'There were no cache operations this request.') ?></p>

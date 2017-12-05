@@ -12,7 +12,6 @@
  */
 namespace DebugKit\Panel;
 
-use Cake\Controller\Controller;
 use Cake\Core\Plugin;
 use Cake\Event\Event;
 use Cake\Utility\Hash;
@@ -151,13 +150,13 @@ class IncludePanel extends DebugPanel
     {
         switch ($type) {
             case 'app':
-                return str_replace(APP, 'APP/', $file);
+                return str_replace(APP, 'APP' . DIRECTORY_SEPARATOR, $file);
 
             case 'cake':
-                return str_replace(CAKE, 'CAKE/', $file);
+                return str_replace(CAKE, 'CAKE' . DIRECTORY_SEPARATOR, $file);
 
             default:
-                return str_replace($this->_pluginPaths[$type], $type . '/', $file);
+                return str_replace($this->_pluginPaths[$type], $type . DIRECTORY_SEPARATOR, $file);
         }
     }
 

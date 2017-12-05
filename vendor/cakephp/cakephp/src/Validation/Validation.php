@@ -1,16 +1,16 @@
 <?php
 /**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
  * @since         1.2.0
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 namespace Cake\Validation;
 
@@ -20,6 +20,7 @@ use DateTimeInterface;
 use InvalidArgumentException;
 use LogicException;
 use NumberFormatter;
+use Psr\Http\Message\UploadedFileInterface;
 use RuntimeException;
 
 /**
@@ -84,7 +85,7 @@ class Validation
      */
     public static function notBlank($check)
     {
-        if (empty($check) && $check !== '0' && $check !== 0) {
+        if (empty($check) && !is_bool($check) && !is_numeric($check)) {
             return false;
         }
 
@@ -389,7 +390,9 @@ class Validation
         if ($check instanceof DateTimeInterface) {
             return true;
         }
-
+        if (is_object($check)) {
+            return false;
+        }
         if (is_array($check)) {
             $check = static::_getDateString($check);
             $format = 'ymd';
@@ -428,7 +431,7 @@ class Validation
         $regex['ym'] = '%^(' . $year . $separator . $month . ')$%';
         $regex['y'] = '%^(' . $fourDigitYear . ')$%';
 
-        $format = (is_array($format)) ? array_values($format) : [$format];
+        $format = is_array($format) ? array_values($format) : [$format];
         foreach ($format as $key) {
             if (static::_check($check, $regex[$key]) === true) {
                 return true;
@@ -454,6 +457,9 @@ class Validation
     {
         if ($check instanceof DateTimeInterface) {
             return true;
+        }
+        if (is_object($check)) {
+            return false;
         }
         $valid = false;
         if (is_array($check)) {
@@ -506,6 +512,9 @@ class Validation
         if ($check instanceof DateTimeInterface) {
             return true;
         }
+        if (is_object($check)) {
+            return false;
+        }
         static $methods = [
             'date' => 'parseDate',
             'time' => 'parseTime',
@@ -520,16 +529,57 @@ class Validation
     }
 
     /**
-     * Boolean validation, determines if value passed is a boolean integer or true/false.
+     * Validates if passed value is boolean-like.
      *
-     * @param string $check a valid boolean
-     * @return bool Success
+     * The list of what is considered to be boolean values, may be set via $booleanValues.
+     *
+     * @param bool|int|string $check Value to check.
+     * @param string $booleanValues List of valid boolean values, defaults to `[true, false, 0, 1, '0', '1']`.
+     * @return bool Success.
      */
-    public static function boolean($check)
+    public static function boolean($check, array $booleanValues = [])
     {
-        $booleanList = [0, 1, '0', '1', true, false];
+        if (!$booleanValues) {
+            $booleanValues = [true, false, 0, 1, '0', '1'];
+        }
 
-        return in_array($check, $booleanList, true);
+        return in_array($check, $booleanValues, true);
+    }
+
+    /**
+     * Validates if given value is truthy.
+     *
+     * The list of what is considered to be truthy values, may be set via $truthyValues.
+     *
+     * @param bool|int|string $check Value to check.
+     * @param array $truthyValues List of valid truthy values, defaults to `[true, 1, '1']`.
+     * @return bool Success.
+     */
+    public static function truthy($check, array $truthyValues = [])
+    {
+        if (!$truthyValues) {
+            $truthyValues = [true, 1, '1'];
+        }
+
+        return in_array($check, $truthyValues, true);
+    }
+
+    /**
+     * Validates if given value is falsey.
+     *
+     * The list of what is considered to be falsey values, may be set via $falseyValues.
+     *
+     * @param bool|int|string $check Value to check.
+     * @param array $falseyValues List of valid falsey values, defaults to `[false, 0, '0']`.
+     * @return bool Success.
+     */
+    public static function falsey($check, array $falseyValues = [])
+    {
+        if (!$falseyValues) {
+            $falseyValues = [false, 0, '0'];
+        }
+
+        return in_array($check, $falseyValues, true);
     }
 
     /**
@@ -542,7 +592,7 @@ class Validation
      * - 1..N => Exactly that many number of decimal places. The '.' is required.
      *
      * @param float $check The value the test for decimal.
-     * @param int|null $places Decimal places.
+     * @param int|bool|null $places Decimal places.
      * @param string|null $regex If a custom regular expression is used, this is the only validation that will occur.
      * @return bool Success
      */
@@ -558,7 +608,7 @@ class Validation
                 $regex = "/^{$sign}(?:{$lnum}|{$dnum}){$exp}$/";
             } elseif ($places === true) {
                 if (is_float($check) && floor($check) === $check) {
-                    $check = sprintf("%.1f", $check);
+                    $check = sprintf('%.1f', $check);
                 }
                 $regex = "/^{$sign}{$dnum}{$exp}$/";
             } elseif (is_numeric($places)) {
@@ -641,7 +691,9 @@ class Validation
     public static function extension($check, $extensions = ['gif', 'jpeg', 'png', 'jpg'])
     {
         if (is_array($check)) {
-            return static::extension(array_shift($check), $extensions);
+            $check = isset($check['name']) ? $check['name'] : array_shift($check);
+
+            return static::extension($check, $extensions);
         }
         $extension = strtolower(pathinfo($check, PATHINFO_EXTENSION));
         foreach ($extensions as $value) {
@@ -675,7 +727,7 @@ class Validation
     }
 
     /**
-     * Checks whether the length of a string is greater or equal to a minimal length.
+     * Checks whether the length of a string (in characters) is greater or equal to a minimal length.
      *
      * @param string $check The string to test
      * @param int $min The minimal string length
@@ -687,7 +739,7 @@ class Validation
     }
 
     /**
-     * Checks whether the length of a string is smaller or equal to a maximal length..
+     * Checks whether the length of a string (in characters) is smaller or equal to a maximal length.
      *
      * @param string $check The string to test
      * @param int $max The maximal string length
@@ -696,6 +748,30 @@ class Validation
     public static function maxLength($check, $max)
     {
         return mb_strlen($check) <= $max;
+    }
+
+    /**
+     * Checks whether the length of a string (in bytes) is greater or equal to a minimal length.
+     *
+     * @param string $check The string to test
+     * @param int $min The minimal string length (in bytes)
+     * @return bool Success
+     */
+    public static function minLengthBytes($check, $min)
+    {
+        return strlen($check) >= $min;
+    }
+
+    /**
+     * Checks whether the length of a string (in bytes) is smaller or equal to a maximal length.
+     *
+     * @param string $check The string to test
+     * @param int $max The maximal string length
+     * @return bool Success
+     */
+    public static function maxLengthBytes($check, $max)
+    {
+        return strlen($check) <= $max;
     }
 
     /**
@@ -783,7 +859,7 @@ class Validation
      * @param string $check Value to check
      * @param bool $allowZero Set true to allow zero, defaults to false
      * @return bool Success
-     * @see http://en.wikipedia.org/wiki/Natural_number
+     * @see https://en.wikipedia.org/wiki/Natural_number
      */
     public static function naturalNumber($check, $allowZero = false)
     {
@@ -820,13 +896,13 @@ class Validation
     }
 
     /**
-     * Checks that a value is a valid URL according to http://www.w3.org/Addressing/URL/url-spec.txt
+     * Checks that a value is a valid URL according to https://www.w3.org/Addressing/URL/url-spec.txt
      *
      * The regex checks for the following component parts:
      *
      * - a valid, optional, scheme
      * - a valid ip address OR
-     *   a valid domain name as defined by section 2.3.1 of http://www.ietf.org/rfc/rfc1035.txt
+     *   a valid domain name as defined by section 2.3.1 of https://www.ietf.org/rfc/rfc1035.txt
      *   with an optional port number
      * - an optional valid path
      * - an optional query string (get parameters)
@@ -886,11 +962,11 @@ class Validation
             E_USER_DEPRECATED
         );
 
-        return call_user_func_array([$object, $method], [$check, $args]);
+        return $object->$method($check, $args);
     }
 
     /**
-     * Checks that a value is a valid UUID - http://tools.ietf.org/html/rfc4122
+     * Checks that a value is a valid UUID - https://tools.ietf.org/html/rfc4122
      *
      * @param string $check Value to check
      * @return bool Success
@@ -919,7 +995,7 @@ class Validation
      *
      * @param string|array $check Value to check.
      * @return bool Success
-     * @see http://en.wikipedia.org/wiki/Luhn_algorithm
+     * @see https://en.wikipedia.org/wiki/Luhn_algorithm
      */
     public static function luhn($check)
     {
@@ -944,7 +1020,11 @@ class Validation
     /**
      * Checks the mime type of a file.
      *
-     * @param string|array $check Value to check.
+     * Will check the mimetype of files/UploadedFileInterface instances
+     * by checking the using finfo on the file, not relying on the content-type
+     * sent by the client.
+     *
+     * @param string|array|\Psr\Http\Message\UploadedFileInterface $check Value to check.
      * @param array|string $mimeTypes Array of mime types or regex pattern to check.
      * @return bool Success
      * @throws \RuntimeException when mime type can not be determined.
@@ -952,20 +1032,21 @@ class Validation
      */
     public static function mimeType($check, $mimeTypes = [])
     {
-        if (is_array($check) && isset($check['tmp_name'])) {
-            $check = $check['tmp_name'];
+        $file = static::getFilename($check);
+        if ($file === false) {
+            return false;
         }
 
         if (!function_exists('finfo_open')) {
             throw new LogicException('ext/fileinfo is required for validating file mime types');
         }
 
-        if (!is_file($check)) {
+        if (!is_file($file)) {
             throw new RuntimeException('Cannot validate mimetype for a missing file');
         }
 
         $finfo = finfo_open(FILEINFO_MIME);
-        $finfo = finfo_file($finfo, $check);
+        $finfo = finfo_file($finfo, $file);
 
         if (!$finfo) {
             throw new RuntimeException('Can not determine the mimetype.');
@@ -985,23 +1066,52 @@ class Validation
     }
 
     /**
+     * Helper for reading the file out of the various file implementations
+     * we accept.
+     *
+     * @param string|array|\Psr\Http\Message\UploadedFileInterface $check The data to read a filename out of.
+     * @return string|bool Either the filename or false on failure.
+     */
+    protected static function getFilename($check)
+    {
+        if ($check instanceof UploadedFileInterface) {
+            try {
+                // Uploaded files throw exceptions on upload errors.
+                return $check->getStream()->getMetadata('uri');
+            } catch (RuntimeException $e) {
+                return false;
+            }
+        }
+        if (is_array($check) && isset($check['tmp_name'])) {
+            return $check['tmp_name'];
+        }
+
+        return $check;
+    }
+
+    /**
      * Checks the filesize
      *
-     * @param string|array $check Value to check.
+     * Will check the filesize of files/UploadedFileInterface instances
+     * by checking the filesize() on disk and not relying on the length
+     * reported by the client.
+     *
+     * @param string|array|\Psr\Http\Message\UploadedFileInterface $check Value to check.
      * @param string|null $operator See `Validation::comparison()`.
      * @param int|string|null $size Size in bytes or human readable string like '5MB'.
      * @return bool Success
      */
     public static function fileSize($check, $operator = null, $size = null)
     {
-        if (is_array($check) && isset($check['tmp_name'])) {
-            $check = $check['tmp_name'];
+        $file = static::getFilename($check);
+        if ($file === false) {
+            return false;
         }
 
         if (is_string($size)) {
             $size = Text::parseFileSize($size);
         }
-        $filesize = filesize($check);
+        $filesize = filesize($file);
 
         return static::comparison($filesize, $operator, $size);
     }
@@ -1009,21 +1119,25 @@ class Validation
     /**
      * Checking for upload errors
      *
-     * @param string|array $check Value to check.
+     * @param string|array|\Psr\Http\Message\UploadedFileInterface $check Value to check.
      * @param bool $allowNoFile Set to true to allow UPLOAD_ERR_NO_FILE as a pass.
      * @return bool
-     * @see http://www.php.net/manual/en/features.file-upload.errors.php
+     * @see https://secure.php.net/manual/en/features.file-upload.errors.php
      */
     public static function uploadError($check, $allowNoFile = false)
     {
-        if (is_array($check) && isset($check['error'])) {
-            $check = $check['error'];
+        if ($check instanceof UploadedFileInterface) {
+            $code = $check->getError();
+        } elseif (is_array($check) && isset($check['error'])) {
+            $code = $check['error'];
+        } else {
+            $code = $check;
         }
         if ($allowNoFile) {
-            return in_array((int)$check, [UPLOAD_ERR_OK, UPLOAD_ERR_NO_FILE], true);
+            return in_array((int)$code, [UPLOAD_ERR_OK, UPLOAD_ERR_NO_FILE], true);
         }
 
-        return (int)$check === UPLOAD_ERR_OK;
+        return (int)$code === UPLOAD_ERR_OK;
     }
 
     /**
@@ -1054,18 +1168,28 @@ class Validation
             'types' => null,
             'optional' => false,
         ];
-        if (!is_array($file)) {
+        if (!is_array($file) && !($file instanceof UploadedFileInterface)) {
             return false;
         }
-        $keys = ['error', 'name', 'size', 'tmp_name', 'type'];
-        ksort($file);
-        if (array_keys($file) != $keys) {
-            return false;
+        $error = $isUploaded = false;
+        if ($file instanceof UploadedFileInterface) {
+            $error = $file->getError();
+            $isUploaded = true;
         }
+        if (is_array($file)) {
+            $keys = ['error', 'name', 'size', 'tmp_name', 'type'];
+            ksort($file);
+            if (array_keys($file) != $keys) {
+                return false;
+            }
+            $error = (int)$file['error'];
+            $isUploaded = is_uploaded_file($file['tmp_name']);
+        }
+
         if (!static::uploadError($file, $options['optional'])) {
             return false;
         }
-        if ($options['optional'] && (int)$file['error'] === UPLOAD_ERR_NO_FILE) {
+        if ($options['optional'] && $error === UPLOAD_ERR_NO_FILE) {
             return true;
         }
         if (isset($options['minSize']) && !static::fileSize($file, '>=', $options['minSize'])) {
@@ -1078,7 +1202,83 @@ class Validation
             return false;
         }
 
-        return is_uploaded_file($file['tmp_name']);
+        return $isUploaded;
+    }
+
+    /**
+     * Validates the size of an uploaded image.
+     *
+     * @param array $file The uploaded file data from PHP.
+     * @param array $options Options to validate width and height.
+     * @return bool
+     */
+    public static function imageSize($file, $options)
+    {
+        if (!isset($options['height']) && !isset($options['width'])) {
+            throw new InvalidArgumentException('Invalid image size validation parameters! Missing `width` and / or `height`.');
+        }
+
+        if ($file instanceof UploadedFileInterface) {
+            $file = $file->getStream()->getContents();
+        } elseif (is_array($file) && isset($file['tmp_name'])) {
+            $file = $file['tmp_name'];
+        }
+
+        list($width, $height) = getimagesize($file);
+
+        if (isset($options['height'])) {
+            $validHeight = self::comparison($height, $options['height'][0], $options['height'][1]);
+        }
+        if (isset($options['width'])) {
+            $validWidth = self::comparison($width, $options['width'][0], $options['width'][1]);
+        }
+        if (isset($validHeight) && isset($validWidth)) {
+            return ($validHeight && $validWidth);
+        }
+        if (isset($validHeight)) {
+            return $validHeight;
+        }
+        if (isset($validWidth)) {
+            return $validWidth;
+        }
+
+        throw new InvalidArgumentException('The 2nd argument is missing the `width` and / or `height` options.');
+    }
+
+    /**
+     * Validates the image width.
+     *
+     * @param array $file The uploaded file data from PHP.
+     * @param string $operator Comparision operator.
+     * @param int $width Min or max width.
+     * @return bool
+     */
+    public static function imageWidth($file, $operator, $width)
+    {
+        return self::imageSize($file, [
+            'width' => [
+                $operator,
+                $width
+            ]
+        ]);
+    }
+
+    /**
+     * Validates the image width.
+     *
+     * @param array $file The uploaded file data from PHP.
+     * @param string $operator Comparision operator.
+     * @param int $height Min or max width.
+     * @return bool
+     */
+    public static function imageHeight($file, $operator, $height)
+    {
+        return self::imageSize($file, [
+            'height' => [
+                $operator,
+                $height
+            ]
+        ]);
     }
 
     /**
@@ -1228,6 +1428,17 @@ class Validation
     public static function isArray($value)
     {
         return is_array($value);
+    }
+
+    /**
+     * Check that the input value is a 6 digits hex color.
+     *
+     * @param string|array $check The value to check
+     * @return bool Success
+     */
+    public static function hexColor($check)
+    {
+        return static::_check($check, '/^#[0-9a-f]{6}$/iD');
     }
 
     /**

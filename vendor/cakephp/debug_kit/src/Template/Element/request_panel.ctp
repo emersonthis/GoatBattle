@@ -15,6 +15,16 @@
  * @since         DebugKit 0.1
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
+
+/**
+ * @var \DebugKit\View\AjaxView $this
+ * @var array $headers
+ * @var array $params
+ * @var array $data
+ * @var array $query
+ * @var array $cookie
+ * @var string $matchedRoute
+ */
 ?>
 <?php if (!empty($headers) && $headers['response']): ?>
 <h4>Warning</h4>

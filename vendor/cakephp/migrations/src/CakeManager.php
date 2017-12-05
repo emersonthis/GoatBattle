@@ -144,7 +144,7 @@ class CakeManager extends Manager
     /**
      * {@inheritdoc}
      */
-    public function rollbackToDateTime($environment, \DateTime $dateTime)
+    public function rollbackToDateTime($environment, \DateTime $dateTime, $force = false)
     {
         $env = $this->getEnvironment($environment);
         $versions = $env->getVersions();
@@ -152,7 +152,7 @@ class CakeManager extends Manager
         sort($versions);
         $versions = array_reverse($versions);
 
-        if ($dateString > $versions[0]) {
+        if (empty($versions) || $dateString > $versions[0]) {
             $this->getOutput()->writeln('No migrations to rollback');
             return;
         }
@@ -163,6 +163,7 @@ class CakeManager extends Manager
             return;
         }
 
+        $index = 0;
         foreach ($versions as $index => $version) {
             if ($dateString > $version) {
                 break;
@@ -172,7 +173,7 @@ class CakeManager extends Manager
         $versionToRollback = $versions[$index];
 
         $this->getOutput()->writeln('Rolling back to version ' . $versionToRollback);
-        $this->rollback($environment, $versionToRollback);
+        $this->rollback($environment, $versionToRollback, $force);
     }
 
     /**

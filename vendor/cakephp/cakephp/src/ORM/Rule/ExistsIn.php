@@ -1,16 +1,16 @@
 <?php
 /**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
  * @since         3.0.0
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 namespace Cake\ORM\Rule;
 
@@ -56,6 +56,8 @@ class ExistsIn
      * @param object|string $repository The repository where the field will be looked for,
      * or the association name for the repository.
      * @param array $options The options that modify the rules behavior.
+     *     Options 'allowNullableNulls' will make the rule pass if given foreign keys are set to `null`.
+     *     Notice: allowNullableNulls cannot pass by database columns set to `NOT NULL`.
      */
     public function __construct($fields, $repository, array $options = [])
     {
@@ -92,8 +94,8 @@ class ExistsIn
 
         $source = $target = $this->_repository;
         $isAssociation = $target instanceof Association;
-        $bindingKey = $isAssociation ? (array)$target->bindingKey() : (array)$target->primaryKey();
-        $realTarget = $isAssociation ? $target->target() : $target;
+        $bindingKey = $isAssociation ? (array)$target->getBindingKey() : (array)$target->getPrimaryKey();
+        $realTarget = $isAssociation ? $target->getTarget() : $target;
 
         if (!empty($options['_sourceTable']) && $realTarget === $options['_sourceTable']) {
             return true;
@@ -103,7 +105,7 @@ class ExistsIn
             $source = $options['repository'];
         }
         if ($source instanceof Association) {
-            $source = $source->source();
+            $source = $source->getSource();
         }
 
         if (!$entity->extract($this->_fields, true)) {
@@ -115,11 +117,10 @@ class ExistsIn
         }
 
         if ($this->_options['allowNullableNulls']) {
-            $schema = $source->schema();
+            $schema = $source->getSchema();
             foreach ($this->_fields as $i => $field) {
                 if ($schema->column($field) && $schema->isNullable($field) && $entity->get($field) === null) {
-                    unset($bindingKey[$i]);
-                    unset($this->_fields[$i]);
+                    unset($bindingKey[$i], $this->_fields[$i]);
                 }
             }
         }
@@ -146,7 +147,7 @@ class ExistsIn
     protected function _fieldsAreNull($entity, $source)
     {
         $nulls = 0;
-        $schema = $source->schema();
+        $schema = $source->getSchema();
         foreach ($this->_fields as $field) {
             if ($schema->column($field) && $schema->isNullable($field) && $entity->get($field) === null) {
                 $nulls++;

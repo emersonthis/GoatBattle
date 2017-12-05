@@ -17,6 +17,7 @@ use Cake\Core\Configure;
 use Cake\Datasource\ConnectionManager;
 use Cake\Event\Event;
 use Cake\Event\EventManager;
+use Migrations\TableFinderTrait;
 use Migrations\Util\UtilTrait;
 
 /**
@@ -24,8 +25,10 @@ use Migrations\Util\UtilTrait;
  */
 class MigrationSnapshotTask extends SimpleMigrationTask
 {
-    use UtilTrait;
+
     use SnapshotTrait;
+    use TableFinderTrait;
+    use UtilTrait;
 
     /**
      * {@inheritDoc}
@@ -138,6 +141,10 @@ class MigrationSnapshotTask extends SimpleMigrationTask
             'boolean' => true,
             'default' => false,
             'help' => 'Disable phinx behavior of automatically adding an id field.'
+        ])
+        ->addOption('no-lock', [
+            'help' => 'If present, no lock file will be generated after baking',
+            'boolean' => true
         ]);
 
         return $parser;

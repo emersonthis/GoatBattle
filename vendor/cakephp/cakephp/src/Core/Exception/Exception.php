@@ -1,14 +1,14 @@
 <?php
 /**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  * @since         3.0.0
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 namespace Cake\Core\Exception;
 
@@ -36,11 +36,11 @@ class Exception extends RuntimeException
     protected $_messageTemplate = '';
 
     /**
-     * Array of headers to be passed to Cake\Network\Response::header()
+     * Array of headers to be passed to Cake\Http\Response::header()
      *
-     * @var array
+     * @var array|null
      */
-    protected $_responseHeaders = null;
+    protected $_responseHeaders;
 
     /**
      * Constructor.
@@ -75,7 +75,7 @@ class Exception extends RuntimeException
     /**
      * Get/set the response header to be used
      *
-     * See also Cake\Network\Response::header()
+     * See also Cake\Http\Response::header()
      *
      * @param string|array|null $header An array of header strings or a single header string
      *  - an associative array of "header name" => "header value"

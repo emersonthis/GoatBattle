@@ -11,6 +11,15 @@
  * @since         DebugKit 0.1
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
+
+/**
+ * @var \DebugKit\View\AjaxView $this
+ * @var string $error
+ * @var bool $sort
+ * @var array $content
+ * @var array $errors
+ */
+
 if (isset($error)):
     printf('<p class="warning">%s</p>', $error);
 endif;

@@ -1,16 +1,16 @@
 <?php
 /**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
  * @since         2.2.0
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 namespace Cake\Validation;
 
@@ -26,7 +26,7 @@ use IteratorAggregate;
  *
  * Implements ArrayAccess to easily modify rules in the set
  *
- * @link http://book.cakephp.org/3.0/en/core-libraries/validation.html
+ * @link https://book.cakephp.org/3.0/en/core-libraries/validation.html
  */
 class Validator implements ArrayAccess, IteratorAggregate, Countable
 {
@@ -155,7 +155,7 @@ class Validator implements ArrayAccess, IteratorAggregate, Countable
     public function field($name, ValidationSet $set = null)
     {
         if (empty($this->_fields[$name])) {
-            $set = $set ?: new ValidationSet;
+            $set = $set ?: new ValidationSet();
             $this->_fields[$name] = $set;
         }
 
@@ -179,28 +179,58 @@ class Validator implements ArrayAccess, IteratorAggregate, Countable
      * deciding whether a validation rule can be applied. All validation methods,
      * when called will receive the full list of providers stored in this validator.
      *
+     * @param string $name The name under which the provider should be set.
+     * @param object|string $object Provider object or class name.
+     * @return $this
+     */
+    public function setProvider($name, $object)
+    {
+        $this->_providers[$name] = $object;
+
+        return $this;
+    }
+
+    /**
+     * Returns the provider stored under that name if it exists.
+     *
+     * @param string $name The name under which the provider should be set.
+     * @return object|string|null
+     */
+    public function getProvider($name)
+    {
+        if (isset($this->_providers[$name])) {
+            return $this->_providers[$name];
+        }
+        if ($name !== 'default') {
+            return null;
+        }
+
+        $this->_providers[$name] = new RulesProvider();
+
+        return $this->_providers[$name];
+    }
+
+    /**
+     * Associates an object to a name so it can be used as a provider. Providers are
+     * objects or class names that can contain methods used during validation of for
+     * deciding whether a validation rule can be applied. All validation methods,
+     * when called will receive the full list of providers stored in this validator.
+     *
      * If called with no arguments, it will return the provider stored under that name if
      * it exists, otherwise it returns this instance of chaining.
      *
+     * @deprecated 3.4.0 Use setProvider()/getProvider() instead.
      * @param string $name The name under which the provider should be set.
      * @param null|object|string $object Provider object or class name.
      * @return $this|object|string|null
      */
     public function provider($name, $object = null)
     {
-        if ($object === null) {
-            if (isset($this->_providers[$name])) {
-                return $this->_providers[$name];
-            }
-            if ($name === 'default') {
-                return $this->_providers[$name] = new RulesProvider;
-            }
-
-            return null;
+        if ($object !== null) {
+            return $this->setProvider($name, $object);
         }
-        $this->_providers[$name] = $object;
 
-        return $this;
+        return $this->getProvider($name);
     }
 
     /**
@@ -245,7 +275,7 @@ class Validator implements ArrayAccess, IteratorAggregate, Countable
     public function offsetSet($field, $rules)
     {
         if (!$rules instanceof ValidationSet) {
-            $set = new ValidationSet;
+            $set = new ValidationSet();
             foreach ((array)$rules as $name => $rule) {
                 $set->add($name, $rule);
             }
@@ -302,7 +332,7 @@ class Validator implements ArrayAccess, IteratorAggregate, Countable
      *      ]);
      * ```
      *
-     * @param string $field The name of the field from which the rule will be removed
+     * @param string $field The name of the field from which the rule will be added
      * @param array|string $name The alias for a single rule or multiple rules array
      * @param array|\Cake\Validation\ValidationRule $rule the rule to add
      * @return $this
@@ -349,7 +379,7 @@ class Validator implements ArrayAccess, IteratorAggregate, Countable
                 return false;
             }
             foreach ($this->providers() as $provider) {
-                $validator->provider($provider, $this->provider($provider));
+                $validator->setProvider($provider, $this->getProvider($provider));
             }
             $errors = $validator->errors($value, $context['newRecord']);
 
@@ -384,7 +414,7 @@ class Validator implements ArrayAccess, IteratorAggregate, Countable
                 return false;
             }
             foreach ($this->providers() as $provider) {
-                $validator->provider($provider, $this->provider($provider));
+                $validator->setProvider($provider, $this->getProvider($provider));
             }
             $errors = [];
             foreach ($value as $i => $row) {
@@ -431,7 +461,7 @@ class Validator implements ArrayAccess, IteratorAggregate, Countable
 
     /**
      * Sets whether a field is required to be present in data array.
-     * You can also pass array. Using an array will let you provide  the following
+     * You can also pass array. Using an array will let you provide the following
      * keys:
      *
      * - `mode` individual mode for field
@@ -1149,6 +1179,26 @@ class Validator implements ArrayAccess, IteratorAggregate, Countable
      * Add a string length validation rule to a field.
      *
      * @param string $field The field you want to apply the rule to.
+     * @param int $min The minimum length required.
+     * @param string|null $message The error message when the rule fails.
+     * @param string|callable|null $when Either 'create' or 'update' or a callable that returns
+     *   true when the validation rule should be applied.
+     * @see \Cake\Validation\Validation::minLengthBytes()
+     * @return $this
+     */
+    public function minLengthBytes($field, $min, $message = null, $when = null)
+    {
+        $extra = array_filter(['on' => $when, 'message' => $message]);
+
+        return $this->add($field, 'minLengthBytes', $extra + [
+            'rule' => ['minLengthBytes', $min]
+        ]);
+    }
+
+    /**
+     * Add a string length validation rule to a field.
+     *
+     * @param string $field The field you want to apply the rule to.
      * @param int $max The maximum length allowed.
      * @param string|null $message The error message when the rule fails.
      * @param string|callable|null $when Either 'create' or 'update' or a callable that returns
@@ -1162,6 +1212,26 @@ class Validator implements ArrayAccess, IteratorAggregate, Countable
 
         return $this->add($field, 'maxLength', $extra + [
             'rule' => ['maxLength', $max]
+        ]);
+    }
+
+    /**
+     * Add a string length validation rule to a field.
+     *
+     * @param string $field The field you want to apply the rule to.
+     * @param int $max The maximum length allowed.
+     * @param string|null $message The error message when the rule fails.
+     * @param string|callable|null $when Either 'create' or 'update' or a callable that returns
+     *   true when the validation rule should be applied.
+     * @see \Cake\Validation\Validation::maxLengthBytes()
+     * @return $this
+     */
+    public function maxLengthBytes($field, $max, $message = null, $when = null)
+    {
+        $extra = array_filter(['on' => $when, 'message' => $message]);
+
+        return $this->add($field, 'maxLengthBytes', $extra + [
+            'rule' => ['maxLengthBytes', $max]
         ]);
     }
 
@@ -1504,6 +1574,25 @@ class Validator implements ArrayAccess, IteratorAggregate, Countable
     }
 
     /**
+     * Add a validation rule to ensure a field is a 6 digits hex color value.
+     *
+     * @param string $field The field you want to apply the rule to.
+     * @param string|null $message The error message when the rule fails.
+     * @param string|callable|null $when Either 'create' or 'update' or a callable that returns
+     *   true when the validation rule should be applied.
+     * @see \Cake\Validation\Validation::hexColor()
+     * @return $this
+     */
+    public function hexColor($field, $message = null, $when = null)
+    {
+        $extra = array_filter(['on' => $when, 'message' => $message]);
+
+        return $this->add($field, 'hexColor', $extra + [
+            'rule' => 'hexColor',
+        ]);
+    }
+
+    /**
      * Add a validation rule for a multiple select. Comparison is case sensitive by default.
      *
      * @param string $field The field you want to apply the rule to.
@@ -1518,7 +1607,7 @@ class Validator implements ArrayAccess, IteratorAggregate, Countable
     public function multipleOptions($field, array $options = [], $message = null, $when = null)
     {
         $extra = array_filter(['on' => $when, 'message' => $message]);
-        $caseInsensitive = isset($options['caseInsenstive']) ? $options['caseInsensitive'] : false;
+        $caseInsensitive = isset($options['caseInsensitive']) ? $options['caseInsensitive'] : false;
         unset($options['caseInsensitive']);
 
         return $this->add($field, 'multipleOptions', $extra + [
@@ -1675,7 +1764,7 @@ class Validator implements ArrayAccess, IteratorAggregate, Countable
      */
     protected function _fieldIsEmpty($data)
     {
-        if (empty($data) && $data !== '0' && $data !== false && $data !== 0 && $data !== 0.0) {
+        if (empty($data) && !is_bool($data) && !is_numeric($data)) {
             return true;
         }
         $isArray = is_array($data);
@@ -1705,7 +1794,7 @@ class Validator implements ArrayAccess, IteratorAggregate, Countable
     {
         $errors = [];
         // Loading default provider in case there is none
-        $this->provider('default');
+        $this->getProvider('default');
         $message = 'The provided value is invalid';
 
         if ($this->_useI18n) {

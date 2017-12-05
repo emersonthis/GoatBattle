@@ -1,22 +1,21 @@
 <?php
 /**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
  * @since         1.2.0
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 namespace Cake\I18n;
 
 use Aura\Intl\FormatterLocator;
 use Aura\Intl\PackageLocator;
-use Aura\Intl\TranslatorFactory;
 use Cake\Cache\Cache;
 use Cake\I18n\Formatter\IcuFormatter;
 use Cake\I18n\Formatter\SprintfFormatter;
@@ -38,7 +37,7 @@ class I18n
     /**
      * The translators collection
      *
-     * @var \Aura\Intl\TranslatorLocator
+     * @var \Cake\I18n\TranslatorRegistry|null
      */
     protected static $_collection;
 
@@ -54,7 +53,7 @@ class I18n
      * for getting specific translators based of their name and locale
      * or to configure some aspect of future translations that are not yet constructed.
      *
-     * @return \Aura\Intl\TranslatorLocator The translators collection.
+     * @return \Cake\I18n\TranslatorRegistry The translators collection.
      */
     public static function translators()
     {
@@ -66,10 +65,10 @@ class I18n
             new PackageLocator,
             new FormatterLocator([
                 'sprintf' => function () {
-                    return new SprintfFormatter;
+                    return new SprintfFormatter();
                 },
                 'default' => function () {
-                    return new IcuFormatter;
+                    return new IcuFormatter();
                 },
             ]),
             new TranslatorFactory,
@@ -121,7 +120,7 @@ class I18n
      * @param string|null $locale The locale for the translator.
      * @param callable|null $loader A callback function or callable class responsible for
      * constructing a translations package instance.
-     * @return \Aura\Intl\Translator|null The configured translator.
+     * @return \Aura\Intl\TranslatorInterface|null The configured translator.
      */
     public static function translator($name = 'default', $locale = null, callable $loader = null)
     {

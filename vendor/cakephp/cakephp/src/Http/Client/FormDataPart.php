@@ -1,15 +1,15 @@
 <?php
 /**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
  * @since         3.0.0
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 namespace Cake\Http\Client;
 
@@ -17,7 +17,7 @@ namespace Cake\Http\Client;
  * Contains the data and behavior for a single
  * part in a Multipart FormData request body.
  *
- * Added to Cake\Network\Http\FormData when sending
+ * Added to Cake\Http\Client\FormData when sending
  * data to a remote server.
  *
  * @internal
@@ -221,3 +221,6 @@ class FormDataPart
         return $out;
     }
 }
+
+// @deprecated Add backwards compat alias.
+class_alias('Cake\Http\Client\FormDataPart', 'Cake\Network\Http\FormData\Part');

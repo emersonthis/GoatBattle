@@ -1,16 +1,16 @@
 <?php
 /**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
  * @since         1.2.0
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 namespace Cake\Network;
 
@@ -53,9 +53,9 @@ class Socket
     /**
      * Reference to socket connection resource
      *
-     * @var resource
+     * @var resource|null
      */
-    public $connection = null;
+    public $connection;
 
     /**
      * This boolean contains the current state of the Socket class
@@ -112,7 +112,7 @@ class Socket
      */
     public function __construct(array $config = [])
     {
-        $this->config($config);
+        $this->setConfig($config);
     }
 
     /**
@@ -198,14 +198,8 @@ class Socket
         if (!isset($this->_config['context']['ssl']['SNI_enabled'])) {
             $this->_config['context']['ssl']['SNI_enabled'] = true;
         }
-        if (version_compare(PHP_VERSION, '5.6.0', '>=')) {
-            if (empty($this->_config['context']['ssl']['peer_name'])) {
-                $this->_config['context']['ssl']['peer_name'] = $host;
-            }
-        } else {
-            if (empty($this->_config['context']['ssl']['SNI_server_name'])) {
-                $this->_config['context']['ssl']['SNI_server_name'] = $host;
-            }
+        if (empty($this->_config['context']['ssl']['peer_name'])) {
+            $this->_config['context']['ssl']['peer_name'] = $host;
         }
         if (empty($this->_config['context']['ssl']['cafile'])) {
             $dir = dirname(dirname(__DIR__));
@@ -318,22 +312,22 @@ class Socket
     /**
      * Write data to the socket.
      *
-     * @param string $data The data to write to the socket
-     * @return bool Success
+     * @param string $data The data to write to the socket.
+     * @return int Bytes written.
      */
     public function write($data)
     {
-        if (!$this->connected) {
-            if (!$this->connect()) {
-                return false;
-            }
+        if (!$this->connected && !$this->connect()) {
+            return false;
         }
         $totalBytes = strlen($data);
-        for ($written = 0; $written < $totalBytes; $written += $rv) {
+        $written = 0;
+        while ($written < $totalBytes) {
             $rv = fwrite($this->connection, substr($data, $written));
             if ($rv === false || $rv === 0) {
                 return $written;
             }
+            $written += $rv;
         }
 
         return $written;
@@ -348,10 +342,8 @@ class Socket
      */
     public function read($length = 1024)
     {
-        if (!$this->connected) {
-            if (!$this->connect()) {
-                return false;
-            }
+        if (!$this->connected && !$this->connect()) {
+            return false;
         }
 
         if (!feof($this->connection)) {

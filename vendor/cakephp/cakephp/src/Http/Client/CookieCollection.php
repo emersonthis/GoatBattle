@@ -1,15 +1,15 @@
 <?php
 /**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
  * @since         3.0.0
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 namespace Cake\Http\Client;
 
@@ -35,7 +35,7 @@ class CookieCollection
      * Store the cookies that haven't expired. If a cookie has been expired
      * and is currently stored, it will be removed.
      *
-     * @param \Cake\Network\Http\Response $response The response to read cookies from
+     * @param \Cake\Http\Client\Response $response The response to read cookies from
      * @param string $url The request URL used for default host/path values.
      * @return void
      */
@@ -92,15 +92,15 @@ class CookieCollection
                 continue;
             }
             $leadingDot = $cookie['domain'][0] === '.';
-            if (!$leadingDot && $host !== $cookie['domain']) {
+            if ($leadingDot) {
+                $cookie['domain'] = ltrim($cookie['domain'], '.');
+            }
+
+            $pattern = '/' . preg_quote(substr($cookie['domain'], 1), '/') . '$/';
+            if (!preg_match($pattern, $host)) {
                 continue;
             }
-            if ($leadingDot) {
-                $pattern = '/' . preg_quote(substr($cookie['domain'], 1), '/') . '$/';
-                if (!preg_match($pattern, $host)) {
-                    continue;
-                }
-            }
+
             $out[$cookie['name']] = $cookie['value'];
         }
 
@@ -117,3 +117,6 @@ class CookieCollection
         return array_values($this->_cookies);
     }
 }
+
+// @deprecated Add backwards compat alias.
+class_alias('Cake\Http\Client\CookieCollection', 'Cake\Network\Http\CookieCollection');

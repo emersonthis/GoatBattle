@@ -1,22 +1,24 @@
 <?php
 /**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
  * @since         2.0.0
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 namespace Cake\TestSuite\Fixture;
 
+loadPHPUnitAliases();
+
 use Cake\Core\Configure;
 use Cake\Core\Exception\Exception;
-use Cake\Database\Schema\Table;
+use Cake\Database\Schema\TableSchema;
 use Cake\Datasource\ConnectionManager;
 use Cake\Datasource\TableSchemaInterface;
 use Cake\Utility\Inflector;
@@ -39,14 +41,14 @@ class FixtureManager
     /**
      * Holds the fixture classes that where instantiated
      *
-     * @var array
+     * @var \Cake\Datasource\FixtureInterface[]
      */
     protected $_loaded = [];
 
     /**
      * Holds the fixture classes that where instantiated indexed by class name
      *
-     * @var array
+     * @var \Cake\Datasource\FixtureInterface[]
      */
     protected $_fixtureMap = [];
 
@@ -174,32 +176,44 @@ class FixtureManager
                 continue;
             }
 
-            list($type, $pathName) = explode('.', $fixture, 2);
-            $path = explode('/', $pathName);
-            $name = array_pop($path);
-            $additionalPath = implode('\\', $path);
+            if (strpos($fixture, '.')) {
+                list($type, $pathName) = explode('.', $fixture, 2);
+                $path = explode('/', $pathName);
+                $name = array_pop($path);
+                $additionalPath = implode('\\', $path);
 
-            if ($type === 'core') {
-                $baseNamespace = 'Cake';
-            } elseif ($type === 'app') {
-                $baseNamespace = Configure::read('App.namespace');
-            } elseif ($type === 'plugin') {
-                list($plugin, $name) = explode('.', $pathName);
-                $path = implode('\\', explode('/', $plugin));
-                $baseNamespace = Inflector::camelize(str_replace('\\', '\ ', $path));
-                $additionalPath = null;
+                if ($type === 'core') {
+                    $baseNamespace = 'Cake';
+                } elseif ($type === 'app') {
+                    $baseNamespace = Configure::read('App.namespace');
+                } elseif ($type === 'plugin') {
+                    list($plugin, $name) = explode('.', $pathName);
+                    // Flip vendored plugin separators
+                    $path = implode('\\', explode('/', $plugin));
+                    $baseNamespace = Inflector::camelize(str_replace('\\', '\ ', $path));
+                    $additionalPath = null;
+                } else {
+                    $baseNamespace = '';
+                    $name = $fixture;
+                }
+
+                // Tweak subdirectory names, so camelize() can make the correct name
+                if (strpos($name, '/') > 0) {
+                    $name = implode('\\ ', explode('/', $name));
+                }
+
+                $name = Inflector::camelize($name);
+                $nameSegments = [
+                    $baseNamespace,
+                    'Test\Fixture',
+                    $additionalPath,
+                    $name . 'Fixture'
+                ];
+                $className = implode('\\', array_filter($nameSegments));
             } else {
-                $baseNamespace = '';
-                $name = $fixture;
+                $className = $fixture;
+                $name = preg_replace('/Fixture\z/', '', substr(strrchr($fixture, '\\'), 1));
             }
-            $name = Inflector::camelize($name);
-            $nameSegments = [
-                $baseNamespace,
-                'Test\Fixture',
-                $additionalPath,
-                $name . 'Fixture'
-            ];
-            $className = implode('\\', array_filter($nameSegments));
 
             if (class_exists($className)) {
                 $this->_loaded[$fixture] = new $className();
@@ -219,7 +233,7 @@ class FixtureManager
     /**
      * Runs the drop and create commands on the fixtures if necessary.
      *
-     * @param \Cake\TestSuite\Fixture\TestFixture $fixture the fixture object to create
+     * @param \Cake\Datasource\FixtureInterface $fixture the fixture object to create
      * @param \Cake\Database\Connection $db The Connection object instance to use
      * @param array $sources The existing tables in the datasource.
      * @param bool $drop whether drop the fixture if it is already created or not
@@ -237,7 +251,7 @@ class FixtureManager
         $exists = in_array($table, $sources);
 
         if (($drop && $exists) ||
-            ($exists && !$isFixtureSetup && $fixture instanceof TableSchemaInterface && $fixture->schema() instanceof Table)
+            ($exists && !$isFixtureSetup && $fixture instanceof TableSchemaInterface && $fixture->schema() instanceof TableSchema)
         ) {
             $fixture->drop($db);
             $fixture->create($db);
@@ -354,7 +368,7 @@ class FixtureManager
     {
         $dbs = $this->_fixtureConnections($fixtures);
         foreach ($dbs as $connection => $fixtures) {
-            $db = ConnectionManager::get($connection, false);
+            $db = ConnectionManager::get($connection);
             $logQueries = $db->logQueries();
             if ($logQueries && !$this->_debug) {
                 $db->logQueries(false);
@@ -429,27 +443,27 @@ class FixtureManager
      */
     public function loadSingle($name, $db = null, $dropTables = true)
     {
-        if (isset($this->_fixtureMap[$name])) {
-            $fixture = $this->_fixtureMap[$name];
-            if (!$db) {
-                $db = ConnectionManager::get($fixture->connection());
-            }
-
-            if (!$this->isFixtureSetup($db->configName(), $fixture)) {
-                $sources = $db->schemaCollection()->listTables();
-                $this->_setupTable($fixture, $db, $sources, $dropTables);
-            }
-
-            if (!$dropTables) {
-                $fixture->dropConstraints($db);
-                $fixture->truncate($db);
-            }
-
-            $fixture->createConstraints($db);
-            $fixture->insert($db);
-        } else {
+        if (!isset($this->_fixtureMap[$name])) {
             throw new UnexpectedValueException(sprintf('Referenced fixture class %s not found', $name));
         }
+
+        $fixture = $this->_fixtureMap[$name];
+        if (!$db) {
+            $db = ConnectionManager::get($fixture->connection());
+        }
+
+        if (!$this->isFixtureSetup($db->configName(), $fixture)) {
+            $sources = $db->schemaCollection()->listTables();
+            $this->_setupTable($fixture, $db, $sources, $dropTables);
+        }
+
+        if (!$dropTables) {
+            $fixture->dropConstraints($db);
+            $fixture->truncate($db);
+        }
+
+        $fixture->createConstraints($db);
+        $fixture->insert($db);
     }
 
     /**

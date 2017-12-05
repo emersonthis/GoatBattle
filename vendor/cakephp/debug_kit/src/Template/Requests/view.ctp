@@ -1,4 +1,9 @@
 <?php
+/**
+ * @var \DebugKit\View\AjaxView $this
+ * @var \DebugKit\Model\Entity\Request $toolbar
+ */
+
 use Cake\Routing\Router;
 use Cake\Core\Configure;
 
@@ -11,18 +16,32 @@ use Cake\Core\Configure;
 </div>
 
 <ul id="toolbar" class="toolbar">
-    <?php foreach ($toolbar->panels as $panel): ?>
-    <li class="panel hidden" data-id="<?= $panel->id ?>">
+     <li class="panel-button-left panel hidden">
         <span class="panel-button">
-            <?= h($panel->title) ?>
+            &#x3008;
         </span>
-        <?php if (strlen($panel->summary)): ?>
-        <span class="panel-summary">
-            <?= h($panel->summary) ?>
-        </span>
-        <?php endif ?>
     </li>
-    <?php endforeach; ?>
+    <li class="panel-button-right panel hidden">
+        <span class="panel-button">
+            &#x3009;
+        </span>
+    </li>
+    <li class="toolbar-inner">
+        <ul class="toolbar-inner">
+        <?php foreach ($toolbar->panels as $panel): ?>
+        <li class="panel hidden" data-id="<?= $panel->id ?>">
+            <span class="panel-button">
+                <?= h($panel->title) ?>
+            </span>
+            <?php if (strlen($panel->summary)): ?>
+            <span class="panel-summary">
+                <?= h($panel->summary) ?>
+            </span>
+            <?php endif ?>
+        </li>
+        <?php endforeach; ?>
+        </ul>
+    </li>
     <li id="panel-button">
         <?= $this->Html->image('DebugKit.cake.icon.png', [
             'alt' => 'Debug Kit', 'title' => 'CakePHP ' . Configure::version() . ' Debug Kit'

@@ -1,15 +1,15 @@
 <?php
 /**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
  * @since         3.0.0
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 namespace Cake\Http\Client;
 
@@ -50,7 +50,7 @@ class FormData implements Countable
     /**
      * The parts in the form data.
      *
-     * @var array
+     * @var \Cake\Http\Client\FormDataPart[]
      */
     protected $_parts = [];
 
@@ -74,7 +74,7 @@ class FormData implements Countable
      *
      * @param string $name The name of the part.
      * @param string $value The value to add.
-     * @return \Cake\Network\Http\FormDataPart
+     * @return \Cake\Http\Client\FormDataPart
      */
     public function newPart($name, $value)
     {
@@ -90,7 +90,7 @@ class FormData implements Countable
      * If the $value is an array, multiple parts will be added.
      * Files will be read from their current position and saved in memory.
      *
-     * @param string|\Cake\Network\Http\FormData $name The name of the part to add,
+     * @param string|\Cake\Http\Client\FormData $name The name of the part to add,
      *   or the part data object.
      * @param mixed $value The value for the part.
      * @return $this
@@ -141,7 +141,7 @@ class FormData implements Countable
      *
      * @param string $name The name to use.
      * @param mixed $value Either a string filename, or a filehandle.
-     * @return \Cake\Network\Http\FormDataPart
+     * @return \Cake\Http\Client\FormDataPart
      */
     public function addFile($name, $value)
     {
@@ -268,3 +268,6 @@ class FormData implements Countable
         return http_build_query($data);
     }
 }
+
+// @deprecated Add backwards compat alias.
+class_alias('Cake\Http\Client\FormData', 'Cake\Network\Http\FormData');

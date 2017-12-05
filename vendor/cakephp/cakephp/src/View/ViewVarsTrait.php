@@ -1,15 +1,15 @@
 <?php
 /**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c), Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @copyright     Copyright (c), Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
  * @since         3.0.0
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 namespace Cake\View;
 
@@ -28,9 +28,9 @@ trait ViewVarsTrait
      * The name of default View class.
      *
      * @var string
-     * @deprecated 3.1.0 Use `$this->viewBuilder()->className()` instead.
+     * @deprecated 3.1.0 Use `$this->viewBuilder()->getClassName()`/`$this->viewBuilder()->setClassName()` instead.
      */
-    public $viewClass = null;
+    public $viewClass;
 
     /**
      * Variables for the view
@@ -70,11 +70,11 @@ trait ViewVarsTrait
     public function createView($viewClass = null)
     {
         $builder = $this->viewBuilder();
-        if ($viewClass === null && $builder->className() === null) {
-            $builder->className($this->viewClass);
+        if ($viewClass === null && $builder->getClassName() === null) {
+            $builder->setClassName($this->viewClass);
         }
         if ($viewClass) {
-            $builder->className($viewClass);
+            $builder->setClassName($viewClass);
         }
 
         $validViewOptions = $this->viewOptions();
@@ -109,7 +109,7 @@ trait ViewVarsTrait
                 $builder->{$prop}($this->{$prop});
             }
         }
-        $builder->options($viewOptions);
+        $builder->setOptions($viewOptions);
 
         return $builder->build(
             $this->viewVars,
@@ -123,7 +123,7 @@ trait ViewVarsTrait
      * Saves a variable or an associative array of variables for use inside a template.
      *
      * @param string|array $name A string or an array of data.
-     * @param string|array|null|bool $value Value in case $name is a string (which then works as the key).
+     * @param mixed $value Value in case $name is a string (which then works as the key).
      *   Unused if $name is an associative array, otherwise serves as the values to $name's keys.
      * @return $this
      */

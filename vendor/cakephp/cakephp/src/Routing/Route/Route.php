@@ -1,21 +1,22 @@
 <?php
 /**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
  * @since         1.3.0
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 namespace Cake\Routing\Route;
 
-use Cake\Network\Request;
+use Cake\Http\ServerRequest;
 use Cake\Routing\Router;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * A single Route used by the Router to connect requests to
@@ -52,31 +53,31 @@ class Route
     /**
      * The routes template string.
      *
-     * @var string
+     * @var string|null
      */
-    public $template = null;
+    public $template;
 
     /**
-     * Is this route a greedy route?  Greedy routes have a `/*` in their
+     * Is this route a greedy route? Greedy routes have a `/*` in their
      * template
      *
-     * @var string
+     * @var bool
      */
     protected $_greedy = false;
 
     /**
      * The compiled route regular expression
      *
-     * @var string
+     * @var string|null
      */
-    protected $_compiledRoute = null;
+    protected $_compiledRoute;
 
     /**
-     * The name for a route.  Fetch with Route::getName();
+     * The name for a route. Fetch with Route::getName();
      *
-     * @var string
+     * @var string|null
      */
-    protected $_name = null;
+    protected $_name;
 
     /**
      * List of connected extensions for this route.
@@ -92,6 +93,9 @@ class Route
      *
      * - `_ext` - Defines the extensions used for this route.
      * - `pass` - Copies the listed parameters into params['pass'].
+     * - `_host` - Define the host name pattern if you want this route to only match
+     *   specific host names. You can use `.*` and to create wildcard subdomains/hosts
+     *   e.g. `*.example.com` matches all subdomains on `example.com`.
      *
      * @param string $template Template string with parameter placeholders
      * @param array|string $defaults Defaults for the route.
@@ -101,19 +105,18 @@ class Route
     {
         $this->template = $template;
         $this->defaults = (array)$defaults;
-        $this->options = $options;
         if (isset($this->defaults['[method]'])) {
             $this->defaults['_method'] = $this->defaults['[method]'];
             unset($this->defaults['[method]']);
         }
-        if (isset($this->options['_ext'])) {
-            $this->_extensions = (array)$this->options['_ext'];
-        }
+        $this->options = $options + ['_ext' => []];
+        $this->setExtensions((array)$this->options['_ext']);
     }
 
     /**
      * Get/Set the supported extensions for this route.
      *
+     * @deprecated 3.3.9 Use getExtensions/setExtensions instead.
      * @param null|string|array $extensions The extensions to set. Use null to get.
      * @return array|null The extensions or null.
      */
@@ -123,6 +126,29 @@ class Route
             return $this->_extensions;
         }
         $this->_extensions = (array)$extensions;
+    }
+
+    /**
+     * Set the supported extensions for this route.
+     *
+     * @param array $extensions The extensions to set.
+     * @return $this
+     */
+    public function setExtensions(array $extensions)
+    {
+        $this->_extensions = array_map('strtolower', $extensions);
+
+        return $this;
+    }
+
+    /**
+     * Get the supported extensions for this route.
+     *
+     * @return array
+     */
+    public function getExtensions()
+    {
+        return $this->_extensions;
     }
 
     /**
@@ -141,7 +167,7 @@ class Route
      * Modifies defaults property so all necessary keys are set
      * and populates $this->names with the named routing elements.
      *
-     * @return array Returns a string regular expression of the compiled route.
+     * @return string Returns a string regular expression of the compiled route.
      */
     public function compile()
     {
@@ -173,7 +199,7 @@ class Route
         $names = $routeParams = [];
         $parsed = preg_quote($this->template, '#');
 
-        preg_match_all('#:([A-Za-z0-9_-]+[A-Z0-9a-z])#', $route, $namedElements);
+        preg_match_all('/:([a-z0-9-_]+(?<![-_]))/i', $route, $namedElements);
         foreach ($namedElements[1] as $i => $name) {
             $search = '\\' . $namedElements[0][$i];
             if (isset($this->options[$name])) {
@@ -260,11 +286,31 @@ class Route
      * Checks to see if the given URL can be parsed by this route.
      *
      * If the route can be parsed an array of parameters will be returned; if not
+     * false will be returned.
+     *
+     * @param \Psr\Http\Message\ServerRequestInterface $request The URL to attempt to parse.
+     * @return array|false An array of request parameters, or false on failure.
+     */
+    public function parseRequest(ServerRequestInterface $request)
+    {
+        $uri = $request->getUri();
+        if (isset($this->options['_host']) && !$this->hostMatches($uri->getHost())) {
+            return false;
+        }
+
+        return $this->parse($uri->getPath(), $request->getMethod());
+    }
+
+    /**
+     * Checks to see if the given URL can be parsed by this route.
+     *
+     * If the route can be parsed an array of parameters will be returned; if not
      * false will be returned. String URLs are parsed if they match a routes regular expression.
      *
      * @param string $url The URL to attempt to parse.
      * @param string $method The HTTP method of the request being parsed.
      * @return array|false An array of request parameters, or false on failure.
+     * @deprecated 3.4.0 Use/implement parseRequest() instead as it provides more flexibility/control.
      */
     public function parse($url, $method = '')
     {
@@ -280,8 +326,8 @@ class Route
         if (isset($this->defaults['_method'])) {
             if (empty($method)) {
                 // Deprecated reading the global state is deprecated and will be removed in 4.x
-                $request = Router::getRequest(true) ?: Request::createFromGlobals();
-                $method = $request->env('REQUEST_METHOD');
+                $request = Router::getRequest(true) ?: ServerRequest::createFromGlobals();
+                $method = $request->getMethod();
             }
             if (!in_array($method, (array)$this->defaults['_method'], true)) {
                 return false;
@@ -331,10 +377,22 @@ class Route
                 }
             }
         }
-
         $route['_matchedRoute'] = $this->template;
 
         return $route;
+    }
+
+    /**
+     * Check to see if the host matches the route requirements
+     *
+     * @param string $host The request's host name
+     * @return bool Whether or not the host matches any conditions set in for this route.
+     */
+    public function hostMatches($host)
+    {
+        $pattern = '@^' . str_replace('\*', '.*', preg_quote($this->options['_host'], '@')) . '$@';
+
+        return preg_match($pattern, $host) !== 0;
     }
 
     /**
@@ -346,20 +404,12 @@ class Route
      */
     protected function _parseExtension($url)
     {
-        if (empty($this->_extensions)) {
-            return [$url, null];
-        }
-        preg_match('/\.([0-9a-z]*)$/', $url, $match);
-        if (empty($match[1])) {
-            return [$url, null];
-        }
-        $ext = strtolower($match[1]);
-        $len = strlen($match[1]);
-        foreach ($this->_extensions as $name) {
-            if (strtolower($name) === $ext) {
-                $url = substr($url, 0, ($len + 1) * -1);
-
-                return [$url, $ext];
+        if (count($this->_extensions) && strpos($url, '.') !== false) {
+            foreach ($this->_extensions as $ext) {
+                $len = strlen($ext) + 1;
+                if (substr($url, -$len) === '.' . $ext) {
+                    return [substr($url, 0, $len * -1), $ext];
+                }
             }
         }
 
@@ -372,7 +422,7 @@ class Route
      * Return true if a given named $param's $val matches a given $rule depending on $context.
      * Currently implemented rule types are controller, action and match that can be combined with each other.
      *
-     * @param string $args A string with the passed params.  eg. /1/foo
+     * @param string $args A string with the passed params. eg. /1/foo
      * @param string $context The current route context, which should contain controller/action keys.
      * @return array Array of passed args.
      */
@@ -430,7 +480,7 @@ class Route
             $this->compile();
         }
         $defaults = $this->defaults;
-        $context += ['params' => []];
+        $context += ['params' => [], '_port' => null, '_scheme' => null, '_host' => null];
 
         if (!empty($this->options['persist']) &&
             is_array($this->options['persist'])
@@ -450,6 +500,21 @@ class Route
 
             if ($hostOptions['_port'] == $context['_port']) {
                 unset($hostOptions['_port']);
+            }
+        }
+
+        // Apply the _host option if possible
+        if (isset($this->options['_host'])) {
+            if (!isset($hostOptions['_host']) && strpos($this->options['_host'], '*') === false) {
+                $hostOptions['_host'] = $this->options['_host'];
+            }
+            if (!isset($hostOptions['_host'])) {
+                $hostOptions['_host'] = $context['_host'];
+            }
+
+            // The host did not match the route preferences
+            if (!$this->hostMatches($hostOptions['_host'])) {
+                return false;
             }
         }
 
@@ -621,11 +686,12 @@ class Route
         ) {
             $host = $params['_host'];
 
-            // append the port if it exists.
+            // append the port & scheme if they exists.
             if (isset($params['_port'])) {
                 $host .= ':' . $params['_port'];
             }
-            $out = "{$params['_scheme']}://{$host}{$out}";
+            $scheme = isset($params['_scheme']) ? $params['_scheme'] : 'http';
+            $out = "{$scheme}://{$host}{$out}";
         }
         if (!empty($params['_ext']) || !empty($query)) {
             $out = rtrim($out, '/');

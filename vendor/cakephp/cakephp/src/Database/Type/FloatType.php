@@ -1,16 +1,16 @@
 <?php
 /**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
  * @since         3.0.0
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 namespace Cake\Database\Type;
 
@@ -27,16 +27,21 @@ use RuntimeException;
  */
 class FloatType extends Type implements TypeInterface
 {
-
     /**
-     * Identifier name for this type
+     * Identifier name for this type.
+     *
+     * (This property is declared here again so that the inheritance from
+     * Cake\Database\Type can be removed in the future.)
      *
      * @var string|null
      */
-    protected $_name = null;
+    protected $_name;
 
     /**
-     * Constructor
+     * Constructor.
+     *
+     * (This method is declared here again so that the inheritance from
+     * Cake\Database\Type can be removed in the future.)
      *
      * @param string|null $name The name identifying this type
      */
@@ -65,15 +70,12 @@ class FloatType extends Type implements TypeInterface
      *
      * @param string|resource $value The value to convert.
      * @param \Cake\Database\Driver $driver The driver instance to convert with.
-     * @return string|resource
+     * @return float|null
      */
     public function toDatabase($value, Driver $driver)
     {
         if ($value === null || $value === '') {
             return null;
-        }
-        if (is_array($value)) {
-            return 1;
         }
 
         return (float)$value;
@@ -84,7 +86,7 @@ class FloatType extends Type implements TypeInterface
      *
      * @param null|string|resource $value The value to convert.
      * @param \Cake\Database\Driver $driver The driver instance to convert with.
-     * @return resource
+     * @return float|null
      * @throws \Cake\Core\Exception\Exception
      */
     public function toPHP($value, Driver $driver)
@@ -93,7 +95,7 @@ class FloatType extends Type implements TypeInterface
             return null;
         }
         if (is_array($value)) {
-            return 1;
+            return 1.0;
         }
 
         return (float)$value;
@@ -115,7 +117,7 @@ class FloatType extends Type implements TypeInterface
      * Marshalls request data into PHP floats.
      *
      * @param mixed $value The value to convert.
-     * @return mixed Converted value.
+     * @return float|null Converted value.
      */
     public function marshal($value)
     {
@@ -129,7 +131,7 @@ class FloatType extends Type implements TypeInterface
             return $this->_parseValue($value);
         }
         if (is_array($value)) {
-            return 1;
+            return 1.0;
         }
 
         return $value;
@@ -162,7 +164,7 @@ class FloatType extends Type implements TypeInterface
     }
 
     /**
-     * Converts a string into a float point after parseing it using the locale
+     * Converts a string into a float point after parsing it using the locale
      * aware parser.
      *
      * @param string $value The value to parse and convert to an float.
