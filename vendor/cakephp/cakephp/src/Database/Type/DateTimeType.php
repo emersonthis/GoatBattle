@@ -53,12 +53,9 @@ class DateTimeType extends Type implements TypeInterface
     /**
      * String format to use for DateTime parsing
      *
-     * @var string|array
+     * @var string
      */
-    protected $_format = [
-        'Y-m-d H:i:s',
-        'Y-m-d\TH:i:sP',
-    ];
+    protected $_format = 'Y-m-d H:i:s';
 
     /**
      * Whether dates should be parsed using a locale aware parser
@@ -105,7 +102,7 @@ class DateTimeType extends Type implements TypeInterface
      *
      * @param string|int|\DateTime $value The value to convert.
      * @param \Cake\Database\Driver $driver The driver instance to convert with.
-     * @return string|null
+     * @return string
      */
     public function toDatabase($value, Driver $driver)
     {
@@ -117,9 +114,7 @@ class DateTimeType extends Type implements TypeInterface
             $value = new $class('@' . $value);
         }
 
-        $format = (array)$this->_format;
-
-        return $value->format(array_shift($format));
+        return $value->format($this->_format);
     }
 
     /**
@@ -171,7 +166,7 @@ class DateTimeType extends Type implements TypeInterface
                 $date = new $class($value);
                 $compare = true;
             }
-            if ($compare && $date && !$this->_compare($date, $value)) {
+            if ($compare && $date && $date->format($this->_format) !== $value) {
                 return $value;
             }
             if ($date) {
@@ -209,22 +204,6 @@ class DateTimeType extends Type implements TypeInterface
         $tz = isset($value['timezone']) ? $value['timezone'] : null;
 
         return new $class($format, $tz);
-    }
-
-    /**
-     * @param \Cake\I18n\Time|\DateTime $date DateTime object
-     * @param mixed $value Request data
-     * @return bool
-     */
-    protected function _compare($date, $value)
-    {
-        foreach ((array)$this->_format as $format) {
-            if ($date->format($format) === $value) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     /**

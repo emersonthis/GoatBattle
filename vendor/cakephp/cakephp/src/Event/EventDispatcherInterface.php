@@ -22,9 +22,6 @@ namespace Cake\Event;
  *
  * The Cake\Event\EventDispatcherTrait lets you easily implement
  * this interface.
- *
- * @method \Cake\Event\EventManager getEventManager()
- * @method $this setEventManager(\Cake\Event\EventManager $eventManager)
  */
 interface EventDispatcherInterface
 {
@@ -49,7 +46,6 @@ interface EventDispatcherInterface
      * You can use this instance to register any new listeners or callbacks to the
      * object events, or create your own events and trigger them at will.
      *
-     * @deprecated 3.5.0 Use getEventManager()/setEventManager() instead.
      * @param \Cake\Event\EventManager|null $eventManager the eventManager to set
      * @return \Cake\Event\EventManager
      */

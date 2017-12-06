@@ -33,12 +33,10 @@ use JsonSerializable;
  * @method array getError($field)
  * @method array setErrors(array $fields, $overwrite = false)
  * @method array setError($field, $errors, $overwrite = false)
- * @method $this setAccess($property, $set)
+ * @method $this setAccess(array $properties, $merge = false)
  * @method bool isAccessible($property)
  * @method $this setSource($source)
  * @method array getSource()
- * @method array extractOriginal(array $properties)
- * @method array extractOriginalChanged(array $properties)
  *
  * @property mixed $id Alias for commonly used primary key.
  */
@@ -70,7 +68,7 @@ interface EntityInterface extends ArrayAccess, JsonSerializable
      * Returns whether this entity contains a property named $property
      * regardless of if it is empty.
      *
-     * @param string|array $property The property to check.
+     * @param string $property The property to check.
      * @return bool
      */
     public function has($property);
@@ -140,7 +138,6 @@ interface EntityInterface extends ArrayAccess, JsonSerializable
      * When called with no arguments it will return whether or not there are any
      * dirty property in the entity
      *
-     * @deprecated 3.4.0 Use setDirty() and isDirty() instead.
      * @param string|null $property the field to set or check status for
      * @param null|bool $isDirty true means the property was changed, false means
      * it was not changed and null will make the function return current state
@@ -182,7 +179,6 @@ interface EntityInterface extends ArrayAccess, JsonSerializable
      * When used as a setter, this method will return this entity instance for method
      * chaining.
      *
-     * @deprecated 3.4.0 Use setErrors() and getErrors() instead.
      * @param string|array|null $field The field to get errors for.
      * @param string|array|null $errors The errors to be set for $field
      * @param bool $overwrite Whether or not to overwrite pre-existing errors for $field
@@ -197,7 +193,6 @@ interface EntityInterface extends ArrayAccess, JsonSerializable
      * `$entity->accessible('*', true)` means that any property not specified already
      * will be accessible by default.
      *
-     * @deprecated 3.4.0 Use setAccess() and isAccessible() instead.
      * @param string|array $property Either a single or list of properties to change its accessibility.
      * @param bool|null $set true marks the property as accessible, false will
      * mark it as protected.

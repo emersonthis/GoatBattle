@@ -144,7 +144,7 @@ class UrlHelper extends Helper
             return $this->build($path, !empty($options['fullBase']));
         }
         if (strpos($path, '://') !== false || preg_match('/^[a-z]+:/i', $path)) {
-            return ltrim($this->build($path), '/');
+            return $path;
         }
         if (!array_key_exists('plugin', $options) || $options['plugin'] !== false) {
             list($plugin, $path) = $this->_View->pluginSplit($path, false);
@@ -159,7 +159,7 @@ class UrlHelper extends Helper
             $path .= $options['ext'];
         }
         if (preg_match('|^([a-z0-9]+:)?//|', $path)) {
-            return $this->build($path);
+            return $path;
         }
         if (isset($plugin)) {
             $path = Inflector::underscore($plugin) . '/' . $path;
@@ -209,16 +209,18 @@ class UrlHelper extends Helper
             );
             $webrootPath = WWW_ROOT . str_replace('/', DIRECTORY_SEPARATOR, $filepath);
             if (file_exists($webrootPath)) {
-                return $path . '?' . filemtime($webrootPath);
+                //@codingStandardsIgnoreStart
+                return $path . '?' . @filemtime($webrootPath);
+                //@codingStandardsIgnoreEnd
             }
             $segments = explode('/', ltrim($filepath, '/'));
             $plugin = Inflector::camelize($segments[0]);
             if (Plugin::loaded($plugin)) {
                 unset($segments[0]);
                 $pluginPath = Plugin::path($plugin) . 'webroot' . DIRECTORY_SEPARATOR . implode(DIRECTORY_SEPARATOR, $segments);
-                if (file_exists($pluginPath)) {
-                    return $path . '?' . filemtime($pluginPath);
-                }
+                //@codingStandardsIgnoreStart
+                return $path . '?' . @filemtime($pluginPath);
+                //@codingStandardsIgnoreEnd
             }
         }
 

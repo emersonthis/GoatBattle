@@ -55,7 +55,7 @@ class ActionDispatcher
     public function __construct($factory = null, $eventManager = null, array $filters = [])
     {
         if ($eventManager) {
-            $this->setEventManager($eventManager);
+            $this->eventManager($eventManager);
         }
         foreach ($filters as $filter) {
             $this->addFilter($filter);
@@ -122,15 +122,14 @@ class ActionDispatcher
         }
 
         if (!$response && $controller->autoRender) {
-            $controller->render();
+            $response = $controller->render();
+        } elseif (!$response) {
+            $response = $controller->response;
         }
 
         $result = $controller->shutdownProcess();
         if ($result instanceof Response) {
             return $result;
-        }
-        if (!$response) {
-            $response = $controller->response;
         }
 
         return $response;
@@ -150,7 +149,7 @@ class ActionDispatcher
     public function addFilter(EventListenerInterface $filter)
     {
         $this->filters[] = $filter;
-        $this->getEventManager()->on($filter);
+        $this->eventManager()->on($filter);
     }
 
     /**

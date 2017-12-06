@@ -35,34 +35,29 @@ class Text
      * Warning: This method should not be used as a random seed for any cryptographic operations.
      * Instead you should use the openssl or mcrypt extensions.
      *
-     * It should also not be used to create identifiers that have security implications, such as
-     * 'unguessable' URL identifiers. Instead you should use `Security::randomBytes()` for that.
-     *
      * @see https://www.ietf.org/rfc/rfc4122.txt
      * @return string RFC 4122 UUID
      * @copyright Matt Farina MIT License https://github.com/lootils/uuid/blob/master/LICENSE
      */
     public static function uuid()
     {
-        $random = function_exists('random_int') ? 'random_int' : 'mt_rand';
-
         return sprintf(
             '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
             // 32 bits for "time_low"
-            $random(0, 65535),
-            $random(0, 65535),
+            mt_rand(0, 65535),
+            mt_rand(0, 65535),
             // 16 bits for "time_mid"
-            $random(0, 65535),
+            mt_rand(0, 65535),
             // 12 bits before the 0100 of (version) 4 for "time_hi_and_version"
-            $random(0, 4095) | 0x4000,
+            mt_rand(0, 4095) | 0x4000,
             // 16 bits, 8 bits for "clk_seq_hi_res",
             // 8 bits for "clk_seq_low",
             // two most significant bits holds zero and one for variant DCE1.1
-            $random(0, 0x3fff) | 0x8000,
+            mt_rand(0, 0x3fff) | 0x8000,
             // 48 bits for "node"
-            $random(0, 65535),
-            $random(0, 65535),
-            $random(0, 65535)
+            mt_rand(0, 65535),
+            mt_rand(0, 65535),
+            mt_rand(0, 65535)
         );
     }
 
@@ -200,6 +195,8 @@ class Text
 
             return $options['clean'] ? static::cleanInsert($str, $options) : $str;
         }
+
+        asort($data);
 
         $dataKeys = array_keys($data);
         $hashKeys = array_map('crc32', $dataKeys);
@@ -1108,7 +1105,7 @@ class Text
 
         $regex = '^\s\p{Ll}\p{Lm}\p{Lo}\p{Lt}\p{Lu}\p{Nd}';
         if ($options['preserve']) {
-            $regex .= preg_quote($options['preserve'], '/');
+            $regex .= '(' . preg_quote($options['preserve'], '/') . ')';
         }
         $quotedReplacement = preg_quote($options['replacement'], '/');
         $map = [

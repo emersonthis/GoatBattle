@@ -19,22 +19,16 @@ class UnauthorizedException extends HttpException
 {
 
     /**
-     * {@inheritDoc}
-     */
-    protected $_defaultCode = 401;
-
-    /**
      * Constructor
      *
      * @param string|null $message If no message is given 'Unauthorized' will be the message
      * @param int $code Status code, defaults to 401
-     * @param \Exception|null $previous The previous exception.
      */
-    public function __construct($message = null, $code = null, $previous = null)
+    public function __construct($message = null, $code = 401)
     {
         if (empty($message)) {
             $message = 'Unauthorized';
         }
-        parent::__construct($message, $code, $previous);
+        parent::__construct($message, $code);
     }
 }

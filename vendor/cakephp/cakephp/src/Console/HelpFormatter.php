@@ -14,7 +14,6 @@
  */
 namespace Cake\Console;
 
-use Cake\Console\Exception\ConsoleException;
 use Cake\Utility\Text;
 use SimpleXmlElement;
 
@@ -52,13 +51,6 @@ class HelpFormatter
     protected $_parser;
 
     /**
-     * Alias to display in the output.
-     *
-     * @var string
-     */
-    protected $_alias = 'cake';
-
-    /**
      * Build the help formatter for an OptionParser
      *
      * @param \Cake\Console\ConsoleOptionParser $parser The option parser help is being generated for.
@@ -66,22 +58,6 @@ class HelpFormatter
     public function __construct(ConsoleOptionParser $parser)
     {
         $this->_parser = $parser;
-    }
-
-    /**
-     * Set the alias
-     *
-     * @param string $alias The alias
-     * @return void
-     * @throws \Cake\Console\Exception\ConsoleException When alias is not a string.
-     */
-    public function setAlias($alias)
-    {
-        if (is_string($alias)) {
-            $this->_alias = $alias;
-        } else {
-            throw new ConsoleException('Alias must be of type string.');
-        }
     }
 
     /**
@@ -115,7 +91,7 @@ class HelpFormatter
                 ]);
             }
             $out[] = '';
-            $out[] = sprintf('To see help on a subcommand use <info>`' . $this->_alias . ' %s [subcommand] --help`</info>', $parser->getCommand());
+            $out[] = sprintf('To see help on a subcommand use <info>`cake %s [subcommand] --help`</info>', $parser->getCommand());
             $out[] = '';
         }
 
@@ -166,7 +142,7 @@ class HelpFormatter
      */
     protected function _generateUsage()
     {
-        $usage = [$this->_alias . ' ' . $this->_parser->getCommand()];
+        $usage = ['cake ' . $this->_parser->getCommand()];
         $subcommands = $this->_parser->subcommands();
         if (!empty($subcommands)) {
             $usage[] = '[subcommand]';

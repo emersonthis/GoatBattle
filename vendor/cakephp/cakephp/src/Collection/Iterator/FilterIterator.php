@@ -14,9 +14,7 @@
  */
 namespace Cake\Collection\Iterator;
 
-use ArrayIterator;
 use Cake\Collection\Collection;
-use Cake\Collection\CollectionInterface;
 use CallbackFilterIterator;
 use Iterator;
 
@@ -29,13 +27,6 @@ class FilterIterator extends Collection
 {
 
     /**
-     * The callback used to filter the elements in this collection
-     *
-     * @var callable
-     */
-    protected $_callback;
-
-    /**
      * Creates a filtered iterator using the callback to determine which items are
      * accepted or rejected.
      *
@@ -46,50 +37,9 @@ class FilterIterator extends Collection
      * @param \Iterator $items The items to be filtered.
      * @param callable $callback Callback.
      */
-    public function __construct($items, callable $callback)
+    public function __construct(Iterator $items, callable $callback)
     {
-        if (!$items instanceof Iterator) {
-            $items = new Collection($items);
-        }
-
-        $this->_callback = $callback;
         $wrapper = new CallbackFilterIterator($items, $callback);
         parent::__construct($wrapper);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * We perform here some strictness analysis so that the
-     * iterator logic is bypassed entirely.
-     *
-     * @return \Iterator
-     */
-    public function unwrap()
-    {
-        $filter = $this->getInnerIterator();
-        $iterator = $filter->getInnerIterator();
-
-        if ($iterator instanceof CollectionInterface) {
-            $iterator = $iterator->unwrap();
-        }
-
-        if (get_class($iterator) !== ArrayIterator::class) {
-            return $filter;
-        }
-
-        // ArrayIterator can be traversed strictly.
-        // Let's do that for performance gains
-
-        $callback = $this->_callback;
-        $res = [];
-
-        foreach ($iterator as $k => $v) {
-            if ($callback($v, $k, $iterator)) {
-                $res[$k] = $v;
-            }
-        }
-
-        return new ArrayIterator($res);
     }
 }

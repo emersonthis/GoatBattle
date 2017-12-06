@@ -12,17 +12,12 @@
  */
 namespace Cake\Utility\Exception;
 
-use Cake\Core\Exception\Exception;
+use RuntimeException;
 
 /**
  * Exception class for Xml. This exception will be thrown from Xml when it
  * encounters an error.
  */
-class XmlException extends Exception
+class XmlException extends RuntimeException
 {
-
-    /**
-     * {@inheritDoc}
-     */
-    protected $_defaultCode = 0;
 }

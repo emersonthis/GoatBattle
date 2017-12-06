@@ -14,9 +14,7 @@
  */
 namespace Cake\Collection\Iterator;
 
-use ArrayIterator;
 use Cake\Collection\Collection;
-use Cake\Collection\CollectionInterface;
 
 /**
  * Creates an iterator from another iterator that will modify each of the values
@@ -26,7 +24,7 @@ class ReplaceIterator extends Collection
 {
 
     /**
-     * The callback function to be used to transform values
+     * The callback function to be used to modify each of the values
      *
      * @var callable
      */
@@ -68,38 +66,5 @@ class ReplaceIterator extends Collection
         $callback = $this->_callback;
 
         return $callback(parent::current(), $this->key(), $this->_innerIterator);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * We perform here some strictness analysis so that the
-     * iterator logic is bypassed entirely.
-     *
-     * @return \Iterator
-     */
-    public function unwrap()
-    {
-        $iterator = $this->_innerIterator;
-
-        if ($iterator instanceof CollectionInterface) {
-            $iterator = $iterator->unwrap();
-        }
-
-        if (get_class($iterator) !== ArrayIterator::class) {
-            return $this;
-        }
-
-        // ArrayIterator can be traversed strictly.
-        // Let's do that for performance gains
-
-        $callback = $this->_callback;
-        $res = [];
-
-        foreach ($iterator as $k => $v) {
-            $res[$k] = $callback($v, $k, $iterator);
-        }
-
-        return new ArrayIterator($res);
     }
 }

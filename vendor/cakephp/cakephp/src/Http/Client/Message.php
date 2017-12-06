@@ -18,8 +18,6 @@ namespace Cake\Http\Client;
  *
  * Defines some common helper methods, constants
  * and properties.
- *
- * @property array $headers
  */
 class Message
 {

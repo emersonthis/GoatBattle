@@ -172,7 +172,7 @@ class TimestampBehavior extends Behavior
         foreach ($events[$eventName] as $field => $when) {
             if (in_array($when, ['always', 'existing'])) {
                 $return = true;
-                $entity->setDirty($field, false);
+                $entity->dirty($field, false);
                 $this->_updateField($entity, $field, $refresh);
             }
         }
@@ -190,7 +190,7 @@ class TimestampBehavior extends Behavior
      */
     protected function _updateField($entity, $field, $refreshTimestamp)
     {
-        if ($entity->isDirty($field)) {
+        if ($entity->dirty($field)) {
             return;
         }
         $entity->set($field, $this->timestamp(null, $refreshTimestamp));

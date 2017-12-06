@@ -651,36 +651,8 @@ class Debugger
     }
 
     /**
-     * Get the output format for Debugger error rendering.
-     *
-     * @return string Returns the current format when getting.
-     */
-    public static function getOutputFormat()
-    {
-        return Debugger::getInstance()->_outputFormat;
-    }
-
-    /**
-     * Set the output format for Debugger error rendering.
-     *
-     * @param string $format The format you want errors to be output as.
-     * @return void
-     * @throws \InvalidArgumentException When choosing a format that doesn't exist.
-     */
-    public static function setOutputFormat($format)
-    {
-        $self = Debugger::getInstance();
-
-        if (!isset($self->_templates[$format])) {
-            throw new InvalidArgumentException('Invalid Debugger output format.');
-        }
-        $self->_outputFormat = $format;
-    }
-
-    /**
      * Get/Set the output format for Debugger error rendering.
      *
-     * @deprecated 3.5.0 Use getOutputFormat()/setOutputFormat() instead.
      * @param string|null $format The format you want errors to be output as.
      *   Leave null to get the current format.
      * @return string|null Returns null when setting. Returns the current format when getting.
@@ -766,7 +738,7 @@ class Debugger
     /**
      * Takes a processed array of data from an error and displays it in the chosen format.
      *
-     * @param array $data Data to output.
+     * @param string $data Data to output.
      * @return void
      */
     public function outputError($data)
@@ -792,7 +764,7 @@ class Debugger
             $file = $files[1];
         }
         if ($file) {
-            $code = static::excerpt($file['file'], $file['line'], 1);
+            $code = static::excerpt($file['file'], $file['line'] - 1, 1);
         }
         $trace = static::trace(['start' => $data['start'], 'depth' => '20']);
         $insertOpts = ['before' => '{:', 'after' => '}'];
@@ -956,7 +928,7 @@ TEXT;
      */
     public static function checkSecurityKeys()
     {
-        if (Security::getSalt() === '__SALT__') {
+        if (Security::salt() === '__SALT__') {
             trigger_error(sprintf('Please change the value of %s in %s to a salt value specific to your application.', '\'Security.salt\'', 'ROOT/config/app.php'), E_USER_NOTICE);
         }
     }

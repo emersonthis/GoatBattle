@@ -16,7 +16,6 @@ namespace Cake\View\Helper;
 
 use Cake\Core\App;
 use Cake\Core\Exception\Exception;
-use Cake\Utility\Security;
 use Cake\View\Helper;
 use Cake\View\View;
 
@@ -49,7 +48,7 @@ class TextHelper extends Helper
     ];
 
     /**
-     * An array of hashes and their contents.
+     * An array of md5sums and their contents.
      * Used when inserting links into text.
      *
      * @var array
@@ -168,7 +167,7 @@ class TextHelper extends Helper
         if (isset($matches['url_bare'])) {
             $match = $matches['url_bare'];
         }
-        $key = hash_hmac('sha1', $match, Security::getSalt());
+        $key = md5($match);
         $this->_placeholders[$key] = [
             'content' => $match,
             'envelope' => $envelope

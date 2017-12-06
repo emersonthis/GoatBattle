@@ -19,7 +19,6 @@ use Cake\Core\App;
 use Cake\Core\ConventionsTrait;
 use Cake\Database\Expression\IdentifierExpression;
 use Cake\Datasource\EntityInterface;
-use Cake\Datasource\QueryInterface;
 use Cake\Datasource\ResultSetDecorator;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\Utility\Inflector;
@@ -159,7 +158,7 @@ abstract class Association
      *
      * @var string
      */
-    protected $_joinType = QueryInterface::JOIN_TYPE_LEFT;
+    protected $_joinType = 'LEFT';
 
     /**
      * The property name that should be filled with data from the target table
@@ -404,7 +403,7 @@ abstract class Association
                 $registryAlias = $this->_name;
             }
 
-            $tableLocator = $this->getTableLocator();
+            $tableLocator = $this->tableLocator();
 
             $config = [];
             $exists = $tableLocator->exists($registryAlias);
@@ -1059,7 +1058,7 @@ abstract class Association
      * @param mixed $conditions Conditions to be used, accepts anything Query::where()
      * can take.
      * @see \Cake\ORM\Table::updateAll()
-     * @return int Count Returns the affected rows.
+     * @return bool Success Returns true if one or more rows are affected.
      */
     public function updateAll($fields, $conditions)
     {
@@ -1192,7 +1191,6 @@ abstract class Association
                 $extracted = new ResultSetDecorator($callable($extracted));
             }
 
-            /* @var \Cake\Collection\CollectionInterface $results */
             return $results->insert($property, $extracted);
         }, Query::PREPEND);
     }

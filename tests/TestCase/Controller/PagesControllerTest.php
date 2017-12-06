@@ -28,43 +28,6 @@ use Cake\View\Exception\MissingTemplateException;
  */
 class PagesControllerTest extends IntegrationTestCase
 {
-
-    // public function setUp()
-    // {
-    //     parent::setUp();
-    //     // Configure::write('Users.auth', false);
-    //     // Configure::write('Users.Auth.authenticate', []);
-    //     // $this->Auth->config('Users.auth', false);
-    //     // $this->UsersAuth->config('auth', false);
-    //     // $config['Auth']['auth'] = false;
-    //     // $Session = $this->request->session();
-    //     // $Session->write([   
-    //     //                     'Auth.User.id' => '0d7a95d2-32b7-40a6-a0b8-1ff8c1e71129',
-    //     //                     'Auth.User.role' => 'user'
-    //     //                 ]);
-
-    //     // $config['Auth']['authorize']['CakeDC/Users.SimpleRbac'] = [
-    //     //     'autoload_config' => false
-    //     // ];
-
-    //     // //THIS SORT OF WORKS BUT ERRORS OVER persmission.php missing
-        
-
-    //     // $this->session([
-    //     //     'Auth' => [
-    //     //         'User' => [
-    //     //             'id' => '0d7a95d2-32b7-40a6-a0b8-1ff8c1e71129',
-    //     //             'role' => 'user',
-    //     //             // ...
-    //     //         ]
-    //     //     ]
-    //     // ]);
-
-
-
-    
-    // }
-
     /**
      * testMutlipleGet method
      *

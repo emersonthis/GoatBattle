@@ -315,9 +315,6 @@ class StringTemplate
         }
         $truthy = [1, '1', true, 'true', $key];
         $isMinimized = isset($this->_compactAttributes[$key]);
-        if (!preg_match('/\A(\w|[.-])+\z/', $key)) {
-            $key = h($key);
-        }
         if ($isMinimized && in_array($value, $truthy, true)) {
             return "$key=\"$key\"";
         }

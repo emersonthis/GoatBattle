@@ -324,13 +324,10 @@ class Plugin
     }
 
     /**
-     * Loads the routes file for a plugin, or all plugins configured to load their respective routes file.
+     * Loads the routes file for a plugin, or all plugins configured to load their respective routes file
      *
-     * If you need fine grained control over how routes are loaded for plugins, you
-     * can use {@see Cake\Routing\RouteBuilder::loadPlugin()}
-     *
-     * @param string|null $plugin name of the plugin, if null will operate on all
-     *   plugins having enabled the loading of routes files.
+     * @param string|null $plugin name of the plugin, if null will operate on all plugins having enabled the
+     * loading of routes files
      * @return bool
      */
     public static function routes($plugin = null)

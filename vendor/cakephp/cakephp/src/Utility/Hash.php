@@ -117,7 +117,7 @@ class Hash
      *
      * @param array|\ArrayAccess $data The data to extract from.
      * @param string $path The path to extract.
-     * @return array|\ArrayAccess An array of the extracted values. Returns an empty array
+     * @return array An array of the extracted values. Returns an empty array
      *   if there are no matches.
      * @link https://book.cakephp.org/3.0/en/core-libraries/hash.html#Cake\Utility\Hash::extract
      */
@@ -135,12 +135,7 @@ class Hash
 
         // Simple paths.
         if (!preg_match('/[{\[]/', $path)) {
-            $data = static::get($data, $path);
-            if ($data !== null && !(is_array($data) || $data instanceof ArrayAccess)) {
-                return [$data];
-            }
-
-            return $data !== null ? (array)$data : [];
+            return (array)static::get($data, $path);
         }
 
         if (strpos($path, '[') === false) {
@@ -350,6 +345,11 @@ class Hash
         $count = count($path);
         $last = $count - 1;
         foreach ($path as $i => $key) {
+            if ((is_numeric($key) && (int)$key > 0 || $key === '0') &&
+                strpos($key, '0') !== 0
+            ) {
+                $key = (int)$key;
+            }
             if ($op === 'insert') {
                 if ($i === $last) {
                     $_list[$key] = $values;
@@ -365,9 +365,7 @@ class Hash
                 }
             } elseif ($op === 'remove') {
                 if ($i === $last) {
-                    if (is_array($_list)) {
-                        unset($_list[$key]);
-                    }
+                    unset($_list[$key]);
 
                     return $data;
                 }
@@ -416,7 +414,7 @@ class Hash
             if ($match && is_array($v)) {
                 if ($conditions) {
                     if (static::_matches($v, $conditions)) {
-                        if ($nextPath !== '') {
+                        if ($nextPath) {
                             $data[$k] = static::remove($v, $nextPath);
                         } else {
                             unset($data[$k]);
@@ -428,7 +426,7 @@ class Hash
                 if (empty($data[$k])) {
                     unset($data[$k]);
                 }
-            } elseif ($match && $nextPath === '') {
+            } elseif ($match && empty($nextPath)) {
                 unset($data[$k]);
             }
         }

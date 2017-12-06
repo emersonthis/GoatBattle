@@ -18,15 +18,10 @@ namespace Cake\Datasource;
 /**
  * The basis for every query object
  *
- * @method $this andWhere($conditions, $types = [])
- * @method $this select($fields = [], $overwrite = false)
+ * @package Cake\Datasource
  */
 interface QueryInterface
 {
-
-    const JOIN_TYPE_INNER = 'INNER';
-    const JOIN_TYPE_LEFT = 'LEFT';
-    const JOIN_TYPE_RIGHT = 'RIGHT';
 
     /**
      * Returns a key => value array representing a single aliased field
@@ -38,7 +33,7 @@ interface QueryInterface
      *
      * @param string $field The field to alias
      * @param string|null $alias the alias used to prefix the field
-     * @return string
+     * @return array
      */
     public function aliasField($field, $alias = null);
 
@@ -48,7 +43,7 @@ interface QueryInterface
      *
      * @param array $fields The fields to alias
      * @param string|null $defaultAlias The default alias
-     * @return string[]
+     * @return array
      */
     public function aliasFields($fields, $defaultAlias = null);
 

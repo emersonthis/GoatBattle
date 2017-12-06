@@ -14,7 +14,6 @@
  */
 namespace Cake\Http;
 
-use Cake\Core\HttpApplicationInterface;
 use Cake\Event\EventDispatcherTrait;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -30,7 +29,7 @@ class Server
     use EventDispatcherTrait;
 
     /**
-     * @var \Cake\Core\HttpApplicationInterface
+     * @var \Cake\Http\BaseApplication
      */
     protected $app;
 
@@ -42,9 +41,9 @@ class Server
     /**
      * Constructor
      *
-     * @param \Cake\Core\HttpApplicationInterface $app The application to use.
+     * @param \Cake\Http\BaseApplication $app The application to use.
      */
-    public function __construct(HttpApplicationInterface $app)
+    public function __construct(BaseApplication $app)
     {
         $this->setApp($app);
         $this->setRunner(new Runner());
@@ -109,10 +108,10 @@ class Server
     /**
      * Set the application.
      *
-     * @param Cake\Core\HttpApplicationInterface $app The application to set.
+     * @param BaseApplication $app The application to set.
      * @return $this
      */
-    public function setApp(HttpApplicationInterface $app)
+    public function setApp(BaseApplication $app)
     {
         $this->app = $app;
 
@@ -122,7 +121,7 @@ class Server
     /**
      * Get the current application.
      *
-     * @return \Cake\Core\HttpApplicationInterface The application that will be run.
+     * @return \Cake\Http\BaseApplication The application that will be run.
      */
     public function getApp()
     {

@@ -383,7 +383,6 @@ class FileEngine extends CacheEngine
         if (!is_dir($dir)) {
             mkdir($dir, 0775, true);
         }
-
         $path = new SplFileInfo($dir . $key);
 
         if (!$createKey && !$path->isFile()) {
@@ -421,23 +420,21 @@ class FileEngine extends CacheEngine
     {
         $dir = new SplFileInfo($this->_config['path']);
         $path = $dir->getPathname();
-        $success = true;
         if (!is_dir($path)) {
-            //@codingStandardsIgnoreStart
-            $success = @mkdir($path, 0775, true);
-            //@codingStandardsIgnoreEnd
+            mkdir($path, 0775, true);
         }
 
-        $isWritableDir = ($dir->isDir() && $dir->isWritable());
-        if (!$success || ($this->_init && !$isWritableDir)) {
+        if ($this->_init && !($dir->isDir() && $dir->isWritable())) {
             $this->_init = false;
             trigger_error(sprintf(
                 '%s is not writable',
                 $this->_config['path']
             ), E_USER_WARNING);
+
+            return false;
         }
 
-        return $success;
+        return true;
     }
 
     /**

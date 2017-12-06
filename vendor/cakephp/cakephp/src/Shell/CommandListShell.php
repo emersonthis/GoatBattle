@@ -25,7 +25,6 @@ use SimpleXmlElement;
  * Shows a list of commands available from the console.
  *
  * @property \Cake\Shell\Task\CommandTask $Command
- * @deprecated 3.5.0 Replaced by Cake\Shell\HelpShell
  */
 class CommandListShell extends Shell
 {
@@ -36,22 +35,6 @@ class CommandListShell extends Shell
      * @var array
      */
     public $tasks = ['Command'];
-
-    /**
-     * Displays a header for the shell
-     *
-     * @return void
-     */
-    protected function _welcome()
-    {
-        $this->out();
-        $this->out(sprintf('<info>Welcome to CakePHP %s Console</info>', 'v' . Configure::version()));
-        $this->hr();
-        $this->out(sprintf('App : %s', APP_DIR));
-        $this->out(sprintf('Path: %s', APP));
-        $this->out(sprintf('PHP : %s', phpversion()));
-        $this->hr();
-    }
 
     /**
      * startup
@@ -143,7 +126,7 @@ class CommandListShell extends Shell
                 $shell->addAttribute('help', $callable . ' -h');
             }
         }
-        $this->_io->setOutputAs(ConsoleOutput::RAW);
+        $this->_io->outputAs(ConsoleOutput::RAW);
         $this->out($shells->saveXML());
     }
 
@@ -162,7 +145,7 @@ class CommandListShell extends Shell
             'help' => 'Get the listing as XML.',
             'boolean' => true
         ])->addOption('version', [
-            'help' => 'Prints the currently installed version of CakePHP. (deprecated - use `cake --version` instead)',
+            'help' => 'Prints the currently installed version of CakePHP.',
             'boolean' => true
         ]);
 

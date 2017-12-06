@@ -25,7 +25,7 @@ class TimeType extends DateTimeType
     /**
      * Time format for DateTime object
      *
-     * @var string|array
+     * @var string
      */
     protected $_format = 'H:i:s';
 

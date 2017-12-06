@@ -28,11 +28,11 @@ class DuplicateNamedRouteException extends Exception
     /**
      * {@inheritDoc}
      */
-    public function __construct($message, $code = 404, $previous = null)
+    public function __construct($message, $code = 404)
     {
         if (is_array($message) && isset($message['message'])) {
             $this->_messageTemplate = $message['message'];
         }
-        parent::__construct($message, $code, $previous);
+        parent::__construct($message, $code);
     }
 }

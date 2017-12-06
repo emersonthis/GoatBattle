@@ -17,9 +17,6 @@ namespace Cake\Datasource;
 /**
  * Describes the methods that any class representing a data storage should
  * comply with.
- *
- * @method $this setAlias($alias)
- * @method string getAlias()
  */
 interface RepositoryInterface
 {
@@ -27,7 +24,6 @@ interface RepositoryInterface
     /**
      * Returns the table alias or sets a new one
      *
-     * @deprecated 3.4.0 Use setAlias()/getAlias() instead.
      * @param string|null $alias the new table alias
      * @return string
      */
@@ -182,7 +178,7 @@ interface RepositoryInterface
      *
      * @param array $data The data to build an entity with.
      * @param array $options A list of options for the objects hydration.
-     * @return \Cake\Datasource\EntityInterface[] An array of hydrated records.
+     * @return array An array of hydrated records.
      */
     public function newEntities(array $data, array $options = []);
 
@@ -217,11 +213,11 @@ interface RepositoryInterface
      * $article = $this->Articles->patchEntities($articles, $this->request->getData());
      * ```
      *
-     * @param \Cake\Datasource\EntityInterface[]|\Traversable $entities the entities that will get the
+     * @param array|\Traversable $entities the entities that will get the
      * data merged in
      * @param array $data list of arrays to be merged into the entities
      * @param array $options A list of options for the objects hydration.
-     * @return \Cake\Datasource\EntityInterface[]
+     * @return array
      */
     public function patchEntities($entities, array $data, array $options = []);
 }

@@ -69,40 +69,18 @@ class TableRegistry
      *
      * @param \Cake\ORM\Locator\LocatorInterface|null $locator Instance of a locator to use.
      * @return \Cake\ORM\Locator\LocatorInterface
-     * @deprecated 3.5.0 Use getTableLocator()/setTableLocator() instead.
      */
     public static function locator(LocatorInterface $locator = null)
     {
         if ($locator) {
-            static::setTableLocator($locator);
+            static::$_locator = $locator;
         }
 
-        return static::getTableLocator();
-    }
-
-    /**
-     * Returns a singleton instance of LocatorInterface implementation.
-     *
-     * @return \Cake\ORM\Locator\LocatorInterface
-     */
-    public static function getTableLocator()
-    {
         if (!static::$_locator) {
-            static::$_locator = new static::$_defaultLocatorClass();
+            static::$_locator = new static::$_defaultLocatorClass;
         }
 
         return static::$_locator;
-    }
-
-    /**
-     * Sets singleton instance of LocatorInterface implementation.
-     *
-     * @param \Cake\ORM\Locator\LocatorInterface|null $tableLocator Instance of a locator to use.
-     * @return void
-     */
-    public static function setTableLocator(LocatorInterface $tableLocator)
-    {
-        static::$_locator = $tableLocator;
     }
 
     /**
@@ -115,7 +93,7 @@ class TableRegistry
      */
     public static function config($alias = null, $options = null)
     {
-        return static::getTableLocator()->config($alias, $options);
+        return static::locator()->config($alias, $options);
     }
 
     /**
@@ -129,7 +107,7 @@ class TableRegistry
      */
     public static function get($alias, array $options = [])
     {
-        return static::getTableLocator()->get($alias, $options);
+        return static::locator()->get($alias, $options);
     }
 
     /**
@@ -140,7 +118,7 @@ class TableRegistry
      */
     public static function exists($alias)
     {
-        return static::getTableLocator()->exists($alias);
+        return static::locator()->exists($alias);
     }
 
     /**
@@ -152,7 +130,7 @@ class TableRegistry
      */
     public static function set($alias, Table $object)
     {
-        return static::getTableLocator()->set($alias, $object);
+        return static::locator()->set($alias, $object);
     }
 
     /**
@@ -163,7 +141,7 @@ class TableRegistry
      */
     public static function remove($alias)
     {
-        static::getTableLocator()->remove($alias);
+        static::locator()->remove($alias);
     }
 
     /**
@@ -173,7 +151,7 @@ class TableRegistry
      */
     public static function clear()
     {
-        static::getTableLocator()->clear();
+        static::locator()->clear();
     }
 
     /**
@@ -185,6 +163,6 @@ class TableRegistry
      */
     public static function __callStatic($name, $arguments)
     {
-        return static::getTableLocator()->$name(...$arguments);
+        return static::locator()->$name(...$arguments);
     }
 }

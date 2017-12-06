@@ -26,5 +26,8 @@ class NotImplementedException extends HttpException
     /**
      * {@inheritDoc}
      */
-    protected $_defaultCode = 501;
+    public function __construct($message, $code = 501)
+    {
+        parent::__construct($message, $code);
+    }
 }

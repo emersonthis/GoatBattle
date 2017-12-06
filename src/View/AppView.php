@@ -38,5 +38,6 @@ class AppView extends View
     {
         $this->loadHelper('CakeDC/Users.User');
         $this->loadHelper('CakeDC/Users.AuthLink');
+        // $this->loadHelper('Auth');
     }
 }

@@ -9,6 +9,7 @@ if (class_exists('PHPUnit_Runner_Version') && !class_exists('PHPUnit\Framework\A
 }
 
 use Cake\Event\Event;
+use Cake\Event\EventManager;
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\Constraint\Constraint;
 
@@ -22,7 +23,7 @@ class EventFiredWith extends Constraint
     /**
      * Array of fired events
      *
-     * @var \Cake\Event\EventManager
+     * @var EventManager
      */
     protected $_eventManager;
 
@@ -43,7 +44,7 @@ class EventFiredWith extends Constraint
     /**
      * Constructor
      *
-     * @param \Cake\Event\EventManager $eventManager Event manager to check
+     * @param EventManager $eventManager Event manager to check
      * @param string $dataKey Data key
      * @param string $dataValue Data value
      */

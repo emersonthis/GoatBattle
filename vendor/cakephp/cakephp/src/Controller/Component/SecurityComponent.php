@@ -99,11 +99,10 @@ class SecurityComponent extends Component
      */
     public function startup(Event $event)
     {
-        /* @var \Cake\Controller\Controller $controller */
         $controller = $event->getSubject();
-        $this->session = $controller->request->getSession();
+        $this->session = $controller->request->session();
         $this->_action = $controller->request->getParam('action');
-        $hasData = ($controller->request->getData() || $controller->request->is(['put', 'post', 'delete', 'patch']));
+        $hasData = (bool)$controller->request->getData();
         try {
             $this->_secureRequired($controller);
             $this->_authRequired($controller);
@@ -313,6 +312,9 @@ class SecurityComponent extends Component
      */
     protected function _validatePost(Controller $controller)
     {
+        if (!$controller->request->getData()) {
+            return true;
+        }
         $token = $this->_validToken($controller);
         $hashParts = $this->_hashParts($controller);
         $check = Security::hash(implode('', $hashParts), 'sha1');
@@ -380,7 +382,7 @@ class SecurityComponent extends Component
             $controller->request->here(),
             serialize($fieldList),
             $unlocked,
-            Security::getSalt()
+            Security::salt()
         ];
     }
 
@@ -511,12 +513,12 @@ class SecurityComponent extends Component
             'Missing field \'%s\' in POST data'
         );
         $expectedUnlockedFields = Hash::get($expectedParts, 2);
-        $dataUnlockedFields = Hash::get($hashParts, 2) ?: null;
+        $dataUnlockedFields = Hash::get($hashParts, 2) ?: [];
         if ($dataUnlockedFields) {
             $dataUnlockedFields = explode('|', $dataUnlockedFields);
         }
         $unlockFieldsMessages = $this->_debugCheckFields(
-            (array)$dataUnlockedFields,
+            $dataUnlockedFields,
             $expectedUnlockedFields,
             'Unexpected unlocked field \'%s\' in POST data',
             null,

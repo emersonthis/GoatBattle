@@ -39,7 +39,6 @@ require_once 'vendor/autoload.php';
 define('ROOT', $root . DS . 'tests' . DS . 'test_app' . DS);
 define('APP', ROOT . 'App' . DS);
 define('TMP', sys_get_temp_dir() . DS);
-define('CACHE', TMP . 'cache' . DS);
 
 Configure::write('debug', true);
 Configure::write('App', [
@@ -47,8 +46,7 @@ Configure::write('App', [
     'paths' => [
         'plugins' => [ROOT . 'Plugin' . DS],
         'templates' => [ROOT . 'App' . DS . 'Template' . DS]
-    ],
-    'encoding' => 'UTF-8'
+    ]
 ]);
 
 if (!getenv('db_dsn')) {
@@ -59,5 +57,3 @@ ConnectionManager::config('test', ['url' => getenv('db_dsn')]);
 Plugin::load('Bake', [
     'path' => dirname(dirname(__FILE__)) . DS,
 ]);
-
-class_alias('PHPUnit\Framework\TestCase', 'PHPUnit_Framework_TestCase');

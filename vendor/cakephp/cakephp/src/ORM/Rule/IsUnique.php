@@ -69,7 +69,7 @@ class IsUnique
         }
         $allowMultipleNulls = $this->_options['allowMultipleNulls'];
 
-        $alias = $options['repository']->getAlias();
+        $alias = $options['repository']->alias();
         $conditions = $this->_alias($alias, $entity->extract($this->_fields), $allowMultipleNulls);
         if ($entity->isNew() === false) {
             $keys = (array)$options['repository']->getPrimaryKey();

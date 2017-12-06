@@ -44,7 +44,7 @@ class HelperRegistry extends ObjectRegistry implements EventDispatcherInterface
     public function __construct(View $view)
     {
         $this->_View = $view;
-        $this->setEventManager($view->getEventManager());
+        $this->eventManager($view->eventManager());
     }
 
     /**
@@ -115,7 +115,6 @@ class HelperRegistry extends ObjectRegistry implements EventDispatcherInterface
      * Throws an exception when a helper is missing.
      *
      * Part of the template method for Cake\Core\ObjectRegistry::load()
-     * and Cake\Core\ObjectRegistry::unload()
      *
      * @param string $class The classname that is missing.
      * @param string $plugin The plugin the helper is missing in.
@@ -150,7 +149,7 @@ class HelperRegistry extends ObjectRegistry implements EventDispatcherInterface
         }
         $enable = isset($settings['enabled']) ? $settings['enabled'] : true;
         if ($enable) {
-            $this->getEventManager()->on($instance);
+            $this->eventManager()->on($instance);
         }
 
         return $instance;

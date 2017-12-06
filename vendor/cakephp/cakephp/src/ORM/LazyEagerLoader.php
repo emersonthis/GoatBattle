@@ -155,7 +155,7 @@ class LazyEagerLoader
             foreach ($associations as $assoc) {
                 $property = $properties[$assoc];
                 $object->set($property, $loaded->get($property), ['useSetters' => false]);
-                $object->setDirty($property, false);
+                $object->dirty($property, false);
             }
             $injected[$k] = $object;
         }

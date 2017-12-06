@@ -19,9 +19,7 @@ use PDO;
 
 /**
  * Represents a database driver containing all specificities for
- * a database engine including its SQL dialect.
- *
- * @property \Cake\Datasource\ConnectionInterface|null $_connection
+ * a database engine including its SQL dialect
  */
 abstract class Driver
 {
@@ -88,7 +86,7 @@ abstract class Driver
      * If first argument is passed,
      *
      * @param null|\PDO $connection The connection object
-     * @return \PDO
+     * @return \Cake\Database\Connection
      */
     abstract public function connection($connection = null);
 

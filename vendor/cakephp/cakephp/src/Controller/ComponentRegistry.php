@@ -68,7 +68,7 @@ class ComponentRegistry extends ObjectRegistry implements EventDispatcherInterfa
     public function setController(Controller $controller)
     {
         $this->_Controller = $controller;
-        $this->setEventManager($controller->getEventManager());
+        $this->eventManager($controller->eventManager());
     }
 
     /**
@@ -88,7 +88,6 @@ class ComponentRegistry extends ObjectRegistry implements EventDispatcherInterfa
      * Throws an exception when a component is missing.
      *
      * Part of the template method for Cake\Core\ObjectRegistry::load()
-     * and Cake\Core\ObjectRegistry::unload()
      *
      * @param string $class The classname that is missing.
      * @param string $plugin The plugin the component is missing in.
@@ -119,7 +118,7 @@ class ComponentRegistry extends ObjectRegistry implements EventDispatcherInterfa
         $instance = new $class($this, $config);
         $enable = isset($config['enabled']) ? $config['enabled'] : true;
         if ($enable) {
-            $this->getEventManager()->on($instance);
+            $this->eventManager()->on($instance);
         }
 
         return $instance;

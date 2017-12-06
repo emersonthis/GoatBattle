@@ -139,26 +139,26 @@ class MapReduce implements IteratorAggregate
      * Appends a new record to the bucket labelled with $key, usually as a result
      * of mapping a single record from the original data.
      *
-     * @param mixed $val The record itself to store in the bucket
+     * @param mixed $value The record itself to store in the bucket
      * @param string $bucket the name of the bucket where to put the record
      * @return void
      */
-    public function emitIntermediate($val, $bucket)
+    public function emitIntermediate($value, $bucket)
     {
-        $this->_intermediate[$bucket][] = $val;
+        $this->_intermediate[$bucket][] = $value;
     }
 
     /**
      * Appends a new record to the final list of results and optionally assign a key
      * for this record.
      *
-     * @param mixed $val The value to be appended to the final list of results
+     * @param mixed $value The value to be appended to the final list of results
      * @param string|null $key and optional key to assign to the value
      * @return void
      */
-    public function emit($val, $key = null)
+    public function emit($value, $key = null)
     {
-        $this->_result[$key === null ? $this->_counter : $key] = $val;
+        $this->_result[$key === null ? $this->_counter : $key] = $value;
         $this->_counter++;
     }
 
@@ -174,8 +174,8 @@ class MapReduce implements IteratorAggregate
     protected function _execute()
     {
         $mapper = $this->_mapper;
-        foreach ($this->_data as $key => $val) {
-            $mapper($val, $key, $this);
+        foreach ($this->_data as $key => $value) {
+            $mapper($value, $key, $this);
         }
         $this->_data = null;
 

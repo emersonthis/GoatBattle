@@ -81,9 +81,9 @@ class Digest
     protected function _getServerInfo(Request $request, $credentials)
     {
         $response = $this->_client->get(
-            $request->getUri(),
+            $request->url(),
             [],
-            ['auth' => ['type' => null]]
+            ['auth' => []]
         );
 
         if (!$response->getHeader('WWW-Authenticate')) {

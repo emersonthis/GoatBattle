@@ -19,22 +19,16 @@ class NotAcceptableException extends HttpException
 {
 
     /**
-     * {@inheritDoc}
-     */
-    protected $_defaultCode = 406;
-
-    /**
      * Constructor
      *
      * @param string|null $message If no message is given 'Not Acceptable' will be the message
      * @param int $code Status code, defaults to 406
-     * @param \Exception|null $previous The previous exception.
      */
-    public function __construct($message = null, $code = null, $previous = null)
+    public function __construct($message = null, $code = 406)
     {
         if (empty($message)) {
             $message = 'Not Acceptable';
         }
-        parent::__construct($message, $code, $previous);
+        parent::__construct($message, $code);
     }
 }

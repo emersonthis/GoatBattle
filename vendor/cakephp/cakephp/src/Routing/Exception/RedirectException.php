@@ -14,7 +14,7 @@
  */
 namespace Cake\Routing\Exception;
 
-use Cake\Core\Exception\Exception;
+use RuntimeException;
 
 /**
  * An exception subclass used by the routing layer to indicate
@@ -26,11 +26,6 @@ use Cake\Core\Exception\Exception;
  * throw new RedirectException('http://example.com/some/path', 301);
  * ```
  */
-class RedirectException extends Exception
+class RedirectException extends RuntimeException
 {
-
-    /**
-     * {@inheritDoc}
-     */
-    protected $_defaultCode = 302;
 }

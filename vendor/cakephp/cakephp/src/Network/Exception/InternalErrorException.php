@@ -23,13 +23,12 @@ class InternalErrorException extends HttpException
      *
      * @param string|null $message If no message is given 'Internal Server Error' will be the message
      * @param int $code Status code, defaults to 500
-     * @param \Exception|null $previous The previous exception.
      */
-    public function __construct($message = null, $code = null, $previous = null)
+    public function __construct($message = null, $code = 500)
     {
         if (empty($message)) {
             $message = 'Internal Server Error';
         }
-        parent::__construct($message, $code, $previous);
+        parent::__construct($message, $code);
     }
 }

@@ -52,7 +52,7 @@ class LegacyRequestDispatcher
         $request = new ServerRequest($request);
         $response = new Response();
         $dispatcher = DispatcherFactory::create();
-        $dispatcher->getEventManager()->on(
+        $dispatcher->eventManager()->on(
             'Dispatcher.invokeController',
             ['priority' => 999],
             [$this->_test, 'controllerSpy']

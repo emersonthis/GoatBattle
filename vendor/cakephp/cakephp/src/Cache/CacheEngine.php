@@ -19,8 +19,6 @@ use InvalidArgumentException;
 
 /**
  * Storage engine for CakePHP caching
- *
- * @mixin \Cake\Core\InstanceConfigTrait
  */
 abstract class CacheEngine
 {

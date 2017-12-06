@@ -19,22 +19,16 @@ class ConflictException extends HttpException
 {
 
     /**
-     * {@inheritDoc}
-     */
-    protected $_defaultCode = 409;
-
-    /**
      * Constructor
      *
      * @param string|null $message If no message is given 'Conflict' will be the message
      * @param int $code Status code, defaults to 409
-     * @param \Exception|null $previous The previous exception.
      */
-    public function __construct($message = null, $code = null, $previous = null)
+    public function __construct($message = null, $code = 409)
     {
         if (empty($message)) {
             $message = 'Conflict';
         }
-        parent::__construct($message, $code, $previous);
+        parent::__construct($message, $code);
     }
 }

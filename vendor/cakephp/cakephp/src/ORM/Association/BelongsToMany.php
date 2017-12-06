@@ -18,7 +18,6 @@ use Cake\Core\App;
 use Cake\Database\ExpressionInterface;
 use Cake\Database\Expression\IdentifierExpression;
 use Cake\Datasource\EntityInterface;
-use Cake\Datasource\QueryInterface;
 use Cake\ORM\Association;
 use Cake\ORM\Association\Loader\SelectWithPivotLoader;
 use Cake\ORM\Query;
@@ -56,7 +55,7 @@ class BelongsToMany extends Association
      *
      * @var string
      */
-    protected $_joinType = QueryInterface::JOIN_TYPE_INNER;
+    protected $_joinType = 'INNER';
 
     /**
      * The strategy name to be used to fetch associated records.
@@ -229,42 +228,18 @@ class BelongsToMany extends Association
 
     /**
      * Sets the sort order in which target records should be returned.
-     *
-     * @param mixed $sort A find() compatible order clause
-     * @return $this
-     */
-    public function setSort($sort)
-    {
-        $this->_sort = $sort;
-
-        return $this;
-    }
-
-    /**
-     * Gets the sort order in which target records should be returned.
-     *
-     * @return mixed
-     */
-    public function getSort()
-    {
-        return $this->_sort;
-    }
-
-    /**
-     * Sets the sort order in which target records should be returned.
      * If no arguments are passed the currently configured value is returned
      *
-     * @deprecated 3.5.0 Use setSort()/getSort() instead.
      * @param mixed $sort A find() compatible order clause
      * @return mixed
      */
     public function sort($sort = null)
     {
         if ($sort !== null) {
-            $this->setSort($sort);
+            $this->_sort = $sort;
         }
 
-        return $this->getSort();
+        return $this->_sort;
     }
 
     /**
@@ -293,7 +268,7 @@ class BelongsToMany extends Association
             return $this->_junctionTable;
         }
 
-        $tableLocator = $this->getTableLocator();
+        $tableLocator = $this->tableLocator();
         if ($table === null && $this->_through) {
             $table = $this->_through;
         } elseif ($table === null) {
@@ -514,7 +489,7 @@ class BelongsToMany extends Association
             ->andWhere(function ($exp) use ($subquery, $conds) {
                 $identifiers = [];
                 foreach (array_keys($conds) as $field) {
-                    $identifiers[] = new IdentifierExpression($field);
+                    $identifiers = new IdentifierExpression($field);
                 }
                 $identifiers = $subquery->newExpr()->add($identifiers)->setConjunction(',');
                 $nullExp = clone $exp;
@@ -564,7 +539,7 @@ class BelongsToMany extends Association
             'bindingKey' => $this->getBindingKey(),
             'strategy' => $this->getStrategy(),
             'associationType' => $this->type(),
-            'sort' => $this->getSort(),
+            'sort' => $this->sort(),
             'junctionAssociationName' => $name,
             'junctionProperty' => $this->_junctionProperty,
             'junctionAssoc' => $this->getTarget()->association($name),
@@ -600,7 +575,7 @@ class BelongsToMany extends Association
         $table = $this->junction();
         $hasMany = $this->getSource()->association($table->getAlias());
         if ($this->_cascadeCallbacks) {
-            foreach ($hasMany->find('all')->where($conditions)->all()->toList() as $related) {
+            foreach ($hasMany->find('all')->where($conditions)->toList() as $related) {
                 $table->delete($related, $options);
             }
 
@@ -609,9 +584,7 @@ class BelongsToMany extends Association
 
         $conditions = array_merge($conditions, $hasMany->getConditions());
 
-        $table->deleteAll($conditions);
-
-        return true;
+        return $table->deleteAll($conditions);
     }
 
     /**
@@ -844,7 +817,7 @@ class BelongsToMany extends Association
             }
 
             $e->set($jointProperty, $joint);
-            $e->setDirty($jointProperty, false);
+            $e->dirty($jointProperty, false);
         }
 
         return true;
@@ -969,7 +942,7 @@ class BelongsToMany extends Association
         }
 
         $sourceEntity->set($property, array_values($existing));
-        $sourceEntity->setDirty($property, false);
+        $sourceEntity->dirty($property, false);
 
         return true;
     }
@@ -1123,7 +1096,7 @@ class BelongsToMany extends Association
             $name => [
                 'table' => $this->junction()->getTable(),
                 'conditions' => $conditions,
-                'type' => QueryInterface::JOIN_TYPE_INNER
+                'type' => 'INNER'
             ]
         ];
 
@@ -1226,7 +1199,7 @@ class BelongsToMany extends Association
 
                 ksort($targetEntities);
                 $sourceEntity->set($property, array_values($targetEntities));
-                $sourceEntity->setDirty($property, false);
+                $sourceEntity->dirty($property, false);
 
                 return true;
             }
@@ -1454,7 +1427,7 @@ class BelongsToMany extends Association
             $this->setSaveStrategy($opts['saveStrategy']);
         }
         if (isset($opts['sort'])) {
-            $this->setSort($opts['sort']);
+            $this->sort($opts['sort']);
         }
     }
 }

@@ -66,6 +66,6 @@ class LocaleSelectorFilter extends DispatcherFilter
             return;
         }
 
-        I18n::setLocale($locale);
+        I18n::locale($locale);
     }
 }

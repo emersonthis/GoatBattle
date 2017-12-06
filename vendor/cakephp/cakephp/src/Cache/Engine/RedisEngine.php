@@ -177,9 +177,7 @@ class RedisEngine extends CacheEngine
         $key = $this->_key($key);
 
         $value = (int)$this->_Redis->incrBy($key, $offset);
-        if ($duration > 0) {
-            $this->_Redis->setTimeout($key, $duration);
-        }
+        $this->_Redis->setTimeout($key, $duration);
 
         return $value;
     }
@@ -197,9 +195,7 @@ class RedisEngine extends CacheEngine
         $key = $this->_key($key);
 
         $value = (int)$this->_Redis->decrBy($key, $offset);
-        if ($duration > 0) {
-            $this->_Redis->setTimeout($key, $duration);
-        }
+        $this->_Redis->setTimeout($key, $duration);
 
         return $value;
     }

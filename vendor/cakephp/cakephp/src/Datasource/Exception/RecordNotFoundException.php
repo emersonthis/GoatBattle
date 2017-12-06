@@ -14,18 +14,13 @@
  */
 namespace Cake\Datasource\Exception;
 
-use Cake\Core\Exception\Exception;
+use RuntimeException;
 
 /**
  * Exception raised when a particular record was not found
  */
-class RecordNotFoundException extends Exception
+class RecordNotFoundException extends RuntimeException
 {
-
-    /**
-     * {@inheritDoc}
-     */
-    protected $_defaultCode = 404;
 
     /**
      * Constructor.
@@ -34,7 +29,7 @@ class RecordNotFoundException extends Exception
      * @param int $code The code of the error, is also the HTTP status code for the error.
      * @param \Exception|null $previous the previous exception.
      */
-    public function __construct($message, $code = null, $previous = null)
+    public function __construct($message, $code = 404, $previous = null)
     {
         parent::__construct($message, $code, $previous);
     }

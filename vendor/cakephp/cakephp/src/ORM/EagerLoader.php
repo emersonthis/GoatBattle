@@ -16,7 +16,6 @@ namespace Cake\ORM;
 
 use Cake\Database\Statement\BufferedStatement;
 use Cake\Database\Statement\CallbackStatement;
-use Cake\Datasource\QueryInterface;
 use Closure;
 use InvalidArgumentException;
 
@@ -127,28 +126,12 @@ class EagerLoader
      * @param array|string $associations list of table aliases to be queried.
      * When this method is called multiple times it will merge previous list with
      * the new one.
-     * @param callable|null $queryBuilder The query builder callable
      * @return array Containments.
-     * @throws \InvalidArgumentException When using $queryBuilder with an array of $associations
      */
-    public function contain($associations = [], callable $queryBuilder = null)
+    public function contain($associations = [])
     {
         if (empty($associations)) {
             return $this->_containments;
-        }
-
-        if ($queryBuilder) {
-            if (!is_string($associations)) {
-                throw new InvalidArgumentException(
-                    sprintf('Cannot set containments. To use $queryBuilder, $associations must be a string')
-                );
-            }
-
-            $associations = [
-                $associations => [
-                    'queryBuilder' => $queryBuilder
-                ]
-            ];
         }
 
         $associations = (array)$associations;
@@ -239,7 +222,7 @@ class EagerLoader
         }
 
         if (!isset($options['joinType'])) {
-            $options['joinType'] = QueryInterface::JOIN_TYPE_INNER;
+            $options['joinType'] = 'INNER';
         }
 
         $assocs = explode('.', $assoc);
@@ -648,7 +631,7 @@ class EagerLoader
             return $statement;
         }
 
-        $driver = $query->getConnection()->getDriver();
+        $driver = $query->getConnection()->driver();
         list($collected, $statement) = $this->_collectKeys($external, $query, $statement);
 
         foreach ($external as $meta) {
@@ -804,7 +787,7 @@ class EagerLoader
         }
 
         if (!($statement instanceof BufferedStatement)) {
-            $statement = new BufferedStatement($statement, $query->getConnection()->getDriver());
+            $statement = new BufferedStatement($statement, $query->getConnection()->driver());
         }
 
         return [$this->_groupKeys($statement, $collectKeys), $statement];
@@ -814,7 +797,7 @@ class EagerLoader
      * Helper function used to iterate a statement and extract the columns
      * defined in $collectKeys
      *
-     * @param \Cake\Database\Statement\BufferedStatement $statement The statement to read from.
+     * @param \Cake\Database\StatementInterface $statement The statement to read from.
      * @param array $collectKeys The keys to collect
      * @return array
      */

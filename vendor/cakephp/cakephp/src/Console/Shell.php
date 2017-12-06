@@ -16,6 +16,7 @@ namespace Cake\Console;
 
 use Cake\Console\Exception\ConsoleException;
 use Cake\Console\Exception\StopException;
+use Cake\Core\Configure;
 use Cake\Core\Plugin;
 use Cake\Datasource\ModelAwareTrait;
 use Cake\Filesystem\File;
@@ -31,8 +32,6 @@ use ReflectionMethod;
  * Base class for command-line utilities for automating programmer chores.
  *
  * Is the equivalent of Cake\Controller\Controller on the command line.
- *
- * @method int|bool|null main(...$args)
  */
 class Shell
 {
@@ -164,13 +163,6 @@ class Shell
     protected $_io;
 
     /**
-     * The root command name used when generating help output.
-     *
-     * @var string
-     */
-    protected $rootName = 'cake';
-
-    /**
      * Constructs this Shell instance.
      *
      * @param \Cake\Console\ConsoleIo|null $io An io instance.
@@ -184,7 +176,7 @@ class Shell
         }
         $this->_io = $io ?: new ConsoleIo();
 
-        $locator = $this->getTableLocator() ? : 'Cake\ORM\TableRegistry';
+        $locator = $this->tableLocator() ? : 'Cake\ORM\TableRegistry';
         $this->modelFactory('Table', [$locator, 'get']);
         $this->Tasks = new TaskRegistry($this);
 
@@ -199,43 +191,8 @@ class Shell
     }
 
     /**
-     * Set the root command name for help output.
-     *
-     * @param string $name The name of the root command.
-     * @return $this
-     */
-    public function setRootName($name)
-    {
-        $this->rootName = (string)$name;
-
-        return $this;
-    }
-
-    /**
-     * Get the io object for this shell.
-     *
-     * @return \Cake\Console\ConsoleIo The current ConsoleIo object.
-     */
-    public function getIo()
-    {
-        return $this->_io;
-    }
-
-    /**
-     * Set the io object for this shell.
-     *
-     * @param \Cake\Console\ConsoleIo $io The ConsoleIo object to use.
-     * @return void
-     */
-    public function setIo(ConsoleIo $io)
-    {
-        $this->_io = $io;
-    }
-
-    /**
      * Get/Set the io object for this shell.
      *
-     * @deprecated 3.5.0 Use getIo()/setIo() instead.
      * @param \Cake\Console\ConsoleIo|null $io The ConsoleIo object to use.
      * @return \Cake\Console\ConsoleIo The current ConsoleIo object.
      */
@@ -285,6 +242,13 @@ class Shell
      */
     protected function _welcome()
     {
+        $this->out();
+        $this->out(sprintf('<info>Welcome to CakePHP %s Console</info>', 'v' . Configure::version()));
+        $this->hr();
+        $this->out(sprintf('App : %s', APP_DIR));
+        $this->out(sprintf('Path: %s', APP));
+        $this->out(sprintf('PHP : %s', phpversion()));
+        $this->hr();
     }
 
     /**
@@ -454,12 +418,13 @@ class Shell
      */
     public function runCommand($argv, $autoMethod = false, $extra = [])
     {
-        $command = isset($argv[0]) ? Inflector::underscore($argv[0]) : null;
+        $command = isset($argv[0]) ? $argv[0] : null;
         $this->OptionParser = $this->getOptionParser();
         try {
             list($this->params, $this->args) = $this->OptionParser->parse($argv);
         } catch (ConsoleException $e) {
             $this->err('Error: ' . $e->getMessage());
+            $this->out($this->OptionParser->help($command));
 
             return false;
         }
@@ -507,8 +472,7 @@ class Shell
             return $this->main(...$this->args);
         }
 
-        $this->err('No subcommand provided. Choose one of the available subcommands.', 2);
-        $this->_io->err($this->OptionParser->help($command));
+        $this->out($this->OptionParser->help($command));
 
         return false;
     }
@@ -545,13 +509,10 @@ class Shell
         $format = 'text';
         if (!empty($this->args[0]) && $this->args[0] === 'xml') {
             $format = 'xml';
-            $this->_io->setOutputAs(ConsoleOutput::RAW);
+            $this->_io->outputAs(ConsoleOutput::RAW);
         } else {
             $this->_welcome();
         }
-
-        $subcommands = $this->OptionParser->subcommands();
-        $command = isset($subcommands[$command]) ? $command : null;
 
         return $this->out($this->OptionParser->help($command, $format));
     }
@@ -567,10 +528,8 @@ class Shell
     public function getOptionParser()
     {
         $name = ($this->plugin ? $this->plugin . '.' : '') . $this->name;
-        $parser = new ConsoleOptionParser($name);
-        $parser->setRootName($this->rootName);
 
-        return $parser;
+        return new ConsoleOptionParser($name);
     }
 
     /**

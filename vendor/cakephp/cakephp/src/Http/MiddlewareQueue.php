@@ -40,16 +40,6 @@ class MiddlewareQueue implements Countable
     protected $callables = [];
 
     /**
-     * Constructor
-     *
-     * @param array $middleware The list of middleware to append.
-     */
-    public function __construct(array $middleware = [])
-    {
-        $this->queue = $middleware;
-    }
-
-    /**
      * Get the middleware at the provided index.
      *
      * @param int $index The index to fetch.

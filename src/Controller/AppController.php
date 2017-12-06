@@ -44,6 +44,12 @@ class AppController extends Controller
         $this->loadComponent('RequestHandler');
         $this->loadComponent('Flash');
         $this->loadComponent('CakeDC/Users.UsersAuth');
+        // $this->loadComponent('Auth');
+    }
+
+    public function beforeFilter(Event $event)
+    {
+        $this->set('currentUser', $this->Auth->user());
     }
 
     /**

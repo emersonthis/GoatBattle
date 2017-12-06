@@ -172,7 +172,6 @@ class RadioWidget implements WidgetInterface
         }
         if (isset($data['val']) && (string)$data['val'] === (string)$radio['value']) {
             $radio['checked'] = true;
-            $radio['templateVars']['activeClass'] = 'active';
         }
 
         if (!is_bool($data['label']) && isset($radio['checked']) && $radio['checked']) {

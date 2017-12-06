@@ -33,7 +33,7 @@ class Runner
     /**
      * The middleware queue being run.
      *
-     * @var \Cake\Http\MiddlewareQueue
+     * @var MiddlewareQueue
      */
     protected $middleware;
 

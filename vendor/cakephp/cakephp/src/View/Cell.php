@@ -144,12 +144,10 @@ abstract class Cell
         EventManager $eventManager = null,
         array $cellOptions = []
     ) {
-        if ($eventManager !== null) {
-            $this->setEventManager($eventManager);
-        }
+        $this->eventManager($eventManager);
         $this->request = $request;
         $this->response = $response;
-        $this->modelFactory('Table', [$this->getTableLocator(), 'get']);
+        $this->modelFactory('Table', [$this->tableLocator(), 'get']);
 
         $this->_validCellOptions = array_merge(['action', 'args'], $this->_validCellOptions);
         foreach ($this->_validCellOptions as $var) {

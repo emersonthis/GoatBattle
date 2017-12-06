@@ -33,33 +33,13 @@ class ControllerFactory
      */
     public function create(ServerRequest $request, Response $response)
     {
-        $className = $this->getControllerClass($request);
-        if (!$className) {
-            $this->missingController($request);
-        }
-        $reflection = new ReflectionClass($className);
-        if ($reflection->isAbstract() || $reflection->isInterface()) {
-            $this->missingController($request);
-        }
-
-        return $reflection->newInstance($request, $response);
-    }
-
-    /**
-     * Determine the controller class name based on current request and controller param
-     *
-     * @param \Cake\Http\ServerRequest $request The request to build a controller for.
-     * @return string|null
-     */
-    public function getControllerClass(ServerRequest $request)
-    {
         $pluginPath = $controller = null;
         $namespace = 'Controller';
-        if ($request->getParam('controller')) {
-            $controller = $request->getParam('controller');
-        }
         if ($request->getParam('plugin')) {
             $pluginPath = $request->getParam('plugin') . '.';
+        }
+        if ($request->getParam('controller')) {
+            $controller = $request->getParam('controller');
         }
         if ($request->getParam('prefix')) {
             if (strpos($request->getParam('prefix'), '/') === false) {
@@ -85,7 +65,16 @@ class ControllerFactory
             $this->missingController($request);
         }
 
-        return App::className($pluginPath . $controller, $namespace, 'Controller') ?: null;
+        $className = App::className($pluginPath . $controller, $namespace, 'Controller');
+        if (!$className) {
+            $this->missingController($request);
+        }
+        $reflection = new ReflectionClass($className);
+        if ($reflection->isAbstract() || $reflection->isInterface()) {
+            $this->missingController($request);
+        }
+
+        return $reflection->newInstance($request, $response, $controller);
     }
 
     /**

@@ -21,9 +21,6 @@ use Cake\ORM\TableRegistry;
 /**
  * Task class for creating and updating controller files.
  *
- * @property \Bake\Shell\Task\ModelTask $Model
- * @property \Bake\Shell\Task\BakeTemplateTask $BakeTemplate
- * @property \Bake\Shell\Task\TestTask $Test
  */
 class ControllerTask extends BakeTask
 {
@@ -209,6 +206,10 @@ class ControllerTask extends BakeTask
         }
         $this->Test->plugin = $this->plugin;
         $this->Test->connection = $this->connection;
+        $prefix = $this->_getPrefix();
+        if ($prefix) {
+            $className = str_replace('/', '\\', $prefix) . '\\' . $className;
+        }
 
         return $this->Test->bake('Controller', $className);
     }

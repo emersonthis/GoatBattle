@@ -34,7 +34,7 @@ class DateType extends DateTimeType
     /**
      * Date format for DateTime object
      *
-     * @var string|array
+     * @var string
      */
     protected $_format = 'Y-m-d';
 

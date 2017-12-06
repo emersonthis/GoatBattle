@@ -468,7 +468,7 @@ class EntityContext implements ContextInterface
             $method = $this->_context['validator'][$alias];
         }
 
-        $validator = $table->getValidator($method);
+        $validator = $table->validator($method);
         $validator->setProvider('entity', $entity);
 
         return $this->_validator[$key] = $validator;
@@ -478,11 +478,10 @@ class EntityContext implements ContextInterface
      * Get the table instance from a property path
      *
      * @param array $parts Each one of the parts in a path for a field name
-     * @param bool $fallback Whether or not to fallback to the last found table
-     *  when a non-existent field/property is being encountered.
+     * @param bool $rootFallback Whether or not to fallback to the root entity.
      * @return \Cake\ORM\Table|bool Table instance or false
      */
-    protected function _getTable($parts, $fallback = true)
+    protected function _getTable($parts, $rootFallback = true)
     {
         if (!is_array($parts) || count($parts) === 1) {
             return $this->_tables[$this->_rootName];
@@ -502,22 +501,12 @@ class EntityContext implements ContextInterface
         }
 
         $table = $this->_tables[$this->_rootName];
-        $assoc = null;
         foreach ($normalized as $part) {
-            if ($part === '_joinData') {
-                if ($assoc) {
-                    $table = $assoc->junction();
-                    $assoc = null;
-                    continue;
-                }
-            } else {
-                $assoc = $table->associations()->getByProperty($part);
-            }
-
-            if (!$assoc && $fallback) {
+            $assoc = $table->associations()->getByProperty($part);
+            if (!$assoc && $rootFallback) {
                 break;
             }
-            if (!$assoc && !$fallback) {
+            if (!$assoc && !$rootFallback) {
                 return false;
             }
 
@@ -552,7 +541,7 @@ class EntityContext implements ContextInterface
     {
         $parts = explode('.', $field);
         $table = $this->_getTable($parts);
-        $column = (array)$table->getSchema()->getColumn(array_pop($parts));
+        $column = (array)$table->getSchema()->column(array_pop($parts));
         $whitelist = ['length' => null, 'precision' => null];
 
         return array_intersect_key($column, $whitelist);

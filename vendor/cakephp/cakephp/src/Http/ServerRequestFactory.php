@@ -100,10 +100,6 @@ abstract class ServerRequestFactory extends BaseFactory
             $uri = static::updatePath($base, $uri);
         }
 
-        if (!$uri->getHost()) {
-            $uri = $uri->withHost('localhost');
-        }
-
         // Splat on some extra attributes to save
         // some method calls.
         $uri->base = $base;

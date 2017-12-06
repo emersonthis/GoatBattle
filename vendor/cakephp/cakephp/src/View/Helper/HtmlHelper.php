@@ -346,8 +346,7 @@ class HtmlHelper extends Helper
     {
         $escapeTitle = true;
         if ($url !== null) {
-            $url = $this->Url->build($url, $options);
-            unset($options['fullBase']);
+            $url = $this->Url->build($url);
         } else {
             $url = $this->Url->build($title);
             $title = htmlspecialchars_decode($url, ENT_QUOTES);
@@ -827,7 +826,7 @@ class HtmlHelper extends Helper
      * - `fullBase` If true the src attribute will get a full address for the image file.
      * - `plugin` False value will prevent parsing path as a plugin
      *
-     * @param string|array $path Path to the image file, relative to the app/webroot/img/ directory.
+     * @param string $path Path to the image file, relative to the app/webroot/img/ directory.
      * @param array $options Array of HTML attributes. See above for special options.
      * @return string completed img tag
      * @link https://book.cakephp.org/3.0/en/views/helpers/html.html#linking-to-images

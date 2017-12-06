@@ -94,28 +94,7 @@ class FormContext implements ContextInterface
             return $val;
         }
 
-        if ($options['default'] !== null || !$options['schemaDefault']) {
-            return $options['default'];
-        }
-
-        return $this->_schemaDefault($field);
-    }
-
-    /**
-     * Get default value from form schema for given field.
-     *
-     * @param string $field Field name.
-
-     * @return mixed
-     */
-    protected function _schemaDefault($field)
-    {
-        $field = $this->_form->schema()->field($field);
-        if ($field) {
-            return $field['default'];
-        }
-
-        return null;
+        return $options['default'];
     }
 
     /**

@@ -19,7 +19,6 @@ loadPHPUnitAliases();
 use Cake\Core\Configure;
 use Cake\Core\Exception\Exception;
 use Cake\Database\Schema\TableSchema;
-use Cake\Database\Schema\TableSchemaAwareInterface;
 use Cake\Datasource\ConnectionManager;
 use Cake\Datasource\TableSchemaInterface;
 use Cake\Utility\Inflector;
@@ -251,10 +250,9 @@ class FixtureManager
         $table = $fixture->sourceName();
         $exists = in_array($table, $sources);
 
-        $hasSchema = $fixture instanceof TableSchemaInterface && $fixture->schema() instanceof TableSchema
-            || $fixture instanceof TableSchemaAwareInterface && $fixture->getTableSchema() instanceof TableSchema;
-
-        if (($drop && $exists) || ($exists && !$isFixtureSetup && $hasSchema)) {
+        if (($drop && $exists) ||
+            ($exists && !$isFixtureSetup && $fixture instanceof TableSchemaInterface && $fixture->schema() instanceof TableSchema)
+        ) {
             $fixture->drop($db);
             $fixture->create($db);
         } elseif (!$exists) {

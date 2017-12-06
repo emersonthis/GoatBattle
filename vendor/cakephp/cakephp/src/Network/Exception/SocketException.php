@@ -12,17 +12,12 @@
  */
 namespace Cake\Network\Exception;
 
-use Cake\Core\Exception\Exception;
+use RuntimeException;
 
 /**
  * Exception class for Socket. This exception will be thrown from Socket, Email, HttpSocket
  * SmtpTransport, MailTransport and HttpResponse when it encounters an error.
  */
-class SocketException extends Exception
+class SocketException extends RuntimeException
 {
-
-    /**
-     * {@inheritDoc}
-     */
-    protected $_defaultCode = 0;
 }

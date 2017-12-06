@@ -230,7 +230,6 @@ class ApcEngine extends CacheEngine
      */
     public function clearGroup($group)
     {
-        $success = false;
         apcu_inc($this->_config['prefix'] . $group, 1, $success);
 
         return $success;
