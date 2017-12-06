@@ -6,6 +6,7 @@ return [
         'CakeDC/Auth' => $baseDir . '/vendor/cakedc/auth/',
         'CakeDC/Users' => $baseDir . '/vendor/cakedc/users/',
         'DebugKit' => $baseDir . '/vendor/cakephp/debug_kit/',
-        'Migrations' => $baseDir . '/vendor/cakephp/migrations/'
+        'Migrations' => $baseDir . '/vendor/cakephp/migrations/',
+        'WyriHaximus/TwigView' => $baseDir . '/vendor/wyrihaximus/twig-view/'
     ]
 ];

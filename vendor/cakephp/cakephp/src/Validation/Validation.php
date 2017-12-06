@@ -60,7 +60,7 @@ class Validation
     /**
      * Backwards compatibility wrapper for Validation::notBlank().
      *
-     * @param string|array $check Value to check.
+     * @param string $check Value to check.
      * @return bool Success.
      * @deprecated 3.0.2 Use Validation::notBlank() instead.
      * @see \Cake\Validation\Validation::notBlank()
@@ -77,10 +77,7 @@ class Validation
      *
      * Returns true if string contains something other than whitespace
      *
-     * $check can be passed as an array:
-     * ['check' => 'valueToCheck'];
-     *
-     * @param string|array $check Value to check
+     * @param string $check Value to check
      * @return bool Success
      */
     public static function notBlank($check)
@@ -97,10 +94,7 @@ class Validation
      *
      * Returns true if string contains only integer or letters
      *
-     * $check can be passed as an array:
-     * ['check' => 'valueToCheck'];
-     *
-     * @param string|array $check Value to check
+     * @param string $check Value to check
      * @return bool Success
      */
     public static function alphaNumeric($check)
@@ -136,7 +130,7 @@ class Validation
      * Returns true if field is left blank -OR- only whitespace characters are present in its value
      * Whitespace characters include Space, Tab, Carriage Return, Newline
      *
-     * @param string|array $check Value to check
+     * @param string $check Value to check
      * @return bool Success
      * @deprecated 3.0.2
      */
@@ -151,7 +145,7 @@ class Validation
      * Validation of credit card numbers.
      * Returns true if $check is in the proper credit card format.
      *
-     * @param string|array $check credit card number to validate
+     * @param string $check credit card number to validate
      * @param string|array $type 'all' may be passed as a string, defaults to fast which checks format of most major credit cards
      *    if an array is used only the values of the array are checked.
      *    Example: ['amex', 'bankcard', 'maestro']
@@ -178,13 +172,13 @@ class Validation
         }
         $cards = [
             'all' => [
-                'amex' => '/^3[4|7]\\d{13}$/',
+                'amex' => '/^3[47]\\d{13}$/',
                 'bankcard' => '/^56(10\\d\\d|022[1-5])\\d{10}$/',
                 'diners' => '/^(?:3(0[0-5]|[68]\\d)\\d{11})|(?:5[1-5]\\d{14})$/',
                 'disc' => '/^(?:6011|650\\d)\\d{12}$/',
                 'electron' => '/^(?:417500|4917\\d{2}|4913\\d{2})\\d{10}$/',
                 'enroute' => '/^2(?:014|149)\\d{11}$/',
-                'jcb' => '/^(3\\d{4}|2100|1800)\\d{11}$/',
+                'jcb' => '/^(3\\d{4}|2131|1800)\\d{11}$/',
                 'maestro' => '/^(?:5020|6\\d{3})\\d{12}$/',
                 'mc' => '/^(5[1-5]\\d{14})|(2(?:22[1-9]|2[3-9][0-9]|[3-6][0-9]{2}|7[0-1][0-9]|720)\\d{12})$/',
                 'solo' => '/^(6334[5-9][0-9]|6767[0-9]{2})\\d{10}(\\d{2,3})?$/',
@@ -345,8 +339,7 @@ class Validation
     /**
      * Used when a custom regular expression is needed.
      *
-     * @param string|array $check When used as a string, $regex must also be a valid regular expression.
-     *    As and array: ['check' => value, 'regex' => 'valid regular expression']
+     * @param string $check The value to check.
      * @param string|null $regex If $check is passed as a string, $regex must also be set to valid regular expression
      * @return bool Success
      */
@@ -505,7 +498,7 @@ class Validation
      * @param string|int|null $format any format accepted by IntlDateFormatter
      * @return bool Success
      * @throws \InvalidArgumentException when unsupported $type given
-     * @see \Cake\I18N\Time::parseDate(), \Cake\I18N\Time::parseTime(), \Cake\I18N\Time::parseDateTime()
+     * @see \Cake\I18n\Time::parseDate(), \Cake\I18n\Time::parseTime(), \Cake\I18n\Time::parseDateTime()
      */
     public static function localizedTime($check, $type = 'datetime', $format = null)
     {
@@ -663,7 +656,7 @@ class Validation
                 return true;
             }
 
-            return is_array(gethostbynamel($regs[1]));
+            return is_array(gethostbynamel($regs[1] . '.'));
         }
 
         return false;
@@ -906,21 +899,28 @@ class Validation
      *   with an optional port number
      * - an optional valid path
      * - an optional query string (get parameters)
-     * - an optional fragment (anchor tag)
+     * - an optional fragment (anchor tag) as defined in RFC 3986
      *
      * @param string $check Value to check
      * @param bool $strict Require URL to be prefixed by a valid scheme (one of http(s)/ftp(s)/file/news/gopher)
      * @return bool Success
+     * @link https://tools.ietf.org/html/rfc3986
      */
     public static function url($check, $strict = false)
     {
         static::_populateIp();
-        $validChars = '([' . preg_quote('!"$&\'()*+,-.@_:;=~[]') . '\/0-9\p{L}\p{N}]|(%[0-9a-f]{2}))';
+
+        $emoji = '\x{1F190}-\x{1F9EF}';
+        $alpha = '0-9\p{L}\p{N}' . $emoji;
+        $hex = '(%[0-9a-f]{2})';
+        $subDelimiters = preg_quote('/!"$&\'()*+,-.@_:;=~[]', '/');
+        $path = '([' . $subDelimiters . $alpha . ']|' . $hex . ')';
+        $fragmentAndQuery = '([\?' . $subDelimiters . $alpha . ']|' . $hex . ')';
         $regex = '/^(?:(?:https?|ftps?|sftp|file|news|gopher):\/\/)' . (!empty($strict) ? '' : '?') .
             '(?:' . static::$_pattern['IPv4'] . '|\[' . static::$_pattern['IPv6'] . '\]|' . static::$_pattern['hostname'] . ')(?::[1-9][0-9]{0,4})?' .
-            '(?:\/?|\/' . $validChars . '*)?' .
-            '(?:\?' . $validChars . '*)?' .
-            '(?:#' . $validChars . '*)?$/iu';
+            '(?:\/' . $path . '*)?' .
+            '(?:\?' . $fragmentAndQuery . '*)?' .
+            '(?:#' . $fragmentAndQuery . '*)?$/iu';
 
         return static::_check($check, $regex);
     }
@@ -1428,6 +1428,20 @@ class Validation
     public static function isArray($value)
     {
         return is_array($value);
+    }
+
+    /**
+     * Check that the input value is a scalar.
+     *
+     * This method will accept integers, floats, strings and booleans, but
+     * not accept arrays, objects, resources and nulls.
+     *
+     * @param mixed $value The value to check
+     * @return bool
+     */
+    public static function isScalar($value)
+    {
+        return is_scalar($value);
     }
 
     /**

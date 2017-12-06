@@ -87,7 +87,7 @@ class Email implements JsonSerializable, Serializable
      *
      * @var string
      */
-    const EMAIL_PATTERN = '/^((?:[\p{L}0-9.!#$%&\'*+\/=?^_`{|}~-]+)*@[\p{L}0-9-.]+)$/ui';
+    const EMAIL_PATTERN = '/^((?:[\p{L}0-9.!#$%&\'*+\/=?^_`{|}~-]+)*@[\p{L}0-9-._]+)$/ui';
 
     /**
      * Recipient of the email
@@ -1830,7 +1830,7 @@ class Email implements JsonSerializable, Serializable
      * Get generated message (used by transport classes)
      *
      * @param string|null $type Use MESSAGE_* constants or null to return the full message as array
-     * @return string|array String if have type, array if type is null
+     * @return string|array String if type is given, array if type is null
      */
     public function message($type = null)
     {
@@ -2084,9 +2084,20 @@ class Email implements JsonSerializable, Serializable
         }
         Log::write(
             $config['level'],
-            PHP_EOL . $contents['headers'] . PHP_EOL . PHP_EOL . $contents['message'],
+            PHP_EOL . $this->flatten($contents['headers']) . PHP_EOL . PHP_EOL . $this->flatten($contents['message']),
             $config['scope']
         );
+    }
+
+    /**
+     * Converts given value to string
+     *
+     * @param string|array $value The value to convert
+     * @return string
+     */
+    protected function flatten($value)
+    {
+        return is_array($value) ? implode(';', $value) : (string)$value;
     }
 
     /**
@@ -2207,7 +2218,7 @@ class Email implements JsonSerializable, Serializable
         $this->_headers = [];
         $this->_textMessage = '';
         $this->_htmlMessage = '';
-        $this->_message = '';
+        $this->_message = [];
         $this->_emailFormat = 'text';
         $this->_transport = null;
         $this->_priority = null;
@@ -2612,8 +2623,8 @@ class Email implements JsonSerializable, Serializable
 
         $View = $this->createView();
 
-        list($templatePlugin) = pluginSplit($View->template());
-        list($layoutPlugin) = pluginSplit($View->layout());
+        list($templatePlugin) = pluginSplit($View->getTemplate());
+        list($layoutPlugin) = pluginSplit($View->getLayout());
         if ($templatePlugin) {
             $View->plugin = $templatePlugin;
         } elseif ($layoutPlugin) {
@@ -2626,8 +2637,8 @@ class Email implements JsonSerializable, Serializable
 
         foreach ($types as $type) {
             $View->hasRendered = false;
-            $View->templatePath('Email' . DIRECTORY_SEPARATOR . $type);
-            $View->layoutPath('Email' . DIRECTORY_SEPARATOR . $type);
+            $View->setTemplatePath('Email' . DIRECTORY_SEPARATOR . $type);
+            $View->setLayoutPath('Email' . DIRECTORY_SEPARATOR . $type);
 
             $render = $View->render();
             $render = str_replace(["\r\n", "\r"], "\n", $render);
