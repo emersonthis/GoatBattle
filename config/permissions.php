@@ -41,6 +41,11 @@ return [
                 return false;
             }
         ],
+        [
+            'role' => 'user',
+            'controller' => 'Battles',
+            'action' => 'view',
+        ],
         //all roles allowed to Pages/display
         [
             'role' => '*',
